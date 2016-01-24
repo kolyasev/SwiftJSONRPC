@@ -1,40 +1,18 @@
-#
-# Be sure to run `pod lib lint SwiftJSONRPC.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = "SwiftJSONRPC"
   s.version          = "0.1.0"
-  s.summary          = "A short description of SwiftJSONRPC."
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!  
-  s.description      = <<-DESC
-                       DESC
-
-  s.homepage         = "https://github.com/<GITHUB_USERNAME>/SwiftJSONRPC"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
+  s.summary          = "Swift JSON-RPC client based on Alamofire"
+  s.homepage         = "https://github.com/kolyasev/SwiftJSONRPC"
   s.license          = 'MIT'
   s.author           = { "Denis Kolyasev" => "kolyasev@gmail.com" }
-  s.source           = { :git => "https://github.com/<GITHUB_USERNAME>/SwiftJSONRPC.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.source           = { :git => "https://github.com/kolyasev/SwiftJSONRPC.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'Pod/Classes/**/*'
-  s.resource_bundles = {
-    'SwiftJSONRPC' => ['Pod/Assets/*.png']
-  }
+  s.source_files = 'Sources/**/*.swift'
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.frameworks = 'Foundation'
+  s.dependency 'Alamofire', '~> 3.0'
+  s.dependency 'SwiftyJSON', '~> 2.3'
 end
