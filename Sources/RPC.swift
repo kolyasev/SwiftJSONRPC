@@ -10,15 +10,18 @@ public class RPC
 {
 // MARK: Construction
 
-    public init(baseURL: String)
+    public init(baseURL: String, headers: [String: String]? = nil)
     {
         // Init instance variables
         self.baseURL = baseURL
+        self.headers = headers
     }
 
 // MARK: Properties
 
     public let baseURL: String
+
+    public let headers: [String: String]?
 
     public static var logEnabled: Bool =  false
 

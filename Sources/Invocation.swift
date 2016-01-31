@@ -81,7 +81,7 @@ public class Invocation<Result>: InvocationProtocol
         dispatchStart()
 
         // Perform request
-        request.perform(self.rpc.baseURL) { result in
+        request.perform(self.rpc.baseURL, headers: self.rpc.headers) { result in
             if let instance = weakSelf
             {
                 // Dispatch response

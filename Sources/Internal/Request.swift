@@ -33,7 +33,7 @@ class Request
 
 // MARK: Functions
 
-    func perform(baseUrl: String, completionBlock: CompletionBlock)
+    func perform(baseUrl: String, headers: [String: String]?, completionBlock: CompletionBlock)
     {
         // Build json-rpc body params
         let body = buildBody()
@@ -44,7 +44,7 @@ class Request
         }
 
         // Perform request
-        Alamofire.request(.POST, baseUrl, parameters: body, encoding: .JSON)
+        Alamofire.request(.POST, baseUrl, parameters: body, encoding: .JSON, headers: headers)
             .responseJSON { response in
                 dispatch.async.bg
                 {
