@@ -37,4 +37,6 @@ extension Int: JsonPrimitive {}
 
 extension String: JsonPrimitive {}
 
+extension Bool: JsonPrimitive {}
+
 // ----------------------------------------------------------------------------
