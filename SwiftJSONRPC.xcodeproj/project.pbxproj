@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		666461971C5526AB0057BB6A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 666461961C5526AB0057BB6A /* Info.plist */; };
 		6664619A1C5526B90057BB6A /* SwiftJSONRPCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666461981C5526B20057BB6A /* SwiftJSONRPCTests.swift */; };
 		6664619E1C552C830057BB6A /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6664619D1C552C830057BB6A /* Dispatch.swift */; };
 		FA139612FA2D04C738E50D9E /* Pods_SwiftJSONRPCTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CD4146650E4C3DB64AB2C2D /* Pods_SwiftJSONRPCTests.framework */; };
@@ -186,7 +185,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Denis Kolyasev";
 				TargetAttributes = {
 					6664618D1C55266D0057BB6A = {
@@ -216,7 +215,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				666461971C5526AB0057BB6A /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
