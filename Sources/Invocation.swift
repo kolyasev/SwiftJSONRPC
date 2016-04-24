@@ -36,35 +36,7 @@ public class Invocation<Result>: InvocationProtocol
 
 // MARK: Functions
 
-    public func result(block: ResultBlock) -> Self
-    {
-        self.resultBlocks.append(block)
-
-        return self
-    }
-
-    public func error(block: ErrorBlock) -> Self
-    {
-        self.errorBlocks.append(block)
-
-        return self
-    }
-
-    public func start(block: StartBlock) -> Self
-    {
-        self.startBlocks.append(block)
-
-        return self
-    }
-
-    public func finish(block: FinishBlock) -> Self
-    {
-        self.finishBlocks.append(block)
-
-        return self
-    }
-
-    public func invoke() -> InvocationProtocol
+    public func invoke() -> Cancelable
     {
         weak var weakSelf = self
 
@@ -78,7 +50,7 @@ public class Invocation<Result>: InvocationProtocol
         let request = Request(method: self.method, params: params, id: String(self.identifier))
 
         // Dispatch start blocks
-        dispatchStart()
+        self.callbackDispatcher.dispatchStart()
 
         // Perform request
         request.perform(self.rpc.baseURL, headers: self.rpc.headers) { result in
@@ -94,7 +66,7 @@ public class Invocation<Result>: InvocationProtocol
                 instance.currentRequest = nil
 
                 // Dispatch finish blocks
-                instance.dispatchFinish()
+                instance.callbackDispatcher.dispatchFinish()
             }
         }
 
@@ -102,10 +74,6 @@ public class Invocation<Result>: InvocationProtocol
         self.currentRequest = request
 
         return self
-    }
-
-    public func cancel() {
-        // TODO: ...
     }
 
 // MARK: Private Functions
@@ -120,7 +88,7 @@ public class Invocation<Result>: InvocationProtocol
                 {
                     // Parse result object
                     if let parsedResult = self.parseBlock(result) {
-                        dispatchResult(parsedResult)
+                        self.callbackDispatcher.dispatchResult(parsedResult)
                     }
                     else
                     {
@@ -129,17 +97,17 @@ public class Invocation<Result>: InvocationProtocol
                         let error = InvocationError.ApplicationError(cause: cause)
 
                         // Dispatch error
-                        dispatchError(error)
+                        self.callbackDispatcher.dispatchError(error)
                     }
                 }
                 else
                 if let error = response.error {
-                    dispatchError(InvocationError.RpcError(error: error))
+                    self.callbackDispatcher.dispatchError(InvocationError.RpcError(error: error))
                 }
 
             // Handle network/parsing errors
             case .Failure(let error):
-                dispatchError(InvocationError.ApplicationError(cause: error))
+                self.callbackDispatcher.dispatchError(InvocationError.ApplicationError(cause: error))
         }
     }
 
@@ -158,73 +126,62 @@ public class Invocation<Result>: InvocationProtocol
         return params
     }
 
-// MARK: Private Functions: Callbacks Dispatching
-
-    private func dispatchResult(result: Result)
-    {
-        dispatch.async.main
-        {
-            for resultBlock in self.resultBlocks {
-                resultBlock(r: result)
-            }
-        }
-    }
-
-    private func dispatchError(error: InvocationError)
-    {
-        dispatch.async.main
-        {
-            for errorBlock in self.errorBlocks {
-                errorBlock(e: error)
-            }
-        }
-    }
-
-
-    private func dispatchStart()
-    {
-        dispatch.async.main
-        {
-            for startBlock in self.startBlocks {
-                startBlock()
-            }
-        }
-    }
-
-    private func dispatchFinish()
-    {
-        dispatch.async.main
-        {
-            for finishBlock in self.finishBlocks {
-                finishBlock()
-            }
-        }
-    }
-
-// MARK: Inner Types
-
-    public typealias ResultBlock = (r: Result) -> Void
-
-    public typealias ErrorBlock = (e: InvocationError) -> Void
-
-    public typealias StartBlock = () -> Void
-
-    public typealias FinishBlock = () -> Void
-
 // MARK: Variables
-
-    private var resultBlocks: [ResultBlock] = []
-    
-    private var errorBlocks: [ErrorBlock] = []
-
-    private var startBlocks: [StartBlock] = []
-
-    private var finishBlocks: [FinishBlock] = []
 
     private unowned let rpc: RPC
 
     private var currentRequest: Request?
+
+    private let callbackDispatcher = CallbackDispatcher<Result>()
     
+}
+
+// ----------------------------------------------------------------------------
+
+extension Invocation: ResultProvider
+{
+// MARK: - Functions
+
+    public func result(queue: ResultQueue, block: Invocation.ResultBlock) -> Self
+    {
+        self.callbackDispatcher.result(queue, block: block)
+        return self
+    }
+
+    public func error(queue: ResultQueue, block: Invocation.ErrorBlock) -> Self
+    {
+        self.callbackDispatcher.error(queue, block: block)
+        return self
+    }
+
+    public func start(queue: ResultQueue, block: Invocation.StartBlock) -> Self
+    {
+        self.callbackDispatcher.start(queue, block: block)
+        return self
+    }
+
+    public func finish(queue: ResultQueue, block: Invocation.FinishBlock) -> Self
+    {
+        self.callbackDispatcher.finish(queue, block: block)
+        return self
+    }
+
+// MARK: - Inner Types
+
+    public typealias ResultType = Result
+
+}
+
+// ----------------------------------------------------------------------------
+
+extension Invocation: Cancelable
+{
+// MARK: Functions
+
+    public func cancel() {
+        // TODO: ...
+    }
+
 }
 
 // ----------------------------------------------------------------------------
@@ -237,18 +194,8 @@ public protocol InvocationProtocol: class
 
 // MARK: Functions
 
-    func invoke() -> InvocationProtocol
+    func invoke() -> Cancelable
 
-    func cancel()
-
-}
-
-// ----------------------------------------------------------------------------
-
-public enum InvocationError: ErrorType
-{
-    case ApplicationError(cause: ErrorType)
-    case RpcError(error: RPCError)
 }
 
 // ----------------------------------------------------------------------------
