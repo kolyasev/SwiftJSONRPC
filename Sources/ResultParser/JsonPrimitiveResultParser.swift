@@ -22,7 +22,7 @@ extension RPC
 {
 // MARK: Functions
 
-    public func invocation<Result: JsonPrimitive>(method: String, params: Params? = nil) -> Invocation<Result>
+    public static func invocation<Result: JsonPrimitive>(method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
     {
         return invocation(method, params: params, parser: JsonPrimitiveResultParser())
     }

@@ -29,7 +29,7 @@ extension RPC
 {
 // MARK: Functions
 
-    public func invocation<Result: Parcelable>(method: String, params: Params? = nil) -> Invocation<Result>
+    public static func invocation<Result: Parcelable>(method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
     {
         return invocation(method, params: params, parser: ParcelableResultParser())
     }

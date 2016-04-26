@@ -30,7 +30,7 @@ extension RPC
 {
 // MARK: Functions
 
-    public func invocation<Result: CollectionType, ElementType: Parcelable where Result.Generator.Element == ElementType>(method: String, params: Params? = nil) -> Invocation<Result>
+    public static func invocation<Result: CollectionType, ElementType: Parcelable where Result.Generator.Element == ElementType>(method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
     {
         return invocation(method, params: params, parser: ParcelableCollectionResultParser())
     }

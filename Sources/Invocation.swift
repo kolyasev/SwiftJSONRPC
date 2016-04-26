@@ -6,131 +6,63 @@
 //
 // ----------------------------------------------------------------------------
 
-import Alamofire
-
-// ----------------------------------------------------------------------------
-
-public class Invocation<Result>: InvocationProtocol
+public class Invocation<Result>: InvocationType
 {
-// MARK: Construction
+// MARK: - Construction
 
-    init<Parser: ResultParser where Parser.ResultType == Result>(identifier: Int, method: String, params: InvocationParams, parser: Parser, rpc: RPC)
+    init<Parser: ResultParser where Parser.ResultType == Result>(method: String, params: Params, parser: Parser)
     {
         // Init instance variables
-        self.identifier = identifier
         self.method = method
         self.params = params
-        self.parseBlock = { parser.parse($0) }
-        self.rpc = rpc
+        self.parser = AnyResultParser(parser)
     }
 
-// MARK: Properties
-
-    public let identifier: Int
+// MARK: - Properties
 
     public let method: String
 
-    public let params: InvocationParams
+    public let params: Params
 
-    public let parseBlock: (AnyObject) -> Result?
+// MARK: - Inner Functions
 
-// MARK: Functions
-
-    public func invoke() -> Cancelable
+    func dispatchResult(result: AnyObject)
     {
-        weak var weakSelf = self
+        // Parse result object
+        if let parsedResult = self.parser.parse(result)
+        {
+            self.callbackDispatcher.dispatchResult(parsedResult)
+        }
+        else
+        {
+            // Init parsing error
+            let cause = ResultParserError.InvalidResponseFormat(object: result)
+            let error = InvocationError.ApplicationError(cause: cause)
 
-        // Notify parent rpc object
-        self.rpc.invocationWillInvoke(self)
+            // Dispatch error
+            self.callbackDispatcher.dispatchError(error)
+        }
+    }
 
-        // Build params (remove 'nil' values)
-        let params = buildParamsForRequest()
+    func dispatchError(error: InvocationError) {
+        self.callbackDispatcher.dispatchError(error)
+    }
 
-        // Init request
-        let request = Request(method: self.method, params: params, id: String(self.identifier))
-
-        // Dispatch start blocks
+    func dispatchStart() {
         self.callbackDispatcher.dispatchStart()
-
-        // Perform request
-        request.perform(self.rpc.baseURL, headers: self.rpc.headers) { result in
-            if let instance = weakSelf
-            {
-                // Dispatch response
-                instance.dispatchResponse(result)
-
-                // Notify parent rpc object
-                instance.rpc.invocationDidInvoke(weakSelf!)
-
-                // Release request object
-                instance.currentRequest = nil
-
-                // Dispatch finish blocks
-                instance.callbackDispatcher.dispatchFinish()
-            }
-        }
-
-        // Retain request object
-        self.currentRequest = request
-
-        return self
     }
 
-// MARK: Private Functions
-
-    private func dispatchResponse(result: Alamofire.Result<Response, NSError>)
-    {
-        switch result
-        {
-            // Handler JSON-RPC response
-            case .Success(let response):
-                if let result = response.result
-                {
-                    // Parse result object
-                    if let parsedResult = self.parseBlock(result) {
-                        self.callbackDispatcher.dispatchResult(parsedResult)
-                    }
-                    else
-                    {
-                        // Init parsing error
-                        let cause = ResultParserError.InvalidResponseFormat(object: result)
-                        let error = InvocationError.ApplicationError(cause: cause)
-
-                        // Dispatch error
-                        self.callbackDispatcher.dispatchError(error)
-                    }
-                }
-                else
-                if let error = response.error {
-                    self.callbackDispatcher.dispatchError(InvocationError.RpcError(error: error))
-                }
-
-            // Handle network/parsing errors
-            case .Failure(let error):
-                self.callbackDispatcher.dispatchError(InvocationError.ApplicationError(cause: error))
-        }
+    func dispatchFinish() {
+        self.callbackDispatcher.dispatchFinish()
     }
 
-    private func buildParamsForRequest() -> [String: AnyObject]
-    {
-        var params: [String: AnyObject] = [:]
+// MARK: - Inner Types
 
-        // Remove 'nil' values
-        for (key, value) in self.params
-        {
-            if let value = value {
-                params[key] = value
-            }
-        }
+    public typealias Params = [String: AnyObject?]
 
-        return params
-    }
+// MARK: - Variables
 
-// MARK: Variables
-
-    private unowned let rpc: RPC
-
-    private var currentRequest: Request?
+    private let parser: AnyResultParser<Result>
 
     private let callbackDispatcher = CallbackDispatcher<Result>()
     
@@ -174,32 +106,18 @@ extension Invocation: ResultProvider
 
 // ----------------------------------------------------------------------------
 
-extension Invocation: Cancelable
+protocol InvocationType
 {
-// MARK: Functions
+// MARK: - Functions
 
-    public func cancel() {
-        // TODO: ...
-    }
+    func dispatchResult(result: AnyObject)
+
+    func dispatchError(error: InvocationError)
+
+    func dispatchStart()
+
+    func dispatchFinish()
 
 }
-
-// ----------------------------------------------------------------------------
-
-public protocol InvocationProtocol: class
-{
-// MARK: Properties
-
-    var identifier: Int { get }
-
-// MARK: Functions
-
-    func invoke() -> Cancelable
-
-}
-
-// ----------------------------------------------------------------------------
-
-public typealias InvocationParams = [String: AnyObject?]
 
 // ----------------------------------------------------------------------------

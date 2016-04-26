@@ -8,7 +8,7 @@
 
 public protocol Parcelable
 {
-// MARK: Construction
+// MARK: - Construction
 
     init(params: [String : AnyObject])
 
