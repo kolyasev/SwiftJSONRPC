@@ -15,4 +15,5 @@ Pod::Spec.new do |s|
   s.frameworks = 'Foundation'
   s.dependency 'Alamofire', '~> 3.0'
   s.dependency 'SwiftyJSON', '~> 2.3'
+  s.dependency 'Atomic', '~> 1.0'
 end

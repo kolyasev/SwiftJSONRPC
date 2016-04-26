@@ -6,6 +6,10 @@
 //
 // ----------------------------------------------------------------------------
 
+import Atomic
+
+// ----------------------------------------------------------------------------
+
 public class RPCClient
 {
 // MARK: - Construction
@@ -32,10 +36,10 @@ public class RPCClient
 
         // TODO: Support notification type calls without identifiers
         // Generate invocation indentifier
-        let identifier = String(++self.invocationSeqNo)
+        let identifier = String(self.invocationSeqNo.modify{ $0 + 1 })
 
         // ...
-        self.invocations[identifier] = invocation
+        self.invocations.value[identifier] = invocation
 
         // Init request
         let request = Request(id: identifier, invocation: invocation)
@@ -54,7 +58,7 @@ public class RPCClient
         assert(request.id == response.id)
 
         let identifier = response.id
-        if let invocation = self.invocations.removeValueForKey(identifier)
+        if let invocation = self.invocations.value.removeValueForKey(identifier)
         {
             // Dispatch response
             switch response.body
@@ -75,7 +79,7 @@ public class RPCClient
     {
         // TODO: Support notification type calls without identifiers
         if let identifier = request.id,
-           let invocation = self.invocations.removeValueForKey(identifier)
+           let invocation = self.invocations.value.removeValueForKey(identifier)
         {
             // Dispatch error
             invocation.dispatchError(InvocationError.ApplicationError(cause: error))
@@ -93,9 +97,9 @@ public class RPCClient
 
     private let httpClient: HTTPClient
 
-    private var invocationSeqNo: Int = 0
+    private let invocationSeqNo = Atomic<Int>(0)
 
-    private var invocations: [String: InvocationType] = [:]
+    private let invocations = Atomic<[String: InvocationType]>([:])
 
 }
 

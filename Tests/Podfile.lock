@@ -1,7 +1,9 @@
 PODS:
-  - Alamofire (3.3.0)
+  - Alamofire (3.3.1)
+  - Atomic (1.0.3)
   - SwiftJSONRPC (0.1.0):
     - Alamofire (~> 3.0)
+    - Atomic (~> 1.0)
     - SwiftyJSON (~> 2.3)
   - SwiftyJSON (2.3.2)
 
@@ -13,8 +15,9 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  Alamofire: 9054db4a1b1ca9e363223183e01cea380159a27c
-  SwiftJSONRPC: 520c4118a785592853cc22acd626f7d1e6e66e08
+  Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
+  Atomic: 6a65765cb7d197873633e2693ee612f036736689
+  SwiftJSONRPC: a94515bb44072b11aaec13d55bf04e78f546e2cb
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
 COCOAPODS: 0.39.0
