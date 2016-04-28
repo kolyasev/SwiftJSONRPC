@@ -14,13 +14,10 @@ public class RPCClient
 {
 // MARK: - Construction
 
-    public init(baseURL: String, headers: [String: String]? = nil)
+    public init(httpClient: HTTPClient)
     {
-        let baseURL = NSURL(string: baseURL)!
-        let headers = headers ?? [:]
-
         // Init instance variables
-        self.httpClient = HTTPClient(baseURL: baseURL, headers: headers)
+        self.httpClient = httpClient
         self.httpClient.delegate = self
     }
 
@@ -111,7 +108,7 @@ extension RPCClient: HTTPClientDelegate
         dispatchResponse(response, forRequest: request)
     }
 
-    func httpClient(client: HTTPClient, didFailWithError error: ErrorType, forRequest request: Request) {
+    func httpClient(client: HTTPClient, didFailWithError error: HTTPClientError, forRequest request: Request) {
         dispatchError(error, forRequest: request)
     }
 
