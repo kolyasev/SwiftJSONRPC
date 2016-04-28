@@ -14,7 +14,7 @@ public protocol ResultParser
 
 // MARK: - Inner Types
 
-    typealias ResultType
+    associatedtype ResultType
 
 }
 

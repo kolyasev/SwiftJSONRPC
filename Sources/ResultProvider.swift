@@ -6,6 +6,10 @@
 //
 // ----------------------------------------------------------------------------
 
+import Foundation
+
+// ----------------------------------------------------------------------------
+
 public protocol ResultProvider
 {
 // MARK: - Functions
@@ -20,15 +24,15 @@ public protocol ResultProvider
 
 // MARK: - Inner Types
 
-    typealias ResultType
+    associatedtype ResultType
 
-    typealias ResultBlock = (r: ResultType) -> Void
+    associatedtype ResultBlock = (r: ResultType) -> Void
 
-    typealias ErrorBlock = (e: InvocationError) -> Void
+    associatedtype ErrorBlock = (e: InvocationError) -> Void
 
-    typealias StartBlock = () -> Void
+    associatedtype StartBlock = () -> Void
 
-    typealias FinishBlock = () -> Void
+    associatedtype FinishBlock = () -> Void
 
 }
 

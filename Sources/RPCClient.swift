@@ -32,8 +32,6 @@ public class RPCClient
 
     public func perform<R>(invocation: Invocation<R>) // TODO: ... -> Cancelable
     {
-        weak var weakSelf = self
-
         // TODO: Support notification type calls without identifiers
         // Generate invocation indentifier
         let identifier = String(self.invocationSeqNo.modify{ $0 + 1 })
