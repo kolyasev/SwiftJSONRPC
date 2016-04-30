@@ -92,7 +92,7 @@ public class RPCClient
 
     private let httpClient: HTTPClient
 
-    private let invocationSeqNo = Atomic<Int>(0)
+    private let invocationSeqNo = Atomic<Int>(1)
 
     private let invocations = Atomic<[String: InvocationType]>([:])
 

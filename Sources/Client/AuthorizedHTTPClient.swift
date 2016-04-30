@@ -29,7 +29,7 @@ public class AuthorizedHTTPClient: HTTPClient
 
 // MARK: - Public Functions
 
-    func updateAuthorizationHeader(authorizationHeader: String)
+    public func updateAuthorizationHeader(authorizationHeader: String)
     {
         self.authorizationHeader.value = authorizationHeader
 
