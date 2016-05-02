@@ -14,11 +14,11 @@ public class RPCClient
 {
 // MARK: - Construction
 
-    public init(httpClient: HTTPClient)
+    public init(requestManager: RequestManager)
     {
         // Init instance variables
-        self.httpClient = httpClient
-        self.httpClient.delegate = self
+        self.requestManager = requestManager
+        self.requestManager.delegate = self
     }
 
 // MARK: - Properties
@@ -43,7 +43,7 @@ public class RPCClient
         invocation.dispatchStart()
 
         // Perform request
-        self.httpClient.performRequest(request)
+        self.requestManager.performRequest(request)
     }
 
 // MARK: - Private Functions
@@ -90,7 +90,7 @@ public class RPCClient
 
 // MARK: - Variables
 
-    private let httpClient: HTTPClient
+    private let requestManager: RequestManager
 
     private let invocationSeqNo = Atomic<Int>(1)
 
@@ -100,15 +100,15 @@ public class RPCClient
 
 // ----------------------------------------------------------------------------
 
-extension RPCClient: HTTPClientDelegate
+extension RPCClient: RequestManagerDelegate
 {
 // MARK: - Functions
 
-    func httpClient(client: HTTPClient, didReceiveResponse response: Response, forRequest request: Request) {
+    func requestManager(requestManager: RequestManager, didReceiveResponse response: Response, forRequest request: Request) {
         dispatchResponse(response, forRequest: request)
     }
 
-    func httpClient(client: HTTPClient, didFailWithError error: HTTPClientError, forRequest request: Request) {
+    func requestManager(requestManager: RequestManager, didFailWithError error: ErrorType, forRequest request: Request) {
         dispatchError(error, forRequest: request)
     }
 

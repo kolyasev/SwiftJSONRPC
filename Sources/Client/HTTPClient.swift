@@ -10,32 +10,20 @@ import Alamofire
 
 // ----------------------------------------------------------------------------
 
-public class HTTPClient
+class HTTPClient
 {
-// MARK: - Construction
-
-    public init(baseURL: NSURL)
-    {
-        // Init instance variables
-        self.baseURL = baseURL
-    }
-
 // MARK: - Properties
-
-    public let baseURL: NSURL
-
-    public var additionalHeaders: [String: String] = [:]
 
     weak var delegate: HTTPClientDelegate?
 
 // MARK: - Functions
 
-    func performRequest(request: Request)
+    func performRequest(request: HTTPRequest)
     {
         weak var weakSelf = self
 
         // Build json-rpc body params
-        let body = request.buildBody()
+        let body = request.body.buildBody()
 
         // Log request
         if RPCClient.logEnabled {
@@ -43,9 +31,9 @@ public class HTTPClient
         }
 
         // Perform request
-        Alamofire.request(.POST, self.baseURL, parameters: body, encoding: .JSON, headers: buildHeaders())
-            .responseJSON(queue: responseQueue()) { response in
-                switch response.result
+        Alamofire.request(.POST, request.url, parameters: body, encoding: .JSON, headers: request.headers)
+            .responseJSON(queue: responseQueue()) { result in
+                switch result.result
                 {
                     case .Success(let json):
                         // Log response
@@ -55,31 +43,32 @@ public class HTTPClient
 
                         // Try to parse response
                         do {
-                            let response = try Response(response: json)
-                            weakSelf?.dispatchResponse(response, forRequest: request)
+                            let body = try Response(response: json)
+                            let httpResponse = HTTPResponse(
+                                url: result.response?.URL ?? request.url,
+                                headers: (result.response?.allHeaderFields as? [String: String]) ?? [:],
+                                body: body
+                            )
+                            weakSelf?.dispatchResponse(httpResponse, forRequest: request)
                         }
                         catch (let error) {
-                            let error = HTTPClientError(cause: error, request: response.request, response: response.response)
+                            let error = HTTPClientError(cause: error, request: result.request, response: result.response)
                             weakSelf?.dispatchError(error, forRequest: request)
                         }
 
                     case .Failure(let error):
-                        let error = HTTPClientError(cause: error, request: response.request, response: response.response)
+                        let error = HTTPClientError(cause: error, request: result.request, response: result.response)
                         weakSelf?.dispatchError(error, forRequest: request)
                 }
         }
     }
 
-    func dispatchResponse(response: Response, forRequest request: Request) {
+    func dispatchResponse(response: HTTPResponse, forRequest request: HTTPRequest) {
         self.delegate?.httpClient(self, didReceiveResponse: response, forRequest: request)
     }
 
-    func dispatchError(error: HTTPClientError, forRequest request: Request) {
+    func dispatchError(error: HTTPClientError, forRequest request: HTTPRequest) {
         self.delegate?.httpClient(self, didFailWithError: error, forRequest: request)
-    }
-
-    func buildHeaders() -> [String: String] {
-        return self.additionalHeaders
     }
 
 // MARK: - Private Functions
@@ -96,9 +85,9 @@ protocol HTTPClientDelegate: class
 {
 // MARK: - Functions
 
-    func httpClient(client: HTTPClient, didReceiveResponse response: Response, forRequest request: Request)
+    func httpClient(client: HTTPClient, didReceiveResponse response: HTTPResponse, forRequest request: HTTPRequest)
 
-    func httpClient(client: HTTPClient, didFailWithError error: HTTPClientError, forRequest request: Request)
+    func httpClient(client: HTTPClient, didFailWithError error: HTTPClientError, forRequest request: HTTPRequest)
 
 }
 
