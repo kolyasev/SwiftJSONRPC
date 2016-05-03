@@ -21,6 +21,15 @@ public class RPCClient
         self.requestManager.delegate = self
     }
 
+    public convenience init(baseURL: NSURL)
+    {
+        // Init http request manager
+        let requestManager = HTTPRequestManager(baseURL: baseURL)
+
+        // Parent processing
+        self.init(requestManager: requestManager)
+    }
+
 // MARK: - Properties
 
     public static var logEnabled: Bool =  false
