@@ -38,21 +38,27 @@ public class RPCClient
 
     public func perform<R>(invocation: Invocation<R>) // TODO: ... -> Cancelable
     {
-        // TODO: Support notification type calls without identifiers
-        // Generate invocation indentifier
-        let identifier = String(self.invocationSeqNo.modify{ $0 + 1 })
+        weak var weakSelf = self
+        dispatch.async.bg
+        {
+            guard let instance = weakSelf else { return }
 
-        // ...
-        self.invocations.value[identifier] = invocation
+            // TODO: Support notification type calls without identifiers
+            // Generate invocation indentifier
+            let identifier = String(instance.invocationSeqNo.modify{ $0 + 1 })
 
-        // Init request
-        let request = Request(id: identifier, invocation: invocation)
+            // ...
+            instance.invocations.value[identifier] = invocation
 
-        // Dispatch start blocks
-        invocation.dispatchStart()
+            // Init request
+            let request = Request(id: identifier, invocation: invocation)
 
-        // Perform request
-        self.requestManager.performRequest(request)
+            // Dispatch start blocks
+            invocation.dispatchStart()
+
+            // Perform request
+            instance.requestManager.performRequest(request)
+        }
     }
 
 // MARK: - Private Functions

@@ -7,6 +7,7 @@
 // ----------------------------------------------------------------------------
 
 import Foundation
+import Atomic
 
 // ----------------------------------------------------------------------------
 
@@ -16,6 +17,8 @@ class CallbackDispatcher<Result>
 
     func dispatchResult(result: Result)
     {
+        self.hasResult.value = result
+
         for resultBlock in self.resultBlocks {
             dispatch(resultBlock) { $0(r: result) }
         }
@@ -23,6 +26,8 @@ class CallbackDispatcher<Result>
 
     func dispatchError(error: InvocationError)
     {
+        self.hasError.value = error
+
         for errorBlock in self.errorBlocks {
             dispatch(errorBlock) { $0(e: error) }
         }
@@ -31,6 +36,8 @@ class CallbackDispatcher<Result>
 
     func dispatchStart()
     {
+        self.hasStart.value = true
+
         for startBlock in self.startBlocks {
             dispatch(startBlock) { $0() }
         }
@@ -38,6 +45,8 @@ class CallbackDispatcher<Result>
 
     func dispatchFinish()
     {
+        self.hasFinish.value = true
+
         for finishBlock in self.finishBlocks {
             dispatch(finishBlock) { $0() }
         }
@@ -65,7 +74,7 @@ class CallbackDispatcher<Result>
         }
     }
 
-// MARK: - Variables
+// MARK: - Variables: Callbacks
 
     private var resultBlocks: [CallbackHolder<CallbackDispatcher.ResultBlock>] = []
 
@@ -74,6 +83,16 @@ class CallbackDispatcher<Result>
     private var startBlocks: [CallbackHolder<CallbackDispatcher.StartBlock>] = []
 
     private var finishBlocks: [CallbackHolder<CallbackDispatcher.FinishBlock>] = []
+
+// MARK: - Variables: State
+
+    private let hasStart = Atomic<Bool>(false)
+
+    private let hasFinish = Atomic<Bool>(false)
+
+    private let hasResult = Atomic<Result?>(nil)
+
+    private let hasError = Atomic<InvocationError?>(nil)
 
 }
 
@@ -85,25 +104,61 @@ extension CallbackDispatcher: ResultProvider
 
     func result(queue: ResultQueue, block: CallbackDispatcher.ResultBlock) -> Self
     {
-        self.resultBlocks.append(CallbackHolder(block: block, queue: queue))
+        let holder = CallbackHolder(block: block, queue: queue)
+
+        if let result = self.hasResult.value
+        {
+            dispatch(holder) { $0(r: result) }
+        }
+        else {
+            self.resultBlocks.append(holder)
+        }
+
         return self
     }
 
     func error(queue: ResultQueue, block: CallbackDispatcher.ErrorBlock) -> Self
     {
-        self.errorBlocks.append(CallbackHolder(block: block, queue: queue))
+        let holder = CallbackHolder(block: block, queue: queue)
+
+        if let error = self.hasError.value
+        {
+            dispatch(holder) { $0(e: error) }
+        }
+        else {
+            self.errorBlocks.append(holder)
+        }
+
         return self
     }
 
     func start(queue: ResultQueue, block: CallbackDispatcher.StartBlock) -> Self
     {
-        self.startBlocks.append(CallbackHolder(block: block, queue: queue))
+        let holder = CallbackHolder(block: block, queue: queue)
+
+        if self.hasStart.value
+        {
+            dispatch(holder) { $0() }
+        }
+        else {
+            self.startBlocks.append(holder)
+        }
+
         return self
     }
 
     func finish(queue: ResultQueue, block: CallbackDispatcher.FinishBlock) -> Self
     {
-        self.finishBlocks.append(CallbackHolder(block: block, queue: queue))
+        let holder = CallbackHolder(block: block, queue: queue)
+
+        if self.hasFinish.value
+        {
+            dispatch(holder) { $0() }
+        }
+        else {
+            self.finishBlocks.append(holder)
+        }
+
         return self
     }
 
