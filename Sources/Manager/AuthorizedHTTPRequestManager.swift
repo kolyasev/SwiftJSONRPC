@@ -77,9 +77,9 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
         }
     }
 
-    override func dispatchHTTPError(error: ErrorType, forHTTPRequest httpRequest: HTTPRequest)
+    override func dispatchHTTPError(error: HTTPClientError, forHTTPRequest httpRequest: HTTPRequest)
     {
-        if let error = (error as? HTTPClientError) where (error.response?.statusCode == HttpStatus.Unauthorized)
+        if (error.response?.statusCode == HttpStatus.Unauthorized)
         {
             dispatchAuthorizationError(error, forHTTPRequest: httpRequest)
         }

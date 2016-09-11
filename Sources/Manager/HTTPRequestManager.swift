@@ -51,8 +51,8 @@ public class HTTPRequestManager: RequestManager
         dispatchResponse(httpResponse.body, forRequest: httpRequest.body)
     }
 
-    func dispatchHTTPError(error: ErrorType, forHTTPRequest httpRequest: HTTPRequest) {
-        dispatchError(error, forRequest: httpRequest.body)
+    func dispatchHTTPError(error: HTTPClientError, forHTTPRequest httpRequest: HTTPRequest) {
+        dispatchError(error.cause, forRequest: httpRequest.body)
     }
 
     func dispatchResponse(response: Response, forRequest request: Request) {
