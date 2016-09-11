@@ -56,20 +56,8 @@ class CallbackDispatcher<Result>
 
     private func dispatch<B>(holder: CallbackHolder<B>, block: (B) -> Void)
     {
-        let dispatchQueue: dispatch_queue_t
-        switch holder.queue
-        {
-        case .MainQueue:
-            dispatchQueue = dispatch_get_main_queue()
-
-        case .BackgroundQueue:
-            dispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
-
-        case .CustomQueue(let queue):
-            dispatchQueue = queue
-        }
-
-        dispatch_async(dispatchQueue) {
+        let dispatchQueue = holder.queue.dispatchQueue()
+        dispatch_sync(dispatchQueue) {
             block(holder.block)
         }
     }
@@ -177,6 +165,33 @@ private struct CallbackHolder<Block>
     let block: Block
 
     let queue: ResultQueue
+
+}
+
+// ----------------------------------------------------------------------------
+
+extension ResultQueue
+{
+// MARK: - Functions
+
+    private func dispatchQueue() -> dispatch_queue_t
+    {
+        let result: dispatch_queue_t
+
+        switch self
+        {
+            case .MainQueue:
+                result = dispatch_get_main_queue()
+
+            case .BackgroundQueue:
+                result = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+
+            case .CustomQueue(let queue):
+                result = queue
+        }
+
+        return result
+    }
 
 }
 
