@@ -1,9 +1,9 @@
 source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 
-xcodeproj '../SwiftJSONRPC.xcodeproj'
 workspace '../SwiftJSONRPC.xcworkspace'
+project '../SwiftJSONRPC.xcodeproj'
 
-target 'SwiftJSONRPCTests', :exclusive => true do
+target 'SwiftJSONRPCTests' do
   pod "SwiftJSONRPC", :path => "../"
 end

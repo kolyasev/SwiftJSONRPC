@@ -42,7 +42,7 @@ class dispatch
         class func bg(delay: Double, block: dispatch_block_t)
         {
             let when = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
-            dispatch_after(when, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)!, block)
+            dispatch_after(when, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), block)
         }
 
         class func main(delay: Double, block: dispatch_block_t)
