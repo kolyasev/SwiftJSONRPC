@@ -55,7 +55,7 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 
     override func performHTTPRequest(httpRequest: HTTPRequest)
     {
-        if self.authorized.value
+        if (self.authorizationHeader.value != nil)
         {
             // Default behaviour
             super.performHTTPRequest(httpRequest)
@@ -92,20 +92,27 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 
     private func dispatchAuthorizationError(error: ErrorType?, forHTTPRequest httpRequest: HTTPRequest)
     {
-        // Check if request have used right headers
-        if (httpRequest.headers[Header.Authorization] == self.authorizationHeader.value)
+        if let authorizationHeader = self.authorizationHeader.value
         {
-            // Delay request
-            self.delayedRequests.value.append(httpRequest.body)
+            // Check if request have used right headers
+            if (httpRequest.headers[Header.Authorization] == authorizationHeader)
+            {
+                // Delay request
+                self.delayedRequests.value.append(httpRequest.body)
 
-            // Notify delegate if needed
-            if self.authorized.swap(false) {
-                self.authorizationDelegate?.authorizedHTTPRequestManager(self, didFailWithAuthorizationError: error)
+                // Notify delegate if needed
+                if (self.authorizationHeader.swap(nil) != nil) {
+                    self.authorizationDelegate?.authorizedHTTPRequestManager(self, didFailWithAuthorizationError: error)
+                }
+            }
+            else {
+                // Repeat request with valid headers
+                performRequest(httpRequest.body)
             }
         }
         else {
-            // Repeat request with valid headers
-            performRequest(httpRequest.body)
+            // Delay request
+            self.delayedRequests.value.append(httpRequest.body)
         }
     }
 
@@ -132,9 +139,7 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 
 // MARK: - Variables
 
-    private let authorizationHeader: Atomic<String>
-
-    private let authorized = Atomic<Bool>(true)
+    private let authorizationHeader: Atomic<String?>
 
     private let delayedRequests = Atomic<[Request]>([])
 
