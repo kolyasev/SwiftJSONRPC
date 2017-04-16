@@ -32,6 +32,7 @@ class HTTPClient
 
         // Perform request
         Alamofire.request(.POST, request.url, parameters: body, encoding: .JSON, headers: request.headers)
+            .validate()
             .responseJSON(queue: responseQueue()) { result in
                 switch result.result
                 {

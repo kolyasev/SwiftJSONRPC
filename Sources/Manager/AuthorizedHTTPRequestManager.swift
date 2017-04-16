@@ -10,6 +10,25 @@ import Atomic
 
 // ----------------------------------------------------------------------------
 
+public enum AuthorizationRequestResult
+{
+    case AuthorizationHeader(authorizationHeader: String)
+    case Error(error: ErrorType)
+    case Cancel
+}
+
+// ----------------------------------------------------------------------------
+
+public protocol AuthorizedHTTPRequestManagerDelegate: class
+{
+// MARK: - Functions
+
+    func authorizedHTTPRequestManager(manager: AuthorizedHTTPRequestManager, requestAuthorizationWithCompletionHandler completionHandler: (AuthorizationRequestResult) -> Void)
+
+}
+
+// ----------------------------------------------------------------------------
+
 public class AuthorizedHTTPRequestManager: HTTPRequestManager
 {
 // MARK: - Construction
@@ -26,16 +45,6 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 // MARK: - Properties
 
     public weak var authorizationDelegate: AuthorizedHTTPRequestManagerDelegate?
-
-// MARK: - Public Functions
-
-    public func updateAuthorizationHeader(authorizationHeader: String)
-    {
-        self.authorizationHeader.value = authorizationHeader
-
-        // Resume delayed requests
-        performDelayedRequests()
-    }
 
 // MARK: - Inner Functions
 
@@ -55,7 +64,7 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 
     override func performHTTPRequest(httpRequest: HTTPRequest)
     {
-        if (self.authorizationHeader.value != nil)
+        if !(self.hasActiveAuthorizationRequest.value)
         {
             // Default behaviour
             super.performHTTPRequest(httpRequest)
@@ -92,18 +101,16 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 
     private func dispatchAuthorizationError(error: ErrorType?, forHTTPRequest httpRequest: HTTPRequest)
     {
-        if let authorizationHeader = self.authorizationHeader.value
+        if !(self.hasActiveAuthorizationRequest.value)
         {
             // Check if request have used right headers
-            if (httpRequest.headers[Header.Authorization] == authorizationHeader)
+            if (httpRequest.headers[Header.Authorization] == self.authorizationHeader.value)
             {
                 // Delay request
                 self.delayedRequests.value.append(httpRequest.body)
 
-                // Notify delegate if needed
-                if (self.authorizationHeader.swap(nil) != nil) {
-                    self.authorizationDelegate?.authorizedHTTPRequestManager(self, didFailWithAuthorizationError: error)
-                }
+                // Request authorization
+                requestAuthorization()
             }
             else {
                 // Repeat request with valid headers
@@ -123,6 +130,45 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
         }
     }
 
+    private func requestAuthorization()
+    {
+        if !(self.hasActiveAuthorizationRequest.swap(true))
+        {
+            weak var weakSelf = self
+            self.authorizationDelegate?.authorizedHTTPRequestManager(self, requestAuthorizationWithCompletionHandler: { result in
+                weakSelf?.handleAuthorizationRequestResult(result)
+                weakSelf?.hasActiveAuthorizationRequest.value = false
+            })
+        }
+    }
+
+    private func handleAuthorizationRequestResult(result: AuthorizationRequestResult)
+    {
+        switch result
+        {
+            case .AuthorizationHeader(let authorizationHeader):
+                updateAuthorizationHeader(authorizationHeader)
+
+            case .Error(_), .Cancel:
+                cancelDelayedRequests()
+        }
+    }
+
+    private func updateAuthorizationHeader(authorizationHeader: String)
+    {
+        self.authorizationHeader.value = authorizationHeader
+
+        // Resume delayed requests
+        performDelayedRequests()
+    }
+
+    private func cancelDelayedRequests()
+    {
+        for request in self.delayedRequests.swap([]) {
+            self.delegate?.requestManager(self, didCancelRequest: request)
+        }
+    }
+
 // MARK: - Inner Types
 
     // ...
@@ -139,19 +185,11 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 
 // MARK: - Variables
 
-    private let authorizationHeader: Atomic<String?>
+    private let authorizationHeader: Atomic<String>
+
+    private let hasActiveAuthorizationRequest = Atomic<Bool>(false)
 
     private let delayedRequests = Atomic<[Request]>([])
-
-}
-
-// ----------------------------------------------------------------------------
-
-public protocol AuthorizedHTTPRequestManagerDelegate: class
-{
-// MARK: - Functions
-
-    func authorizedHTTPRequestManager(manager: AuthorizedHTTPRequestManager, didFailWithAuthorizationError error: ErrorType?)
 
 }
 

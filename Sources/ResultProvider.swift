@@ -18,6 +18,8 @@ public protocol ResultProvider
 
     func error(queue: ResultQueue, block: ErrorBlock) -> Self
 
+    func cancel(queue: ResultQueue, block: CancelBlock) -> Self
+
     func start(queue: ResultQueue, block: StartBlock) -> Self
 
     func finish(queue: ResultQueue, block: FinishBlock) -> Self
@@ -29,6 +31,8 @@ public protocol ResultProvider
     associatedtype ResultBlock = (r: ResultType) -> Void
 
     associatedtype ErrorBlock = (e: InvocationError) -> Void
+
+    associatedtype CancelBlock = () -> Void
 
     associatedtype StartBlock = () -> Void
 
@@ -57,6 +61,10 @@ extension ResultProvider
 
     public func error(block: ErrorBlock) -> Self {
         return error(.BackgroundQueue, block: block)
+    }
+
+    public func cancel(block: CancelBlock) -> Self {
+        return cancel(.BackgroundQueue, block: block)
     }
 
     public func start(block: StartBlock) -> Self {

@@ -99,6 +99,20 @@ public class RPCClient
         }
     }
 
+    private func dispatchCancel(forRequest request: Request)
+    {
+        // TODO: Support notification type calls without identifiers
+        if let identifier = request.id,
+           let invocation = self.invocations.value.removeValueForKey(identifier)
+        {
+            // Dispatch cancel
+            invocation.dispatchCancel()
+
+            // Dispatch invocation finish blocks
+            invocation.dispatchFinish()
+        }
+    }
+
 // MARK: - Constants
 
     static let Version = "2.0"
@@ -125,6 +139,10 @@ extension RPCClient: RequestManagerDelegate
 
     func requestManager(requestManager: RequestManager, didFailWithError error: ErrorType, forRequest request: Request) {
         dispatchError(error, forRequest: request)
+    }
+
+    func requestManager(requestManager: RequestManager, didCancelRequest request: Request) {
+        dispatchCancel(forRequest: request)
     }
 
 }

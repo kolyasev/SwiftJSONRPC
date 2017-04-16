@@ -33,6 +33,14 @@ class CallbackDispatcher<Result>
         }
     }
 
+    func dispatchCancel()
+    {
+        self.hasCancel.value = true
+
+        for cancelBlock in self.cancelBlocks {
+            dispatch(cancelBlock) { $0() }
+        }
+    }
 
     func dispatchStart()
     {
@@ -68,6 +76,8 @@ class CallbackDispatcher<Result>
 
     private var errorBlocks: [CallbackHolder<CallbackDispatcher.ErrorBlock>] = []
 
+    private var cancelBlocks: [CallbackHolder<CallbackDispatcher.CancelBlock>] = []
+
     private var startBlocks: [CallbackHolder<CallbackDispatcher.StartBlock>] = []
 
     private var finishBlocks: [CallbackHolder<CallbackDispatcher.FinishBlock>] = []
@@ -81,6 +91,8 @@ class CallbackDispatcher<Result>
     private let hasResult = Atomic<Result?>(nil)
 
     private let hasError = Atomic<InvocationError?>(nil)
+
+    private let hasCancel = Atomic<Bool>(false)
 
 }
 
@@ -115,6 +127,21 @@ extension CallbackDispatcher: ResultProvider
         }
         else {
             self.errorBlocks.append(holder)
+        }
+
+        return self
+    }
+
+    func cancel(queue: ResultQueue, block: CallbackDispatcher.CancelBlock) -> Self
+    {
+        let holder = CallbackHolder(block: block, queue: queue)
+
+        if self.hasCancel.value
+        {
+            dispatch(holder) { $0() }
+        }
+        else {
+            self.cancelBlocks.append(holder)
         }
 
         return self

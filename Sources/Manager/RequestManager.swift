@@ -17,6 +17,7 @@ public class RequestManager
     func performRequest(request: Request) {
         fatalError("Abstract method")
     }
+
 }
 
 // ----------------------------------------------------------------------------
@@ -28,6 +29,8 @@ protocol RequestManagerDelegate: class
     func requestManager(requestManager: RequestManager, didReceiveResponse response: Response, forRequest request: Request)
 
     func requestManager(requestManager: RequestManager, didFailWithError error: ErrorType, forRequest request: Request)
+
+    func requestManager(requestManager: RequestManager, didCancelRequest request: Request)
 
 }
 

@@ -48,6 +48,10 @@ public class Invocation<Result>: InvocationType
         self.callbackDispatcher.dispatchError(error)
     }
 
+    func dispatchCancel() {
+        self.callbackDispatcher.dispatchCancel()
+    }
+
     func dispatchStart() {
         self.callbackDispatcher.dispatchStart()
     }
@@ -86,6 +90,12 @@ extension Invocation: ResultProvider
         return self
     }
 
+    public func cancel(queue: ResultQueue, block: Invocation.CancelBlock) -> Self
+    {
+        self.callbackDispatcher.cancel(queue, block: block)
+        return self
+    }
+
     public func start(queue: ResultQueue, block: Invocation.StartBlock) -> Self
     {
         self.callbackDispatcher.start(queue, block: block)
@@ -113,6 +123,8 @@ protocol InvocationType
     func dispatchResult(result: AnyObject)
 
     func dispatchError(error: InvocationError)
+
+    func dispatchCancel()
 
     func dispatchStart()
 
