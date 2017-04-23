@@ -10,7 +10,7 @@ class HTTPRequest
 {
 // MARK: - Construction
 
-    init(url: NSURL, headers: [String: String], body: Request)
+    init(url: URL, headers: [String: String], body: Request)
     {
         self.url = url
         self.headers = headers
@@ -19,7 +19,7 @@ class HTTPRequest
 
 // MARK: - Properties
 
-    let url: NSURL
+    let url: URL
 
     let headers: [String: String]
 

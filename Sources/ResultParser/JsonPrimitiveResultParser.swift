@@ -10,7 +10,7 @@ class JsonPrimitiveResultParser<ResultType: JsonPrimitive>: ResultParser
 {
 // MARK: Functions
 
-    func parse(object: AnyObject) -> ResultType? {
+    func parse(_ object: AnyObject) -> ResultType? {
         return object as? ResultType
     }
 
@@ -22,7 +22,7 @@ extension RPC
 {
 // MARK: Functions
 
-    public static func invocation<Result: JsonPrimitive>(method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
+    public static func invocation<Result: JsonPrimitive>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
     {
         return invocation(method, params: params, parser: JsonPrimitiveResultParser())
     }

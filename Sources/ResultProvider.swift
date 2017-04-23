@@ -14,29 +14,29 @@ public protocol ResultProvider
 {
 // MARK: - Functions
 
-    func result(queue: ResultQueue, block: ResultBlock) -> Self
+    func result(_ queue: ResultQueue, block: @escaping ResultBlock) -> Self
 
-    func error(queue: ResultQueue, block: ErrorBlock) -> Self
+    func error(_ queue: ResultQueue, block: @escaping ErrorBlock) -> Self
 
-    func cancel(queue: ResultQueue, block: CancelBlock) -> Self
+    func cancel(_ queue: ResultQueue, block: @escaping CancelBlock) -> Self
 
-    func start(queue: ResultQueue, block: StartBlock) -> Self
+    func start(_ queue: ResultQueue, block: @escaping StartBlock) -> Self
 
-    func finish(queue: ResultQueue, block: FinishBlock) -> Self
+    func finish(_ queue: ResultQueue, block: @escaping FinishBlock) -> Self
 
 // MARK: - Inner Types
 
     associatedtype ResultType
 
-    associatedtype ResultBlock = (r: ResultType) -> Void
+    typealias ResultBlock = (ResultType) -> Void
 
-    associatedtype ErrorBlock = (e: InvocationError) -> Void
+    typealias ErrorBlock = (InvocationError) -> Void
 
-    associatedtype CancelBlock = () -> Void
+    typealias CancelBlock = () -> Void
 
-    associatedtype StartBlock = () -> Void
+    typealias StartBlock = () -> Void
 
-    associatedtype FinishBlock = () -> Void
+    typealias FinishBlock = () -> Void
 
 }
 
@@ -44,9 +44,9 @@ public protocol ResultProvider
 
 public enum ResultQueue
 {
-    case MainQueue
-    case BackgroundQueue
-    case CustomQueue(queue: dispatch_queue_t)
+    case mainQueue
+    case backgroundQueue
+    case customQueue(queue: DispatchQueue)
 }
 
 // ----------------------------------------------------------------------------
@@ -55,24 +55,24 @@ extension ResultProvider
 {
 // MARK: - Functions
 
-    public func result(block: ResultBlock) -> Self {
-        return result(.BackgroundQueue, block: block)
+    public func result(_ block: @escaping ResultBlock) -> Self {
+        return result(.backgroundQueue, block: block)
     }
 
-    public func error(block: ErrorBlock) -> Self {
-        return error(.BackgroundQueue, block: block)
+    public func error(_ block: @escaping ErrorBlock) -> Self {
+        return error(.backgroundQueue, block: block)
     }
 
-    public func cancel(block: CancelBlock) -> Self {
-        return cancel(.BackgroundQueue, block: block)
+    public func cancel(_ block: @escaping CancelBlock) -> Self {
+        return cancel(.backgroundQueue, block: block)
     }
 
-    public func start(block: StartBlock) -> Self {
-        return start(.BackgroundQueue, block: block)
+    public func start(_ block: @escaping StartBlock) -> Self {
+        return start(.backgroundQueue, block: block)
     }
 
-    public func finish(block: FinishBlock) -> Self {
-        return finish(.BackgroundQueue, block: block)
+    public func finish(_ block: @escaping FinishBlock) -> Self {
+        return finish(.backgroundQueue, block: block)
     }
 
 }

@@ -6,7 +6,7 @@
 //
 // ----------------------------------------------------------------------------
 
-public class RequestManager
+open class RequestManager
 {
 // MARK: - Properties
 
@@ -14,7 +14,7 @@ public class RequestManager
 
 // MARK: - Functions
 
-    func performRequest(request: Request) {
+    func performRequest(_ request: Request) {
         fatalError("Abstract method")
     }
 
@@ -26,11 +26,11 @@ protocol RequestManagerDelegate: class
 {
 // MARK: - Functions
 
-    func requestManager(requestManager: RequestManager, didReceiveResponse response: Response, forRequest request: Request)
+    func requestManager(_ requestManager: RequestManager, didReceiveResponse response: Response, forRequest request: Request)
 
-    func requestManager(requestManager: RequestManager, didFailWithError error: ErrorType, forRequest request: Request)
+    func requestManager(_ requestManager: RequestManager, didFailWithError error: Error, forRequest request: Request)
 
-    func requestManager(requestManager: RequestManager, didCancelRequest request: Request)
+    func requestManager(_ requestManager: RequestManager, didCancelRequest request: Request)
 
 }
 

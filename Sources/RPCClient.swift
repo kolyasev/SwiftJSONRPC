@@ -6,11 +6,11 @@
 //
 // ----------------------------------------------------------------------------
 
-import Atomic
+// import Atomic
 
 // ----------------------------------------------------------------------------
 
-public class RPCClient
+open class RPCClient
 {
 // MARK: - Construction
 
@@ -21,7 +21,7 @@ public class RPCClient
         self.requestManager.delegate = self
     }
 
-    public convenience init(baseURL: NSURL)
+    public convenience init(baseURL: URL)
     {
         // Init http request manager
         let requestManager = HTTPRequestManager(baseURL: baseURL)
@@ -32,11 +32,11 @@ public class RPCClient
 
 // MARK: - Properties
 
-    public static var logEnabled: Bool =  false
+    open static var logEnabled: Bool =  false
 
 // MARK: - Public Functions
 
-    public func perform<R>(invocation: Invocation<R>) // TODO: ... -> Cancelable
+    open func perform<R>(_ invocation: Invocation<R>) // TODO: ... -> Cancelable
     {
         weak var weakSelf = self
         dispatch.async.bg
@@ -63,21 +63,21 @@ public class RPCClient
 
 // MARK: - Private Functions
 
-    private func dispatchResponse(response: Response, forRequest request: Request)
+    fileprivate func dispatchResponse(_ response: Response, forRequest request: Request)
     {
         assert(request.id == response.id)
 
         let identifier = response.id
-        if let invocation = self.invocations.value.removeValueForKey(identifier)
+        if let invocation = self.invocations.value.removeValue(forKey: identifier)
         {
             // Dispatch response
             switch response.body
             {
-                case .Success(let result):
+                case .success(let result):
                     invocation.dispatchResult(result)
 
-                case .Error(let error):
-                    invocation.dispatchError(InvocationError.RpcError(error: error))
+                case .error(let error):
+                    invocation.dispatchError(InvocationError.rpcError(error: error))
             }
 
             // Dispatch invocation finish blocks
@@ -85,25 +85,25 @@ public class RPCClient
         }
     }
 
-    private func dispatchError(error: ErrorType, forRequest request: Request)
+    fileprivate func dispatchError(_ error: Error, forRequest request: Request)
     {
         // TODO: Support notification type calls without identifiers
         if let identifier = request.id,
-           let invocation = self.invocations.value.removeValueForKey(identifier)
+           let invocation = self.invocations.value.removeValue(forKey: identifier)
         {
             // Dispatch error
-            invocation.dispatchError(InvocationError.ApplicationError(cause: error))
+            invocation.dispatchError(InvocationError.applicationError(cause: error))
 
             // Dispatch invocation finish blocks
             invocation.dispatchFinish()
         }
     }
 
-    private func dispatchCancel(forRequest request: Request)
+    fileprivate func dispatchCancel(forRequest request: Request)
     {
         // TODO: Support notification type calls without identifiers
         if let identifier = request.id,
-           let invocation = self.invocations.value.removeValueForKey(identifier)
+           let invocation = self.invocations.value.removeValue(forKey: identifier)
         {
             // Dispatch cancel
             invocation.dispatchCancel()
@@ -119,11 +119,11 @@ public class RPCClient
 
 // MARK: - Variables
 
-    private let requestManager: RequestManager
+    fileprivate let requestManager: RequestManager
 
-    private let invocationSeqNo = Atomic<Int>(1)
+    fileprivate let invocationSeqNo = Atomic<Int>(1)
 
-    private let invocations = Atomic<[String: InvocationType]>([:])
+    fileprivate let invocations = Atomic<[String: InvocationType]>([:])
 
 }
 
@@ -133,15 +133,15 @@ extension RPCClient: RequestManagerDelegate
 {
 // MARK: - Functions
 
-    func requestManager(requestManager: RequestManager, didReceiveResponse response: Response, forRequest request: Request) {
+    func requestManager(_ requestManager: RequestManager, didReceiveResponse response: Response, forRequest request: Request) {
         dispatchResponse(response, forRequest: request)
     }
 
-    func requestManager(requestManager: RequestManager, didFailWithError error: ErrorType, forRequest request: Request) {
+    func requestManager(_ requestManager: RequestManager, didFailWithError error: Error, forRequest request: Request) {
         dispatchError(error, forRequest: request)
     }
 
-    func requestManager(requestManager: RequestManager, didCancelRequest request: Request) {
+    func requestManager(_ requestManager: RequestManager, didCancelRequest request: Request) {
         dispatchCancel(forRequest: request)
     }
 

@@ -10,13 +10,13 @@ class Response
 {
 // MARK: Construction
 
-    init(response: AnyObject) throws
+    init(response: Any) throws
     {
         guard let json = (response as? [String: AnyObject]),
-              let version = (json[JsonKeys.JsonRPC] as? String) where (version == RPCClient.Version),
+              let version = (json[JsonKeys.JsonRPC] as? String), (version == RPCClient.Version),
               let id = (json[JsonKeys.Id] as? String)
         else {
-            throw ResponseError.InvalidFormat
+            throw ResponseError.invalidFormat
         }
 
         // Handle 'id' object
@@ -26,11 +26,11 @@ class Response
         if let result = json[JsonKeys.Result]
         {
             // Create success result body
-            self.body = .Success(result: result)
+            self.body = .success(result: result)
         }
         else
         // Handle 'error' object if exists
-        if let error   = (json[JsonKeys.Error] as? [String: AnyObject]),
+        if let error   = (json[JsonKeys.Error] as? [String: Any]),
            let code    = (error[JsonKeys.Code] as? Int),
            let message = (error[JsonKeys.Message] as? String)
         {
@@ -40,10 +40,10 @@ class Response
             let error = RPCError(code: code, message: message, data: data)
 
             // Create error body
-            self.body = .Error(error: error)
+            self.body = .error(error: error)
         }
         else {
-            throw ResponseError.InvalidFormat
+            throw ResponseError.invalidFormat
         }
     }
 
@@ -57,13 +57,13 @@ class Response
 
     enum Body
     {
-        case Success(result: AnyObject)
-        case Error(error: RPCError)
+        case success(result: AnyObject)
+        case error(error: RPCError)
     }
 
 // MARK: Constants
 
-    private struct JsonKeys
+    fileprivate struct JsonKeys
     {
         static let JsonRPC = "jsonrpc"
         static let Method = "method"
@@ -80,9 +80,9 @@ class Response
 
 // ----------------------------------------------------------------------------
 
-enum ResponseError: ErrorType
+enum ResponseError: Error
 {
-    case InvalidFormat
+    case invalidFormat
 }
 
 // ----------------------------------------------------------------------------

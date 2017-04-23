@@ -6,15 +6,15 @@
 //
 // ----------------------------------------------------------------------------
 
-import Atomic
+// import Atomic
 
 // ----------------------------------------------------------------------------
 
 public enum AuthorizationRequestResult
 {
-    case AuthorizationHeader(authorizationHeader: String)
-    case Error(error: ErrorType)
-    case Cancel
+    case authorizationHeader(authorizationHeader: String)
+    case error(error: Error)
+    case cancel
 }
 
 // ----------------------------------------------------------------------------
@@ -23,17 +23,17 @@ public protocol AuthorizedHTTPRequestManagerDelegate: class
 {
 // MARK: - Functions
 
-    func authorizedHTTPRequestManager(manager: AuthorizedHTTPRequestManager, requestAuthorizationWithCompletionHandler completionHandler: (AuthorizationRequestResult) -> Void)
+    func authorizedHTTPRequestManager(_ manager: AuthorizedHTTPRequestManager, requestAuthorizationWithCompletionHandler completionHandler: (AuthorizationRequestResult) -> Void)
 
 }
 
 // ----------------------------------------------------------------------------
 
-public class AuthorizedHTTPRequestManager: HTTPRequestManager
+open class AuthorizedHTTPRequestManager: HTTPRequestManager
 {
 // MARK: - Construction
 
-    public init(baseURL: NSURL, authorizationHeader: String)
+    public init(baseURL: URL, authorizationHeader: String)
     {
         // Init instance variables
         self.authorizationHeader = Atomic(authorizationHeader)
@@ -44,11 +44,11 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 
 // MARK: - Properties
 
-    public weak var authorizationDelegate: AuthorizedHTTPRequestManagerDelegate?
+    open weak var authorizationDelegate: AuthorizedHTTPRequestManagerDelegate?
 
 // MARK: - Inner Functions
 
-    override func buildHTTPRequest(request: Request) -> HTTPRequest
+    override func buildHTTPRequest(_ request: Request) -> HTTPRequest
     {
         let httpRequest = super.buildHTTPRequest(request)
         var headers = httpRequest.headers
@@ -62,7 +62,7 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
         return authorizedHttpRequest
     }
 
-    override func performHTTPRequest(httpRequest: HTTPRequest)
+    override func performHTTPRequest(_ httpRequest: HTTPRequest)
     {
         if !(self.hasActiveAuthorizationRequest.value)
         {
@@ -75,9 +75,9 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
         }
     }
 
-    override func dispatchHTTPResponse(httpResponse: HTTPResponse, forHTTPRequest httpRequest: HTTPRequest)
+    override func dispatchHTTPResponse(_ httpResponse: HTTPResponse, forHTTPRequest httpRequest: HTTPRequest)
     {
-        if case .Error(let error) = httpResponse.body.body where (error.code == HttpStatus.Unauthorized)
+        if case .error(let error) = httpResponse.body.body, (error.code == HttpStatus.Unauthorized)
         {
             dispatchAuthorizationError(nil, forHTTPRequest: httpRequest)
         }
@@ -86,7 +86,7 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
         }
     }
 
-    override func dispatchHTTPError(error: HTTPClientError, forHTTPRequest httpRequest: HTTPRequest)
+    override func dispatchHTTPError(_ error: HTTPClientError, forHTTPRequest httpRequest: HTTPRequest)
     {
         if (error.response?.statusCode == HttpStatus.Unauthorized)
         {
@@ -99,7 +99,7 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 
 // MARK: - Private Functions
 
-    private func dispatchAuthorizationError(error: ErrorType?, forHTTPRequest httpRequest: HTTPRequest)
+    fileprivate func dispatchAuthorizationError(_ error: Error?, forHTTPRequest httpRequest: HTTPRequest)
     {
         if !(self.hasActiveAuthorizationRequest.value)
         {
@@ -123,14 +123,14 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
         }
     }
 
-    private func performDelayedRequests()
+    fileprivate func performDelayedRequests()
     {
         for request in self.delayedRequests.swap([]) {
             performRequest(request)
         }
     }
 
-    private func requestAuthorization()
+    fileprivate func requestAuthorization()
     {
         if !(self.hasActiveAuthorizationRequest.swap(true))
         {
@@ -142,19 +142,19 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
         }
     }
 
-    private func handleAuthorizationRequestResult(result: AuthorizationRequestResult)
+    fileprivate func handleAuthorizationRequestResult(_ result: AuthorizationRequestResult)
     {
         switch result
         {
-            case .AuthorizationHeader(let authorizationHeader):
+            case .authorizationHeader(let authorizationHeader):
                 updateAuthorizationHeader(authorizationHeader)
 
-            case .Error(_), .Cancel:
+            case .error(_), .cancel:
                 cancelDelayedRequests()
         }
     }
 
-    private func updateAuthorizationHeader(authorizationHeader: String)
+    fileprivate func updateAuthorizationHeader(_ authorizationHeader: String)
     {
         self.authorizationHeader.value = authorizationHeader
 
@@ -162,7 +162,7 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
         performDelayedRequests()
     }
 
-    private func cancelDelayedRequests()
+    fileprivate func cancelDelayedRequests()
     {
         for request in self.delayedRequests.swap([]) {
             self.delegate?.requestManager(self, didCancelRequest: request)
@@ -175,21 +175,21 @@ public class AuthorizedHTTPRequestManager: HTTPRequestManager
 
 // MARK: - Constants
 
-    private struct Header {
+    fileprivate struct Header {
         static let Authorization = "Authorization"
     }
 
-    private struct HttpStatus {
+    fileprivate struct HttpStatus {
         static let Unauthorized = 401
     }
 
 // MARK: - Variables
 
-    private let authorizationHeader: Atomic<String>
+    fileprivate let authorizationHeader: Atomic<String>
 
-    private let hasActiveAuthorizationRequest = Atomic<Bool>(false)
+    fileprivate let hasActiveAuthorizationRequest = Atomic<Bool>(false)
 
-    private let delayedRequests = Atomic<[Request]>([])
+    fileprivate let delayedRequests = Atomic<[Request]>([])
 
 }
 

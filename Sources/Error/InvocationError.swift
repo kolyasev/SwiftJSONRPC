@@ -6,10 +6,10 @@
 //
 // ----------------------------------------------------------------------------
 
-public enum InvocationError: ErrorType
+public enum InvocationError: Error
 {
-    case ApplicationError(cause: ErrorType)
-    case RpcError(error: RPCError)
+    case applicationError(cause: Error)
+    case rpcError(error: RPCError)
 }
 
 // ----------------------------------------------------------------------------

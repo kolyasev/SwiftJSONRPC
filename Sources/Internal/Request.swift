@@ -31,13 +31,13 @@ class Request
     func buildBody() -> [String: AnyObject]
     {
         var body: [String: AnyObject] = [
-            JsonKeys.JsonRPC: RPCClient.Version,
-            JsonKeys.Method: self.method,
-            JsonKeys.Params: self.params,
+            JsonKeys.JsonRPC: RPCClient.Version as AnyObject,
+            JsonKeys.Method: self.method as AnyObject,
+            JsonKeys.Params: self.params as AnyObject,
         ]
 
         if let id = self.id {
-            body[JsonKeys.Id] = id
+            body[JsonKeys.Id] = id as AnyObject?
         }
         
         return body
@@ -45,7 +45,7 @@ class Request
 
 // MARK: Private Functions
 
-    private static func prepareParams(params: [String: AnyObject?]) -> [String: AnyObject]
+    fileprivate static func prepareParams(_ params: [String: AnyObject?]) -> [String: AnyObject]
     {
         var result: [String: AnyObject] = [:]
 
@@ -62,7 +62,7 @@ class Request
 
 // MARK: Constants
 
-    private struct JsonKeys
+    fileprivate struct JsonKeys
     {
         static let JsonRPC = "jsonrpc"
         static let Method = "method"

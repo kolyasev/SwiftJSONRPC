@@ -10,10 +10,12 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'Sources/**/*.swift'
+  s.source_files = 'Sources/**/*.swift', 'Libraries/**/*.swift'
 
   s.frameworks = 'Foundation'
-  s.dependency 'Alamofire', '~> 3.5'
-  s.dependency 'SwiftyJSON', '~> 2.4'
-  s.dependency 'Atomic', '~> 1.0'
+  s.dependency 'Alamofire', '~> 4.4'
+  s.dependency 'SwiftyJSON', '~> 3.1'
+
+  # TODO: Convert to Swift 3.x
+  # s.dependency 'Atomic', '~> 1.0'
 end

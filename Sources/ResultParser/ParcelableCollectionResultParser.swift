@@ -6,11 +6,11 @@
 //
 // ----------------------------------------------------------------------------
 
-class ParcelableCollectionResultParser<ResultType: CollectionType, ElementType: Parcelable where ResultType.Generator.Element == ElementType>: ResultParser
+class ParcelableCollectionResultParser<ResultType: Collection, ElementType: Parcelable>: ResultParser where ResultType.Iterator.Element == ElementType
 {
 // MARK: Functions
 
-    func parse(object: AnyObject) -> ResultType?
+    func parse(_ object: AnyObject) -> ResultType?
     {
         var result: ResultType?
 
@@ -30,7 +30,7 @@ extension RPC
 {
 // MARK: Functions
 
-    public static func invocation<Result: CollectionType, ElementType: Parcelable where Result.Generator.Element == ElementType>(method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
+    public static func invocation<Result: Collection, ElementType: Parcelable>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result> where Result.Iterator.Element == ElementType
     {
         return invocation(method, params: params, parser: ParcelableCollectionResultParser())
     }

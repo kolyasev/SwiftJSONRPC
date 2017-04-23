@@ -11,44 +11,44 @@ class dispatch
 {
     class async
     {
-        class func bg(block: dispatch_block_t) {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), block)
+        class func bg(_ block: @escaping ()->()) {
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background).async(execute: block)
         }
 
-        class func main(block: dispatch_block_t) {
-            dispatch_async(dispatch_get_main_queue(), block)
+        class func main(_ block: @escaping ()->()) {
+            DispatchQueue.main.async(execute: block)
         }
     }
 
     class sync
     {
-        class func bg(block: dispatch_block_t) {
-            dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), block)
+        class func bg(_ block: ()->()) {
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background).sync(execute: block)
         }
 
-        class func main(block: dispatch_block_t)
+        class func main(_ block: ()->())
         {
-            if NSThread.isMainThread() {
+            if Thread.isMainThread {
                 block()
             }
             else {
-                dispatch_sync(dispatch_get_main_queue(), block)
+                DispatchQueue.main.sync(execute: block)
             }
         }
     }
 
     // after by @stanislavfeldman
     class after {
-        class func bg(delay: Double, block: dispatch_block_t)
+        class func bg(_ delay: Double, block: @escaping ()->())
         {
-            let when = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
-            dispatch_after(when, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), block)
+            let when = DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background).asyncAfter(deadline: when, execute: block)
         }
 
-        class func main(delay: Double, block: dispatch_block_t)
+        class func main(_ delay: Double, block: @escaping ()->())
         {
-            let when = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
-            dispatch_after(when, dispatch_get_main_queue(), block)
+            let when = DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: when, execute: block)
         }
     }
 }

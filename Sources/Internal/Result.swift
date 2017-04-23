@@ -10,8 +10,8 @@ enum Result<V, E>
 {
 // MARK: - Construction
 
-    case Success(V)
-    case Error(E)
+    case success(V)
+    case error(E)
 
 }
 

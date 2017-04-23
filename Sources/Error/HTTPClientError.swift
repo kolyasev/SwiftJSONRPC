@@ -10,7 +10,7 @@ import Foundation
 
 // ----------------------------------------------------------------------------
 
-struct HTTPClientError: ErrorType
+struct HTTPClientError: Error
 {
 // MARK: - Construction
 
@@ -18,11 +18,11 @@ struct HTTPClientError: ErrorType
 
 // MARK: - Properties
 
-    let cause: ErrorType
+    let cause: Error
 
-    let request: NSURLRequest?
+    let request: URLRequest?
 
-    let response: NSHTTPURLResponse?
+    let response: HTTPURLResponse?
 
 // MARK: - Functions
 

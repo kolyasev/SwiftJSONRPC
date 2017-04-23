@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 import Foundation
-import Atomic
+// import Atomic
 
 // ----------------------------------------------------------------------------
 
@@ -15,21 +15,21 @@ class CallbackDispatcher<Result>
 {
 // MARK: - Functions
 
-    func dispatchResult(result: Result)
+    func dispatchResult(_ result: Result)
     {
         self.hasResult.value = result
 
         for resultBlock in self.resultBlocks {
-            dispatch(resultBlock) { $0(r: result) }
+            dispatch(resultBlock) { $0(result) }
         }
     }
 
-    func dispatchError(error: InvocationError)
+    func dispatchError(_ error: InvocationError)
     {
         self.hasError.value = error
 
         for errorBlock in self.errorBlocks {
-            dispatch(errorBlock) { $0(e: error) }
+            dispatch(errorBlock) { $0(error) }
         }
     }
 
@@ -62,37 +62,37 @@ class CallbackDispatcher<Result>
 
 // MARK: - Private Functions
 
-    private func dispatch<B>(holder: CallbackHolder<B>, block: (B) -> Void)
+    fileprivate func dispatch<B>(_ holder: CallbackHolder<B>, block: (B) -> Void)
     {
         let dispatchQueue = holder.queue.dispatchQueue()
-        dispatch_sync(dispatchQueue) {
+        dispatchQueue.sync {
             block(holder.block)
         }
     }
 
 // MARK: - Variables: Callbacks
 
-    private var resultBlocks: [CallbackHolder<CallbackDispatcher.ResultBlock>] = []
+    fileprivate var resultBlocks: [CallbackHolder<CallbackDispatcher.ResultBlock>] = []
 
-    private var errorBlocks: [CallbackHolder<CallbackDispatcher.ErrorBlock>] = []
+    fileprivate var errorBlocks: [CallbackHolder<CallbackDispatcher.ErrorBlock>] = []
 
-    private var cancelBlocks: [CallbackHolder<CallbackDispatcher.CancelBlock>] = []
+    fileprivate var cancelBlocks: [CallbackHolder<CallbackDispatcher.CancelBlock>] = []
 
-    private var startBlocks: [CallbackHolder<CallbackDispatcher.StartBlock>] = []
+    fileprivate var startBlocks: [CallbackHolder<CallbackDispatcher.StartBlock>] = []
 
-    private var finishBlocks: [CallbackHolder<CallbackDispatcher.FinishBlock>] = []
+    fileprivate var finishBlocks: [CallbackHolder<CallbackDispatcher.FinishBlock>] = []
 
 // MARK: - Variables: State
 
-    private let hasStart = Atomic<Bool>(false)
+    fileprivate let hasStart = Atomic<Bool>(false)
 
-    private let hasFinish = Atomic<Bool>(false)
+    fileprivate let hasFinish = Atomic<Bool>(false)
 
-    private let hasResult = Atomic<Result?>(nil)
+    fileprivate let hasResult = Atomic<Result?>(nil)
 
-    private let hasError = Atomic<InvocationError?>(nil)
+    fileprivate let hasError = Atomic<InvocationError?>(nil)
 
-    private let hasCancel = Atomic<Bool>(false)
+    fileprivate let hasCancel = Atomic<Bool>(false)
 
 }
 
@@ -102,13 +102,13 @@ extension CallbackDispatcher: ResultProvider
 {
 // MARK: - Functions
 
-    func result(queue: ResultQueue, block: CallbackDispatcher.ResultBlock) -> Self
+    func result(_ queue: ResultQueue, block: @escaping CallbackDispatcher.ResultBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
         if let result = self.hasResult.value
         {
-            dispatch(holder) { $0(r: result) }
+            dispatch(holder) { $0(result) }
         }
         else {
             self.resultBlocks.append(holder)
@@ -117,13 +117,13 @@ extension CallbackDispatcher: ResultProvider
         return self
     }
 
-    func error(queue: ResultQueue, block: CallbackDispatcher.ErrorBlock) -> Self
+    func error(_ queue: ResultQueue, block: @escaping CallbackDispatcher.ErrorBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
         if let error = self.hasError.value
         {
-            dispatch(holder) { $0(e: error) }
+            dispatch(holder) { $0(error) }
         }
         else {
             self.errorBlocks.append(holder)
@@ -132,7 +132,7 @@ extension CallbackDispatcher: ResultProvider
         return self
     }
 
-    func cancel(queue: ResultQueue, block: CallbackDispatcher.CancelBlock) -> Self
+    func cancel(_ queue: ResultQueue, block: @escaping CallbackDispatcher.CancelBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
@@ -147,7 +147,7 @@ extension CallbackDispatcher: ResultProvider
         return self
     }
 
-    func start(queue: ResultQueue, block: CallbackDispatcher.StartBlock) -> Self
+    func start(_ queue: ResultQueue, block: @escaping CallbackDispatcher.StartBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
@@ -162,7 +162,7 @@ extension CallbackDispatcher: ResultProvider
         return self
     }
 
-    func finish(queue: ResultQueue, block: CallbackDispatcher.FinishBlock) -> Self
+    func finish(_ queue: ResultQueue, block: @escaping CallbackDispatcher.FinishBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
@@ -177,7 +177,7 @@ extension CallbackDispatcher: ResultProvider
         return self
     }
 
-// MARK: - Functions
+// MARK: - Inner Types
 
     typealias ResultType = Result
 
@@ -201,19 +201,19 @@ extension ResultQueue
 {
 // MARK: - Functions
 
-    private func dispatchQueue() -> dispatch_queue_t
+    fileprivate func dispatchQueue() -> DispatchQueue
     {
-        let result: dispatch_queue_t
+        let result: DispatchQueue
 
         switch self
         {
-            case .MainQueue:
-                result = dispatch_get_main_queue()
+            case .mainQueue:
+                result = DispatchQueue.main
 
-            case .BackgroundQueue:
-                result = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+            case .backgroundQueue:
+                result = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background)
 
-            case .CustomQueue(let queue):
+            case .customQueue(let queue):
                 result = queue
         }
 

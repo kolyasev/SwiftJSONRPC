@@ -6,11 +6,11 @@
 //
 // ----------------------------------------------------------------------------
 
-public class RPCError
+open class RPCError
 {
 // MARK: Construction
 
-    init(code: Int, message: String, data: AnyObject?)
+    init(code: Int, message: String, data: Any?)
     {
         // Init instance variables
         self.code = code
@@ -20,11 +20,11 @@ public class RPCError
 
 // MARK: Properties
 
-    public let code: Int
+    open let code: Int
 
-    public let message: String
+    open let message: String
 
-    public let data: AnyObject?
+    open let data: Any?
 
 }
 

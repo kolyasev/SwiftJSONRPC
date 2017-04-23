@@ -18,7 +18,7 @@ class HTTPClient
 
 // MARK: - Functions
 
-    func performRequest(request: HTTPRequest)
+    func performRequest(_ request: HTTPRequest)
     {
         weak var weakSelf = self
 
@@ -31,22 +31,22 @@ class HTTPClient
         }
 
         // Perform request
-        Alamofire.request(.POST, request.url, parameters: body, encoding: .JSON, headers: request.headers)
+        Alamofire.request(request.url, method: .post, parameters: body, encoding: JSONEncoding.default, headers: request.headers)
             .validate()
             .responseJSON(queue: responseQueue()) { result in
                 switch result.result
                 {
-                    case .Success(let json):
+                    case .success(let json):
                         // Log response
                         if RPCClient.logEnabled {
-                            NSLog("Response: '%@'", json.description)
+                            NSLog("Response: '%@'", String(describing: json))
                         }
 
                         // Try to parse response
                         do {
                             let body = try Response(response: json)
                             let httpResponse = HTTPResponse(
-                                url: result.response?.URL ?? request.url,
+                                url: result.response?.url ?? request.url,
                                 headers: (result.response?.allHeaderFields as? [String: String]) ?? [:],
                                 body: body
                             )
@@ -57,25 +57,25 @@ class HTTPClient
                             weakSelf?.dispatchError(error, forRequest: request)
                         }
 
-                    case .Failure(let error):
+                    case .failure(let error):
                         let error = HTTPClientError(cause: error, request: result.request, response: result.response)
                         weakSelf?.dispatchError(error, forRequest: request)
                 }
         }
     }
 
-    func dispatchResponse(response: HTTPResponse, forRequest request: HTTPRequest) {
+    func dispatchResponse(_ response: HTTPResponse, forRequest request: HTTPRequest) {
         self.delegate?.httpClient(self, didReceiveResponse: response, forRequest: request)
     }
 
-    func dispatchError(error: HTTPClientError, forRequest request: HTTPRequest) {
+    func dispatchError(_ error: HTTPClientError, forRequest request: HTTPRequest) {
         self.delegate?.httpClient(self, didFailWithError: error, forRequest: request)
     }
 
 // MARK: - Private Functions
 
-    private func responseQueue() -> dispatch_queue_t {
-        return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+    fileprivate func responseQueue() -> DispatchQueue {
+        return DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default)
     }
 
 }
@@ -86,9 +86,9 @@ protocol HTTPClientDelegate: class
 {
 // MARK: - Functions
 
-    func httpClient(client: HTTPClient, didReceiveResponse response: HTTPResponse, forRequest request: HTTPRequest)
+    func httpClient(_ client: HTTPClient, didReceiveResponse response: HTTPResponse, forRequest request: HTTPRequest)
 
-    func httpClient(client: HTTPClient, didFailWithError error: HTTPClientError, forRequest request: HTTPRequest)
+    func httpClient(_ client: HTTPClient, didFailWithError error: HTTPClientError, forRequest request: HTTPRequest)
 
 }
 

@@ -6,11 +6,11 @@
 //
 // ----------------------------------------------------------------------------
 
-public class RPC
+open class RPC
 {
 // MARK: - Public Functions
 
-    public static func invocation<Result, Parser: ResultParser where Parser.ResultType == Result>(method: String, params: Invocation<Result>.Params?, parser: Parser) -> Invocation<Result>
+    open static func invocation<Result, Parser: ResultParser>(_ method: String, params: Invocation<Result>.Params?, parser: Parser) -> Invocation<Result> where Parser.ResultType == Result
     {
         let params = params ?? [:]
 

@@ -10,7 +10,7 @@ public protocol ResultParser
 {
 // MARK: - Functions
 
-    func parse(object: AnyObject) -> ResultType?
+    func parse(_ object: AnyObject) -> ResultType?
 
 // MARK: - Inner Types
 
@@ -20,9 +20,9 @@ public protocol ResultParser
 
 // ----------------------------------------------------------------------------
 
-public enum ResultParserError: ErrorType
+public enum ResultParserError: Error
 {
-    case InvalidResponseFormat(object: AnyObject)
+    case invalidResponseFormat(object: AnyObject)
 }
 
 // ----------------------------------------------------------------------------
@@ -31,7 +31,7 @@ class AnyResultParser<T>: ResultParser
 {
 // MARK: - Construction
 
-    init<P: ResultParser where P.ResultType == T>(_ base: P)
+    init<P: ResultParser>(_ base: P) where P.ResultType == T
     {
         // Init instance
         _parse = base.parse
@@ -39,7 +39,7 @@ class AnyResultParser<T>: ResultParser
 
 // MARK: - Functions
 
-    func parse(object: AnyObject) -> ResultType? {
+    func parse(_ object: AnyObject) -> ResultType? {
         return _parse(object)
     }
 
@@ -49,7 +49,7 @@ class AnyResultParser<T>: ResultParser
 
 // MARK: - Variables
 
-    private let _parse: (AnyObject) -> ResultType?
+    fileprivate let _parse: (AnyObject) -> ResultType?
 
 }
 

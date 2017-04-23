@@ -10,7 +10,7 @@ class ParcelableResultParser<ResultType: Parcelable>: ResultParser
 {
 // MARK: Functions
 
-    func parse(object: AnyObject) -> ResultType?
+    func parse(_ object: AnyObject) -> ResultType?
     {
         var result: ResultType?
 
@@ -29,7 +29,7 @@ extension RPC
 {
 // MARK: Functions
 
-    public static func invocation<Result: Parcelable>(method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
+    public static func invocation<Result: Parcelable>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
     {
         return invocation(method, params: params, parser: ParcelableResultParser())
     }
