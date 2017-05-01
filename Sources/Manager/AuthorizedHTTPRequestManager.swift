@@ -23,7 +23,7 @@ public protocol AuthorizedHTTPRequestManagerDelegate: class
 {
 // MARK: - Functions
 
-    func authorizedHTTPRequestManager(_ manager: AuthorizedHTTPRequestManager, requestAuthorizationWithCompletionHandler completionHandler: (AuthorizationRequestResult) -> Void)
+    func authorizedHTTPRequestManager(_ manager: AuthorizedHTTPRequestManager, requestAuthorizationWithCompletionHandler completionHandler: @escaping (AuthorizationRequestResult) -> Void)
 
 }
 
