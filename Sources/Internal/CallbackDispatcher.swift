@@ -102,6 +102,7 @@ extension CallbackDispatcher: ResultProvider
 {
 // MARK: - Functions
 
+    @discardableResult
     func result(_ queue: ResultQueue, block: @escaping CallbackDispatcher.ResultBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)
@@ -117,6 +118,7 @@ extension CallbackDispatcher: ResultProvider
         return self
     }
 
+    @discardableResult
     func error(_ queue: ResultQueue, block: @escaping CallbackDispatcher.ErrorBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)
@@ -132,6 +134,7 @@ extension CallbackDispatcher: ResultProvider
         return self
     }
 
+    @discardableResult
     func cancel(_ queue: ResultQueue, block: @escaping CallbackDispatcher.CancelBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)
@@ -147,6 +150,7 @@ extension CallbackDispatcher: ResultProvider
         return self
     }
 
+    @discardableResult
     func start(_ queue: ResultQueue, block: @escaping CallbackDispatcher.StartBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)
@@ -162,6 +166,7 @@ extension CallbackDispatcher: ResultProvider
         return self
     }
 
+    @discardableResult
     func finish(_ queue: ResultQueue, block: @escaping CallbackDispatcher.FinishBlock) -> Self
     {
         let holder = CallbackHolder(block: block, queue: queue)

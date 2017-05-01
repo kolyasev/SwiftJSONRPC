@@ -78,30 +78,35 @@ extension Invocation: ResultProvider
 {
 // MARK: - Functions
 
+    @discardableResult
     public func result(_ queue: ResultQueue, block: @escaping Invocation.ResultBlock) -> Self
     {
         self.callbackDispatcher.result(queue, block: block)
         return self
     }
 
+    @discardableResult
     public func error(_ queue: ResultQueue, block: @escaping Invocation.ErrorBlock) -> Self
     {
         self.callbackDispatcher.error(queue, block: block)
         return self
     }
 
+    @discardableResult
     public func cancel(_ queue: ResultQueue, block: @escaping Invocation.CancelBlock) -> Self
     {
         self.callbackDispatcher.cancel(queue, block: block)
         return self
     }
 
+    @discardableResult
     public func start(_ queue: ResultQueue, block: @escaping Invocation.StartBlock) -> Self
     {
         self.callbackDispatcher.start(queue, block: block)
         return self
     }
 
+    @discardableResult
     public func finish(_ queue: ResultQueue, block: @escaping Invocation.FinishBlock) -> Self
     {
         self.callbackDispatcher.finish(queue, block: block)
