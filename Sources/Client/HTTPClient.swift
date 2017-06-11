@@ -75,7 +75,7 @@ class HTTPClient
 // MARK: - Private Functions
 
     fileprivate func responseQueue() -> DispatchQueue {
-        return DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default)
+        return DispatchQueue.global()
     }
 
 }

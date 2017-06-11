@@ -39,7 +39,7 @@ open class RPCClient
     open func perform<R>(_ invocation: Invocation<R>) // TODO: ... -> Cancelable
     {
         weak var weakSelf = self
-        dispatch.async.bg
+        DispatchQueue.global().async
         {
             guard let instance = weakSelf else { return }
 

@@ -216,7 +216,7 @@ extension ResultQueue
                 result = DispatchQueue.main
 
             case .backgroundQueue:
-                result = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background)
+                result = DispatchQueue.global()
 
             case .customQueue(let queue):
                 result = queue
