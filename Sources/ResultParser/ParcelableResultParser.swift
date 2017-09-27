@@ -25,13 +25,13 @@ class ParcelableResultParser<ResultType: Parcelable>: ResultParser
 
 // ----------------------------------------------------------------------------
 
-extension RPC
+extension JSONRPCService
 {
 // MARK: Functions
 
-    public static func invocation<Result: Parcelable>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
+    public func perform<Result: Parcelable>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
     {
-        return invocation(method, params: params, parser: ParcelableResultParser())
+        return perform(method, params: params, parser: ParcelableResultParser())
     }
 
 }

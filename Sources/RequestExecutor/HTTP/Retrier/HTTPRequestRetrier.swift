@@ -1,17 +1,16 @@
 // ----------------------------------------------------------------------------
 //
-//  Result.swift
+//  HTTPRequestRetrier.swift
 //
 //  @author Denis Kolyasev <kolyasev@gmail.com>
 //
 // ----------------------------------------------------------------------------
 
-enum Result<V, E>
+public protocol HTTPRequestRetrier
 {
-// MARK: - Construction
+// MARK: - Functions
 
-    case success(V)
-    case error(E)
+    func should(executor: HTTPRequestExecutor, retryRequest request: HTTPRequest, afterError error: HTTPRequestExecutorError) -> Bool
 
 }
 

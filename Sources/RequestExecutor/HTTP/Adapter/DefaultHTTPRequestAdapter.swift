@@ -1,29 +1,22 @@
 // ----------------------------------------------------------------------------
 //
-//  HTTPResponse.swift
+//  DefaultHTTPRequestAdapter.swift
 //
 //  @author Denis Kolyasev <kolyasev@gmail.com>
 //
 // ----------------------------------------------------------------------------
 
-class HTTPResponse
+open class DefaultHTTPRequestAdapter: HTTPRequestAdapter
 {
 // MARK: - Construction
 
-    init(url: URL, headers: [String: String], body: Response)
-    {
-        self.url = url
-        self.headers = headers
-        self.body = body
+    public init() { }
+
+// MARK: - Functions
+
+    open func adapt(request: HTTPRequest) -> HTTPRequest {
+        return request
     }
-
-// MARK: - Construction
-
-    let url: URL
-
-    let headers: [String: String]
-
-    let body: Response
 
 }
 

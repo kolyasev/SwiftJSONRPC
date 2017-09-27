@@ -6,7 +6,7 @@
 //
 // ----------------------------------------------------------------------------
 
-class Request
+public class Request
 {
 // MARK: Construction
 
@@ -20,15 +20,15 @@ class Request
 
 // MARK: Properties
 
-    let id: String?
+    public let id: String?
 
-    let method: String
+    public let method: String
 
-    let params: [String: AnyObject]
+    public let params: [String: AnyObject]
 
 // MARK: Functions
 
-    func buildBody() -> [String: AnyObject]
+    public func buildBody() -> [String: AnyObject]
     {
         var body: [String: AnyObject] = [
             JsonKeys.JsonRPC: RPCClient.Version as AnyObject,

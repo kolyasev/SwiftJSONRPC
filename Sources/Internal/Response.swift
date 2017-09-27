@@ -6,7 +6,7 @@
 //
 // ----------------------------------------------------------------------------
 
-class Response
+public class Response
 {
 // MARK: Construction
 
@@ -49,13 +49,13 @@ class Response
 
 // MARK: - Properties
 
-    let id: String
+    public let id: String
 
-    let body: Body
+    public let body: Body
 
 // MARK: - Inner Types
 
-    enum Body
+    public enum Body
     {
         case success(result: AnyObject)
         case error(error: RPCError)

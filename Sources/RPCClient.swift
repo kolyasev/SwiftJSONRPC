@@ -14,20 +14,10 @@ open class RPCClient
 {
 // MARK: - Construction
 
-    public init(requestManager: RequestManager)
+    public init(requestExecutor: RequestExecutor)
     {
         // Init instance variables
-        self.requestManager = requestManager
-        self.requestManager.delegate = self
-    }
-
-    public convenience init(baseURL: URL)
-    {
-        // Init http request manager
-        let requestManager = HTTPRequestManager(baseURL: baseURL)
-
-        // Parent processing
-        self.init(requestManager: requestManager)
+        self.requestExecutor = requestExecutor
     }
 
 // MARK: - Properties
@@ -57,13 +47,31 @@ open class RPCClient
             invocation.dispatchStart()
 
             // Perform request
-            instance.requestManager.performRequest(request)
+            instance.perform(request: request)
         }
     }
 
 // MARK: - Private Functions
 
-    fileprivate func dispatchResponse(_ response: Response, forRequest request: Request)
+    private func perform(request: Request)
+    {
+        weak var weakSelf = self
+        self.requestExecutor.execute(request: request) { result in
+            switch result
+            {
+                case .response(let response):
+                    weakSelf?.dispatch(response: response, forRequest: request)
+
+                case .error(let error):
+                    weakSelf?.dispatch(error: error, forRequest: request)
+
+                case .cancel:
+                    weakSelf?.dispatchCancel(forRequest: request)
+            }
+        }
+    }
+
+    private func dispatch(response: Response, forRequest request: Request)
     {
         assert(request.id == response.id)
 
@@ -85,7 +93,7 @@ open class RPCClient
         }
     }
 
-    fileprivate func dispatchError(_ error: Error, forRequest request: Request)
+    private func dispatch(error: Error, forRequest request: Request)
     {
         // TODO: Support notification type calls without identifiers
         if let identifier = request.id,
@@ -99,7 +107,7 @@ open class RPCClient
         }
     }
 
-    fileprivate func dispatchCancel(forRequest request: Request)
+    private func dispatchCancel(forRequest request: Request)
     {
         // TODO: Support notification type calls without identifiers
         if let identifier = request.id,
@@ -119,31 +127,11 @@ open class RPCClient
 
 // MARK: - Variables
 
-    fileprivate let requestManager: RequestManager
+    fileprivate let requestExecutor: RequestExecutor
 
     fileprivate let invocationSeqNo = Atomic<Int>(1)
 
     fileprivate let invocations = Atomic<[String: InvocationType]>([:])
-
-}
-
-// ----------------------------------------------------------------------------
-
-extension RPCClient: RequestManagerDelegate
-{
-// MARK: - Functions
-
-    func requestManager(_ requestManager: RequestManager, didReceiveResponse response: Response, forRequest request: Request) {
-        dispatchResponse(response, forRequest: request)
-    }
-
-    func requestManager(_ requestManager: RequestManager, didFailWithError error: Error, forRequest request: Request) {
-        dispatchError(error, forRequest: request)
-    }
-
-    func requestManager(_ requestManager: RequestManager, didCancelRequest request: Request) {
-        dispatchCancel(forRequest: request)
-    }
 
 }
 

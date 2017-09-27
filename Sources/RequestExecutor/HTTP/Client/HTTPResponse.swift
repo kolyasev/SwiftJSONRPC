@@ -1,29 +1,22 @@
 // ----------------------------------------------------------------------------
 //
-//  HTTPRequest.swift
+//  HTTPResponse.swift
 //
 //  @author Denis Kolyasev <kolyasev@gmail.com>
 //
 // ----------------------------------------------------------------------------
 
-class HTTPRequest
+public struct HTTPResponse
 {
-// MARK: - Construction
-
-    init(url: URL, headers: [String: String], body: Request)
-    {
-        self.url = url
-        self.headers = headers
-        self.body = body
-    }
-
 // MARK: - Properties
 
-    let url: URL
+    public var url: URL
 
-    let headers: [String: String]
+    public var code: Int
 
-    let body: Request
+    public var headers: [String: String]
+
+    public var body: Data
 
 }
 

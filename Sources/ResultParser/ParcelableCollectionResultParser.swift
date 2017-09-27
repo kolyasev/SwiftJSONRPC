@@ -26,13 +26,13 @@ class ParcelableCollectionResultParser<ResultType: Collection, ElementType: Parc
 
 // ----------------------------------------------------------------------------
 
-extension RPC
+extension JSONRPCService
 {
 // MARK: Functions
 
-    public static func invocation<Result: Collection, ElementType: Parcelable>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result> where Result.Iterator.Element == ElementType
+    public func perform<Result: Collection, ElementType: Parcelable>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result> where Result.Iterator.Element == ElementType
     {
-        return invocation(method, params: params, parser: ParcelableCollectionResultParser())
+        return perform(method, params: params, parser: ParcelableCollectionResultParser())
     }
 
 }

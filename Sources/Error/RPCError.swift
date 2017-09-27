@@ -6,7 +6,7 @@
 //
 // ----------------------------------------------------------------------------
 
-open class RPCError
+public class RPCError
 {
 // MARK: Construction
 
@@ -20,11 +20,11 @@ open class RPCError
 
 // MARK: Properties
 
-    open let code: Int
+    public let code: Int
 
-    open let message: String
+    public let message: String
 
-    open let data: Any?
+    public let data: Any?
 
 }
 

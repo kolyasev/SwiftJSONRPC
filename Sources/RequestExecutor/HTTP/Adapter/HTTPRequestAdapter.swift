@@ -1,17 +1,16 @@
 // ----------------------------------------------------------------------------
 //
-//  Result.swift
+//  HTTPRequestAdapter.swift
 //
 //  @author Denis Kolyasev <kolyasev@gmail.com>
 //
 // ----------------------------------------------------------------------------
 
-enum Result<V, E>
+public protocol HTTPRequestAdapter
 {
-// MARK: - Construction
+// MARK: - Functions
 
-    case success(V)
-    case error(E)
+    func adapt(request: HTTPRequest) throws -> HTTPRequest
 
 }
 

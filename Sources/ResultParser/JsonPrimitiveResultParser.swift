@@ -18,13 +18,13 @@ class JsonPrimitiveResultParser<ResultType: JsonPrimitive>: ResultParser
 
 // ----------------------------------------------------------------------------
 
-extension RPC
+extension JSONRPCService
 {
 // MARK: Functions
 
-    public static func invocation<Result: JsonPrimitive>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
+    public func perform<Result: JsonPrimitive>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
     {
-        return invocation(method, params: params, parser: JsonPrimitiveResultParser())
+        return perform(method, params: params, parser: JsonPrimitiveResultParser())
     }
 
 }
