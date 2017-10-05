@@ -2,8 +2,8 @@
 //  SwiftJSONRPC.h
 //  SwiftJSONRPC
 //
-//  Created by Denis Kolyasev on 28/04/16.
-//  Copyright © 2016 Denis Kolyasev. All rights reserved.
+//  Created by Denis Kolyasev on 10/5/17.
+//  Copyright © 2017 Denis Kolyasev. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

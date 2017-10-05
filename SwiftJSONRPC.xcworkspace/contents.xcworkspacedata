@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:SwiftJSONRPC.xcodeproj">
+      location = "container:SwiftJSONRPC.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Tests/Pods/Pods.xcodeproj">
+      location = "group:Carthage/Checkouts/Alamofire/Alamofire.xcodeproj">
    </FileRef>
 </Workspace>
