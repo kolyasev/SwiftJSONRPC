@@ -10,7 +10,7 @@ public protocol Parcelable
 {
 // MARK: - Construction
 
-    init(params: [String : Any])
+    init(params: [String : Any]) throws
 
 }
 

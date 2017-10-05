@@ -7,16 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6664619A1C5526B90057BB6A /* SwiftJSONRPCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666461981C5526B20057BB6A /* SwiftJSONRPCTests.swift */; };
+		35BC9BB41F85042500881541 /* HTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9BB31F85042500881541 /* HTTPClientTests.swift */; };
+		35BC9BB61F85052900881541 /* HTTPRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9BB51F85052900881541 /* HTTPRequestTests.swift */; };
+		35BC9BBC1F864EA200881541 /* ResultDispatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9BBB1F864EA200881541 /* ResultDispatcherTests.swift */; };
 		FA139612FA2D04C738E50D9E /* Pods_SwiftJSONRPCTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CD4146650E4C3DB64AB2C2D /* Pods_SwiftJSONRPCTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1CD4146650E4C3DB64AB2C2D /* Pods_SwiftJSONRPCTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftJSONRPCTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		35BC9BB31F85042500881541 /* HTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientTests.swift; sourceTree = "<group>"; };
+		35BC9BB51F85052900881541 /* HTTPRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestTests.swift; sourceTree = "<group>"; };
+		35BC9BBB1F864EA200881541 /* ResultDispatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDispatcherTests.swift; sourceTree = "<group>"; };
 		51B7D0333DF71965379A7980 /* Pods-SwiftJSONRPCTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftJSONRPCTests.release.xcconfig"; path = "Tests/Pods/Target Support Files/Pods-SwiftJSONRPCTests/Pods-SwiftJSONRPCTests.release.xcconfig"; sourceTree = "<group>"; };
 		6664618E1C55266D0057BB6A /* SwiftJSONRPCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftJSONRPCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		666461961C5526AB0057BB6A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		666461981C5526B20057BB6A /* SwiftJSONRPCTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftJSONRPCTests.swift; sourceTree = "<group>"; };
 		66967C9A1CD2517B00FB219D /* SwiftJSONRPC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftJSONRPC.h; sourceTree = "<group>"; };
 		66967C9C1CD2517B00FB219D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4BA3440770E5185B58A6E8A /* Pods-SwiftJSONRPCTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftJSONRPCTests.debug.xcconfig"; path = "Tests/Pods/Target Support Files/Pods-SwiftJSONRPCTests/Pods-SwiftJSONRPCTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -65,7 +69,9 @@
 			isa = PBXGroup;
 			children = (
 				666461961C5526AB0057BB6A /* Info.plist */,
-				666461981C5526B20057BB6A /* SwiftJSONRPCTests.swift */,
+				35BC9BB31F85042500881541 /* HTTPClientTests.swift */,
+				35BC9BB51F85052900881541 /* HTTPRequestTests.swift */,
+				35BC9BBB1F864EA200881541 /* ResultDispatcherTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -118,7 +124,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Denis Kolyasev";
 				TargetAttributes = {
 					6664618D1C55266D0057BB6A = {
@@ -161,13 +167,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SwiftJSONRPCTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8A2EE9382090B3EBAB1789DA /* [CP] Copy Pods Resources */ = {
@@ -191,9 +200,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Tests/Pods/Target Support Files/Pods-SwiftJSONRPCTests/Pods-SwiftJSONRPCTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftJSONRPC/SwiftJSONRPC.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftJSONRPC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -207,7 +223,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6664619A1C5526B90057BB6A /* SwiftJSONRPCTests.swift in Sources */,
+				35BC9BB41F85042500881541 /* HTTPClientTests.swift in Sources */,
+				35BC9BBC1F864EA200881541 /* ResultDispatcherTests.swift in Sources */,
+				35BC9BB61F85052900881541 /* HTTPRequestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,13 +240,21 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -270,13 +296,21 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -296,6 +330,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";

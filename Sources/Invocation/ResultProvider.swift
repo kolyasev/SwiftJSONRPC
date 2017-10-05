@@ -10,38 +10,48 @@ import Foundation
 
 // ----------------------------------------------------------------------------
 
-public protocol ResultProvider
+public class ResultProvider<R>
 {
 // MARK: - Functions
 
     @discardableResult
-    func result(_ queue: ResultQueue, block: @escaping ResultBlock) -> Self
+    public func result(_ queue: ResultQueue, block: @escaping ResultBlock) -> Self {
+        fatalError("Not implemented.")
+    }
 
     @discardableResult
-    func error(_ queue: ResultQueue, block: @escaping ErrorBlock) -> Self
+    public func error(_ queue: ResultQueue, block: @escaping ErrorBlock) -> Self {
+        fatalError("Not implemented.")
+    }
 
     @discardableResult
-    func cancel(_ queue: ResultQueue, block: @escaping CancelBlock) -> Self
+    public func cancel(_ queue: ResultQueue, block: @escaping CancelBlock) -> Self {
+        fatalError("Not implemented.")
+    }
 
     @discardableResult
-    func start(_ queue: ResultQueue, block: @escaping StartBlock) -> Self
+    public func start(_ queue: ResultQueue, block: @escaping StartBlock) -> Self {
+        fatalError("Not implemented.")
+    }
 
     @discardableResult
-    func finish(_ queue: ResultQueue, block: @escaping FinishBlock) -> Self
+    public func finish(_ queue: ResultQueue, block: @escaping FinishBlock) -> Self {
+        fatalError("Not implemented.")
+    }
 
 // MARK: - Inner Types
 
-    associatedtype ResultType
+    public typealias Result = R
 
-    typealias ResultBlock = (ResultType) -> Void
+    public typealias ResultBlock = (Result) -> Void
 
-    typealias ErrorBlock = (InvocationError) -> Void
+    public typealias ErrorBlock = (InvocationError) -> Void
 
-    typealias CancelBlock = () -> Void
+    public typealias CancelBlock = () -> Void
 
-    typealias StartBlock = () -> Void
+    public typealias StartBlock = () -> Void
 
-    typealias FinishBlock = () -> Void
+    public typealias FinishBlock = () -> Void
 
 }
 
@@ -49,9 +59,9 @@ public protocol ResultProvider
 
 public enum ResultQueue
 {
-    case mainQueue
-    case backgroundQueue
-    case customQueue(queue: DispatchQueue)
+    case main
+    case background
+    case custom(queue: DispatchQueue)
 }
 
 // ----------------------------------------------------------------------------
@@ -62,27 +72,27 @@ extension ResultProvider
 
     @discardableResult
     public func result(_ block: @escaping ResultBlock) -> Self {
-        return result(.backgroundQueue, block: block)
+        return result(.background, block: block)
     }
 
     @discardableResult
     public func error(_ block: @escaping ErrorBlock) -> Self {
-        return error(.backgroundQueue, block: block)
+        return error(.background, block: block)
     }
 
     @discardableResult
     public func cancel(_ block: @escaping CancelBlock) -> Self {
-        return cancel(.backgroundQueue, block: block)
+        return cancel(.background, block: block)
     }
 
     @discardableResult
     public func start(_ block: @escaping StartBlock) -> Self {
-        return start(.backgroundQueue, block: block)
+        return start(.background, block: block)
     }
 
     @discardableResult
     public func finish(_ block: @escaping FinishBlock) -> Self {
-        return finish(.backgroundQueue, block: block)
+        return finish(.background, block: block)
     }
 
 }

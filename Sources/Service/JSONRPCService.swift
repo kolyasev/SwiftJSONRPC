@@ -16,17 +16,20 @@ open class JSONRPCService
 
 // MARK: - Public Functions
 
-    open func perform<Result, Parser: ResultParser>(_ method: String, params: Invocation<Result>.Params?, parser: Parser) -> Invocation<Result> where Parser.ResultType == Result
+    open func invoke<Result, Parser: ResultParser>(_ method: String, params: Invocation<Result>.Params?, parser: Parser) -> ResultProvider<Result>
+        where Parser.Result == Result
     {
-        let params = params ?? [:]
-
         // Init invocation object
-        let invocation = Invocation<Result>(method: method, params: params, parser: parser)
+        let invocation = makeInvocation(method: method, params: params, parser: parser)
 
         // Perform invocation
-        self.client.perform(invocation)
+        return self.client.invoke(invocation)
+    }
 
-        return invocation
+    open func makeInvocation<Result, Parser: ResultParser>(method: String, params: Invocation<Result>.Params?, parser: Parser) -> Invocation<Result>
+        where Parser.Result == Result
+    {
+        return Invocation<Result>(method: method, params: params ?? [:], parser: parser)
     }
 
 // MARK: - Variables

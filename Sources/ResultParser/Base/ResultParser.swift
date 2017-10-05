@@ -10,11 +10,11 @@ public protocol ResultParser
 {
 // MARK: - Functions
 
-    func parse(_ object: AnyObject) -> ResultType?
+    func parse(_ object: AnyObject) throws -> Result
 
 // MARK: - Inner Types
 
-    associatedtype ResultType
+    associatedtype Result
 
 }
 
@@ -22,16 +22,16 @@ public protocol ResultParser
 
 public enum ResultParserError: Error
 {
-    case invalidResponseFormat(object: AnyObject)
+    case invalidFormat(object: AnyObject)
 }
 
 // ----------------------------------------------------------------------------
 
-class AnyResultParser<T>: ResultParser
+public struct AnyResultParser<T>: ResultParser
 {
 // MARK: - Construction
 
-    init<P: ResultParser>(_ base: P) where P.ResultType == T
+    init<P: ResultParser>(_ base: P) where P.Result == T
     {
         // Init instance
         _parse = base.parse
@@ -39,17 +39,17 @@ class AnyResultParser<T>: ResultParser
 
 // MARK: - Functions
 
-    func parse(_ object: AnyObject) -> ResultType? {
-        return _parse(object)
+    public func parse(_ object: AnyObject) throws -> Result {
+        return try _parse(object)
     }
 
 // MARK: - Inner Types
 
-    typealias ResultType = T
+    public typealias Result = T
 
 // MARK: - Variables
 
-    fileprivate let _parse: (AnyObject) -> ResultType?
+    fileprivate let _parse: (AnyObject) throws -> Result
 
 }
 

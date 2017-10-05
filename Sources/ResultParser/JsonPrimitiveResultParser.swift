@@ -10,8 +10,13 @@ class JsonPrimitiveResultParser<ResultType: JsonPrimitive>: ResultParser
 {
 // MARK: Functions
 
-    func parse(_ object: AnyObject) -> ResultType? {
-        return object as? ResultType
+    func parse(_ object: AnyObject) throws -> ResultType
+    {
+        guard let value = object as? ResultType else {
+            throw ResultParserError.invalidFormat(object: object)
+        }
+
+        return value
     }
 
 }
@@ -22,9 +27,9 @@ extension JSONRPCService
 {
 // MARK: Functions
 
-    public func perform<Result: JsonPrimitive>(_ method: String, params: Invocation<Result>.Params? = nil) -> Invocation<Result>
+    open func invoke<Result: JsonPrimitive>(_ method: String, params: Invocation<Result>.Params?) -> ResultProvider<Result>
     {
-        return perform(method, params: params, parser: JsonPrimitiveResultParser())
+        return invoke(method, params: params, parser: JsonPrimitiveResultParser())
     }
 
 }
