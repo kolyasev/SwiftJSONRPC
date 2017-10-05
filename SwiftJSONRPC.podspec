@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Sources/**/*.swift', 'Libraries/**/*.swift'
 
   s.frameworks = 'Foundation'
-  s.dependency 'Alamofire', '~> 4.4'
+  s.dependency 'Alamofire', '~> 4.5'
   s.dependency 'SwiftyJSON', '~> 3.1'
 
   # TODO: Convert to Swift 3.x
