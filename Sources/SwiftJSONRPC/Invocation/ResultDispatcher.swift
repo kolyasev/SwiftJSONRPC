@@ -7,7 +7,6 @@
 // ----------------------------------------------------------------------------
 
 import Foundation
-// import Atomic
 
 // ----------------------------------------------------------------------------
 
@@ -25,230 +24,96 @@ public final class ResultDispatcher<R>: ResultProvider<R>
 
 // MARK: - Public Functions
 
-    @discardableResult
-    public override func result(_ queue: ResultQueue, block: @escaping ResultDispatcher.ResultBlock) -> Self
+    override func on(event: CallbackEvent<R>.Simple, queue: ResultQueue, block: @escaping CallbackEventBlock)
     {
-        let holder = CallbackHolder(block: block, queue: queue)
-
         self.queue.async
         {
-            if let result = self.hasResult {
-                self.dispatch(holder) { $0(result) }
+            let callbackHolder = CallbackHolder(event: event, queue: queue, block: block)
+
+            if let event = self.events[event]
+            {
+                self.dispatch(event: event, toCallbackHolder: callbackHolder)
             }
-
-            self.resultBlocks.append(holder)
-        }
-
-        return self
-    }
-
-    @discardableResult
-    public override func error(_ queue: ResultQueue, block: @escaping ResultDispatcher.ErrorBlock) -> Self
-    {
-        let holder = CallbackHolder(block: block, queue: queue)
-
-        self.queue.async
-        {
-            if let error = self.hasError {
-                self.dispatch(holder) { $0(error) }
+            else {
+                var callbacks = self.callbackHolders[event] ?? []
+                callbacks.append(callbackHolder)
+                self.callbackHolders[event] = callbacks
             }
-
-            self.errorBlocks.append(holder)
         }
-
-        return self
-    }
-
-    @discardableResult
-    public override func cancel(_ queue: ResultQueue, block: @escaping ResultDispatcher.CancelBlock) -> Self
-    {
-        let holder = CallbackHolder(block: block, queue: queue)
-
-        self.queue.async
-        {
-            if self.hasCancel {
-                self.dispatch(holder) { $0() }
-            }
-
-            self.cancelBlocks.append(holder)
-        }
-
-        return self
-    }
-
-    @discardableResult
-    public override func start(_ queue: ResultQueue, block: @escaping ResultDispatcher.StartBlock) -> Self
-    {
-        let holder = CallbackHolder(block: block, queue: queue)
-
-        self.queue.async
-        {
-            if self.hasStart {
-                self.dispatch(holder) { $0() }
-            }
-
-            self.startBlocks.append(holder)
-        }
-
-        return self
-    }
-
-    @discardableResult
-    public override func finish(_ queue: ResultQueue, block: @escaping ResultDispatcher.FinishBlock) -> Self
-    {
-        let holder = CallbackHolder(block: block, queue: queue)
-
-        self.queue.async
-        {
-            if self.hasFinish {
-                self.dispatch(holder) { $0() }
-            }
-
-            self.finishBlocks.append(holder)
-        }
-
-        return self
     }
 
 // MARK: - Functions
 
     func dispatchResult(_ result: R)
     {
-        self.queue.async
-        {
-            self.hasResult = result
-
-            for resultBlock in self.resultBlocks {
-                self.dispatch(resultBlock) { $0(result) }
-            }
-        }
+        dispatch(event: .result(result))
     }
 
     func dispatchError(_ error: InvocationError)
     {
-        self.queue.async
-        {
-            self.hasError = error
-
-            for errorBlock in self.errorBlocks {
-                self.dispatch(errorBlock) { $0(error) }
-            }
-        }
+        dispatch(event: .error(error))
     }
 
     func dispatchCancel()
     {
-        self.queue.async
-        {
-            self.hasCancel = true
-
-            for cancelBlock in self.cancelBlocks {
-                self.dispatch(cancelBlock) { $0() }
-            }
-        }
+        dispatch(event: .cancel)
     }
 
     func dispatchStart()
     {
-        self.queue.async
-        {
-            self.hasStart = true
-
-            for startBlock in self.startBlocks {
-                self.dispatch(startBlock) { $0() }
-            }
-        }
+        dispatch(event: .start)
     }
 
     func dispatchFinish()
     {
-        self.queue.async
-        {
-            self.hasFinish = true
-
-            for finishBlock in self.finishBlocks {
-                self.dispatch(finishBlock) { $0() }
-            }
-        }
+        dispatch(event: .finish)
     }
 
 // MARK: - Private Functions
 
-    private func dispatch<B>(_ holder: CallbackHolder<B>, block: @escaping (B) -> Void)
+    private func dispatch(event: CallbackEvent<R>)
     {
-        let dispatchQueue = holder.queue.dispatchQueue()
-        dispatchQueue.async {
-            block(holder.block)
+        self.queue.async
+        {
+            let inserted = (self.events.updateValue(event, forKey: event.simple) == nil)
+            if  inserted
+            {
+                if let holders = self.callbackHolders.removeValue(forKey: event.simple)
+                {
+                    for holder in holders {
+                        self.dispatch(event: event, toCallbackHolder: holder)
+                    }
+                }
+            }
         }
+    }
+
+    private func dispatch(event: CallbackEvent<R>, toCallbackHolder callbackHolder: CallbackHolder)
+    {
+        let dispatchQueue = callbackHolder.queue.dispatchQueue()
+        dispatchQueue.async {
+            callbackHolder.block(event)
+        }
+    }
+
+// MARK: - Inner Types
+
+    private struct CallbackHolder
+    {
+        let event: CallbackEvent<R>.Simple
+        let queue: ResultQueue
+        let block: CallbackEventBlock
     }
 
 // MARK: - Variables
 
     private let queue = DispatchQueue(label: "ru.kolyasev.SwiftJSONRPC.ResultDispatcher.queue")
 
-// MARK: - Variables: Callbacks
+    private var events: [CallbackEvent<R>.Simple: CallbackEvent<R>] = [:]
 
-    private var resultBlocks: [CallbackHolder<ResultDispatcher.ResultBlock>] = []
-
-    private var errorBlocks: [CallbackHolder<ResultDispatcher.ErrorBlock>] = []
-
-    private var cancelBlocks: [CallbackHolder<ResultDispatcher.CancelBlock>] = []
-
-    private var startBlocks: [CallbackHolder<ResultDispatcher.StartBlock>] = []
-
-    private var finishBlocks: [CallbackHolder<ResultDispatcher.FinishBlock>] = []
-
-// MARK: - Variables: State
-
-    private var hasStart: Bool = false
-
-    private var hasFinish: Bool = false
-
-    private var hasResult: R? = nil
-
-    private var hasError: InvocationError? = nil
-
-    private var hasCancel: Bool = false
+    private var callbackHolders: [CallbackEvent<R>.Simple: [CallbackHolder]] = [:]
 
 }
 
 // ----------------------------------------------------------------------------
 
-private struct CallbackHolder<Block>
-{
-// MARK: - Properties
-
-    let block: Block
-
-    let queue: ResultQueue
-
-}
-
-// ----------------------------------------------------------------------------
-
-extension ResultQueue
-{
-// MARK: - Functions
-
-    fileprivate func dispatchQueue() -> DispatchQueue
-    {
-        let result: DispatchQueue
-
-        switch self
-        {
-            case .main:
-                result = DispatchQueue.main
-
-            case .background:
-                result = DispatchQueue.global()
-
-            case .custom(let queue):
-                result = queue
-        }
-
-        return result
-    }
-
-}
-
-// ----------------------------------------------------------------------------

@@ -46,6 +46,7 @@
 		35DFC5F61F87711500B15E9D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35DFC5F51F87711200B15E9D /* Alamofire.framework */; };
 		35DFC5F81F877B6800B15E9D /* Alamofire.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 35DFC5F51F87711200B15E9D /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35DFC61C1F87931700B15E9D /* ResultQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DFC61B1F87931700B15E9D /* ResultQueue.swift */; };
+		35DFC61E1F87AB2800B15E9D /* CallbackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DFC61D1F87AB2800B15E9D /* CallbackEvent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +115,7 @@
 		35DE3F5A1F866E9000A6F773 /* HTTPRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestTests.swift; sourceTree = "<group>"; };
 		35DFC5F51F87711200B15E9D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		35DFC61B1F87931700B15E9D /* ResultQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultQueue.swift; sourceTree = "<group>"; };
+		35DFC61D1F87AB2800B15E9D /* CallbackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackEvent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,6 +244,7 @@
 				35BC9BF51F866AE400881541 /* ResultDispatcher.swift */,
 				35BC9BF61F866AE400881541 /* ResultProvider.swift */,
 				35DFC61B1F87931700B15E9D /* ResultQueue.swift */,
+				35DFC61D1F87AB2800B15E9D /* CallbackEvent.swift */,
 			);
 			path = Invocation;
 			sourceTree = "<group>";
@@ -454,6 +457,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35DFC61E1F87AB2800B15E9D /* CallbackEvent.swift in Sources */,
 				35BC9C121F866B5300881541 /* RPCClient.swift in Sources */,
 				35BC9C131F866B5300881541 /* InvocationError.swift in Sources */,
 				35BC9C141F866B5300881541 /* RPCError.swift in Sources */,

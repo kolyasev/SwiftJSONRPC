@@ -18,3 +18,30 @@ public enum ResultQueue
 }
 
 // ----------------------------------------------------------------------------
+
+extension ResultQueue
+{
+// MARK: - Functions
+
+    func dispatchQueue() -> DispatchQueue
+    {
+        let result: DispatchQueue
+
+        switch self
+        {
+            case .main:
+                result = DispatchQueue.main
+
+            case .background:
+                result = DispatchQueue.global()
+
+            case .custom(let queue):
+                result = queue
+        }
+
+        return result
+    }
+
+}
+
+// ----------------------------------------------------------------------------

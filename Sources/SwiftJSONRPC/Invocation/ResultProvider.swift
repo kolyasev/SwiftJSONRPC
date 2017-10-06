@@ -10,34 +10,85 @@ public class ResultProvider<R>
 {
 // MARK: - Functions
 
-    @discardableResult
-    public func result(_ queue: ResultQueue, block: @escaping ResultBlock) -> Self {
-        fatalError("Not implemented.")
-    }
-
-    @discardableResult
-    public func error(_ queue: ResultQueue, block: @escaping ErrorBlock) -> Self {
-        fatalError("Not implemented.")
-    }
-
-    @discardableResult
-    public func cancel(_ queue: ResultQueue, block: @escaping CancelBlock) -> Self {
-        fatalError("Not implemented.")
-    }
-
-    @discardableResult
-    public func start(_ queue: ResultQueue, block: @escaping StartBlock) -> Self {
-        fatalError("Not implemented.")
-    }
-
-    @discardableResult
-    public func finish(_ queue: ResultQueue, block: @escaping FinishBlock) -> Self {
+    func on(event: CallbackEvent<R>.Simple, queue: ResultQueue, block: @escaping CallbackEventBlock) {
         fatalError("Not implemented.")
     }
 
 // MARK: - Inner Types
 
     public typealias Result = R
+
+    public typealias CallbackEventBlock = (CallbackEvent<R>) -> Void
+
+}
+
+// ----------------------------------------------------------------------------
+
+extension ResultProvider
+{
+// MARK: - Functions
+
+    @discardableResult
+    public func result(queue: ResultQueue, block: @escaping ResultBlock) -> Self
+    {
+        on(event: .result, queue: queue) { event in
+            if case .result(let value) = event {
+                block(value)
+            }
+        }
+
+        return self
+    }
+
+    @discardableResult
+    public func error(queue: ResultQueue, block: @escaping ErrorBlock) -> Self
+    {
+        on(event: .error, queue: queue) { event in
+            if case .error(let value) = event {
+                block(value)
+            }
+        }
+
+        return self
+    }
+
+    @discardableResult
+    public func cancel(queue: ResultQueue, block: @escaping CancelBlock) -> Self
+    {
+        on(event: .cancel, queue: queue) { event in
+            if case .cancel = event {
+                block()
+            }
+        }
+
+        return self
+    }
+
+    @discardableResult
+    public func start(queue: ResultQueue, block: @escaping StartBlock) -> Self
+    {
+        on(event: .start, queue: queue) { event in
+            if case .start = event {
+                block()
+            }
+        }
+
+        return self
+    }
+
+    @discardableResult
+    public func finish(queue: ResultQueue, block: @escaping FinishBlock) -> Self
+    {
+        on(event: .finish, queue: queue) { event in
+            if case .finish = event {
+                block()
+            }
+        }
+
+        return self
+    }
+
+// MARK: - Inner Types
 
     public typealias ResultBlock = (Result) -> Void
 
@@ -59,27 +110,27 @@ extension ResultProvider
 
     @discardableResult
     public func result(_ block: @escaping ResultBlock) -> Self {
-        return result(.background, block: block)
+        return result(queue: .background, block: block)
     }
 
     @discardableResult
     public func error(_ block: @escaping ErrorBlock) -> Self {
-        return error(.background, block: block)
+        return error(queue: .background, block: block)
     }
 
     @discardableResult
     public func cancel(_ block: @escaping CancelBlock) -> Self {
-        return cancel(.background, block: block)
+        return cancel(queue: .background, block: block)
     }
 
     @discardableResult
     public func start(_ block: @escaping StartBlock) -> Self {
-        return start(.background, block: block)
+        return start(queue: .background, block: block)
     }
 
     @discardableResult
     public func finish(_ block: @escaping FinishBlock) -> Self {
-        return finish(.background, block: block)
+        return finish(queue: .background, block: block)
     }
 
 }
