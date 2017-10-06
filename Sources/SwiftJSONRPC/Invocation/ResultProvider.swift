@@ -6,10 +6,6 @@
 //
 // ----------------------------------------------------------------------------
 
-import Foundation
-
-// ----------------------------------------------------------------------------
-
 public class ResultProvider<R>
 {
 // MARK: - Functions
@@ -53,15 +49,6 @@ public class ResultProvider<R>
 
     public typealias FinishBlock = () -> Void
 
-}
-
-// ----------------------------------------------------------------------------
-
-public enum ResultQueue
-{
-    case main
-    case background
-    case custom(queue: DispatchQueue)
 }
 
 // ----------------------------------------------------------------------------

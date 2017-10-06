@@ -45,6 +45,7 @@
 		35DE3F5D1F866E9000A6F773 /* HTTPRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DE3F5A1F866E9000A6F773 /* HTTPRequestTests.swift */; };
 		35DFC5F61F87711500B15E9D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35DFC5F51F87711200B15E9D /* Alamofire.framework */; };
 		35DFC5F81F877B6800B15E9D /* Alamofire.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 35DFC5F51F87711200B15E9D /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35DFC61C1F87931700B15E9D /* ResultQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DFC61B1F87931700B15E9D /* ResultQueue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +113,7 @@
 		35DE3F591F866E9000A6F773 /* HTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientTests.swift; sourceTree = "<group>"; };
 		35DE3F5A1F866E9000A6F773 /* HTTPRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestTests.swift; sourceTree = "<group>"; };
 		35DFC5F51F87711200B15E9D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		35DFC61B1F87931700B15E9D /* ResultQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultQueue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +241,7 @@
 				35BC9BF41F866AE400881541 /* Invocation.swift */,
 				35BC9BF51F866AE400881541 /* ResultDispatcher.swift */,
 				35BC9BF61F866AE400881541 /* ResultProvider.swift */,
+				35DFC61B1F87931700B15E9D /* ResultQueue.swift */,
 			);
 			path = Invocation;
 			sourceTree = "<group>";
@@ -467,6 +470,7 @@
 				35BC9C1E1F866B5300881541 /* HTTPRequest.swift in Sources */,
 				35BC9C1F1F866B5300881541 /* HTTPResponse.swift in Sources */,
 				35BC9C201F866B5300881541 /* HTTPRequestExecutor.swift in Sources */,
+				35DFC61C1F87931700B15E9D /* ResultQueue.swift in Sources */,
 				35BC9C211F866B5300881541 /* HTTPRequestExecutorConfig.swift in Sources */,
 				35BC9C221F866B5300881541 /* HTTPRequestExecutorError.swift in Sources */,
 				35BC9C231F866B5300881541 /* HTTPRequestRetrier.swift in Sources */,

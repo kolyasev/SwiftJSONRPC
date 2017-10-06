@@ -45,6 +45,33 @@ class ResultDispatcherTests: XCTestCase
         XCTAssertEqual(result, message)
     }
 
+    func testResultCallbackAsync()
+    {
+        // Given
+        let message = "Hello world!"
+
+        let expectation = self.expectation(description: "Dispatcher should call callback.")
+        var result: String!
+
+        // When
+        DispatchQueue.global().async {
+            self.resultDispatcher.result { res in
+                result = res
+                expectation.fulfill()
+            }
+        }
+
+        DispatchQueue.global().async {
+            self.resultDispatcher.dispatchResult(message)
+        }
+
+        wait(for: [expectation], timeout: 0.1)
+
+        // Then
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result, message)
+    }
+
     func testResultCallbackDispatchFirst()
     {
         // Given
@@ -59,6 +86,33 @@ class ResultDispatcherTests: XCTestCase
         self.resultDispatcher.result { res in
             result = res
             expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 0.1)
+
+        // Then
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result, message)
+    }
+
+    func testResultCallbackDispatchFirstAsync()
+    {
+        // Given
+        let message = "Hello world!"
+
+        let expectation = self.expectation(description: "Dispatcher should call callback.")
+        var result: String!
+
+        // When
+        DispatchQueue.global().async {
+            self.resultDispatcher.dispatchResult(message)
+        }
+
+        DispatchQueue.global().async {
+            self.resultDispatcher.result { res in
+                result = res
+                expectation.fulfill()
+            }
         }
 
         wait(for: [expectation], timeout: 0.1)

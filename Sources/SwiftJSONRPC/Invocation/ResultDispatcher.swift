@@ -30,11 +30,12 @@ public final class ResultDispatcher<R>: ResultProvider<R>
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
-        if let result = self.hasResult.value
+        self.queue.async
         {
-            dispatch(holder) { $0(result) }
-        }
-        else {
+            if let result = self.hasResult {
+                self.dispatch(holder) { $0(result) }
+            }
+
             self.resultBlocks.append(holder)
         }
 
@@ -46,11 +47,12 @@ public final class ResultDispatcher<R>: ResultProvider<R>
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
-        if let error = self.hasError.value
+        self.queue.async
         {
-            dispatch(holder) { $0(error) }
-        }
-        else {
+            if let error = self.hasError {
+                self.dispatch(holder) { $0(error) }
+            }
+
             self.errorBlocks.append(holder)
         }
 
@@ -62,11 +64,12 @@ public final class ResultDispatcher<R>: ResultProvider<R>
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
-        if self.hasCancel.value
+        self.queue.async
         {
-            dispatch(holder) { $0() }
-        }
-        else {
+            if self.hasCancel {
+                self.dispatch(holder) { $0() }
+            }
+
             self.cancelBlocks.append(holder)
         }
 
@@ -78,11 +81,12 @@ public final class ResultDispatcher<R>: ResultProvider<R>
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
-        if self.hasStart.value
+        self.queue.async
         {
-            dispatch(holder) { $0() }
-        }
-        else {
+            if self.hasStart {
+                self.dispatch(holder) { $0() }
+            }
+
             self.startBlocks.append(holder)
         }
 
@@ -94,11 +98,12 @@ public final class ResultDispatcher<R>: ResultProvider<R>
     {
         let holder = CallbackHolder(block: block, queue: queue)
 
-        if self.hasFinish.value
+        self.queue.async
         {
-            dispatch(holder) { $0() }
-        }
-        else {
+            if self.hasFinish {
+                self.dispatch(holder) { $0() }
+            }
+
             self.finishBlocks.append(holder)
         }
 
@@ -109,82 +114,101 @@ public final class ResultDispatcher<R>: ResultProvider<R>
 
     func dispatchResult(_ result: R)
     {
-        self.hasResult.value = result
+        self.queue.async
+        {
+            self.hasResult = result
 
-        for resultBlock in self.resultBlocks {
-            dispatch(resultBlock) { $0(result) }
+            for resultBlock in self.resultBlocks {
+                self.dispatch(resultBlock) { $0(result) }
+            }
         }
     }
 
     func dispatchError(_ error: InvocationError)
     {
-        self.hasError.value = error
+        self.queue.async
+        {
+            self.hasError = error
 
-        for errorBlock in self.errorBlocks {
-            dispatch(errorBlock) { $0(error) }
+            for errorBlock in self.errorBlocks {
+                self.dispatch(errorBlock) { $0(error) }
+            }
         }
     }
 
     func dispatchCancel()
     {
-        self.hasCancel.value = true
+        self.queue.async
+        {
+            self.hasCancel = true
 
-        for cancelBlock in self.cancelBlocks {
-            dispatch(cancelBlock) { $0() }
+            for cancelBlock in self.cancelBlocks {
+                self.dispatch(cancelBlock) { $0() }
+            }
         }
     }
 
     func dispatchStart()
     {
-        self.hasStart.value = true
+        self.queue.async
+        {
+            self.hasStart = true
 
-        for startBlock in self.startBlocks {
-            dispatch(startBlock) { $0() }
+            for startBlock in self.startBlocks {
+                self.dispatch(startBlock) { $0() }
+            }
         }
     }
 
     func dispatchFinish()
     {
-        self.hasFinish.value = true
+        self.queue.async
+        {
+            self.hasFinish = true
 
-        for finishBlock in self.finishBlocks {
-            dispatch(finishBlock) { $0() }
+            for finishBlock in self.finishBlocks {
+                self.dispatch(finishBlock) { $0() }
+            }
         }
     }
 
 // MARK: - Private Functions
 
-    fileprivate func dispatch<B>(_ holder: CallbackHolder<B>, block: (B) -> Void)
+    private func dispatch<B>(_ holder: CallbackHolder<B>, block: @escaping (B) -> Void)
     {
         let dispatchQueue = holder.queue.dispatchQueue()
-        dispatchQueue.sync {
+        dispatchQueue.async {
             block(holder.block)
         }
     }
 
+// MARK: - Variables
+
+    private let queue = DispatchQueue(label: "ru.kolyasev.SwiftJSONRPC.ResultDispatcher.queue")
+
 // MARK: - Variables: Callbacks
 
-    fileprivate var resultBlocks: [CallbackHolder<ResultDispatcher.ResultBlock>] = []
+    private var resultBlocks: [CallbackHolder<ResultDispatcher.ResultBlock>] = []
 
-    fileprivate var errorBlocks: [CallbackHolder<ResultDispatcher.ErrorBlock>] = []
+    private var errorBlocks: [CallbackHolder<ResultDispatcher.ErrorBlock>] = []
 
-    fileprivate var cancelBlocks: [CallbackHolder<ResultDispatcher.CancelBlock>] = []
+    private var cancelBlocks: [CallbackHolder<ResultDispatcher.CancelBlock>] = []
 
-    fileprivate var startBlocks: [CallbackHolder<ResultDispatcher.StartBlock>] = []
+    private var startBlocks: [CallbackHolder<ResultDispatcher.StartBlock>] = []
 
-    fileprivate var finishBlocks: [CallbackHolder<ResultDispatcher.FinishBlock>] = []
+    private var finishBlocks: [CallbackHolder<ResultDispatcher.FinishBlock>] = []
 
 // MARK: - Variables: State
 
-    fileprivate let hasStart = Atomic<Bool>(false)
+    private var hasStart: Bool = false
 
-    fileprivate let hasFinish = Atomic<Bool>(false)
+    private var hasFinish: Bool = false
 
-    fileprivate let hasResult = Atomic<R?>(nil)
+    private var hasResult: R? = nil
 
-    fileprivate let hasError = Atomic<InvocationError?>(nil)
+    private var hasError: InvocationError? = nil
 
-    fileprivate let hasCancel = Atomic<Bool>(false)
+    private var hasCancel: Bool = false
 
 }
 
