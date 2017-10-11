@@ -94,7 +94,6 @@ extension ResultDispatcher
 
     fileprivate func dispatch(response: Response)
     {
-        // Dispatch response
         switch response.body
         {
             case .success(let successBody):
@@ -103,26 +102,17 @@ extension ResultDispatcher
             case .error(let error):
                 dispatchError(InvocationError.rpcError(error: error))
         }
-
-        // Dispatch invocation finish blocks
-        dispatchFinish()
     }
 
     fileprivate func dispatchSuccessBody(_ body: AnyObject)
     {
         do {
-            // Parse result object
             let result = try self.invocation.parser.parse(body)
-
-            // Dispatch result
             dispatchResult(result)
         }
         catch (let cause)
         {
-            // Init parsing error
             let error = InvocationError.applicationError(cause: cause)
-
-            // Dispatch error
             dispatchError(error)
         }
     }

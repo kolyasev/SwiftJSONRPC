@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-//  Request.swift
+//  RequestId.swift
 //
 //  @author Denis Kolyasev <kolyasev@gmail.com>
 //

@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-//  RPCResponse.swift
+//  Response.swift
 //
 //  @author Denis Kolyasev <kolyasev@gmail.com>
 //

@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-//  RequestManager.swift
+//  RequestExecutor.swift
 //
 //  @author Denis Kolyasev <kolyasev@gmail.com>
 //
