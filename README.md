@@ -13,15 +13,15 @@
 import SwiftJSONRPC
 
 class UserService: JSONRPCService {
-	func vote(rating: Int) -> ResultProvider<Int> {
-		return invoke("vote", params: ["rating": rating])
-	}
-	
-	func create(name: String) -> ResultProvider<UserModel> {
-		return invoke("create", params: ["name": name])
-	}
+    func vote(rating: Int) -> ResultProvider<Int> {
+        return invoke("vote", params: ["rating": rating])
+    }
+    
+    func create(name: String) -> ResultProvider<UserModel> {
+        return invoke("create", params: ["name": name])
+    }
 
-	// And other JSON-RPC methods
+    // And other JSON-RPC methods
 }
 ```
 
@@ -45,7 +45,7 @@ service.vote(rating: 5)
 
 ```swift
 service.vote(rating: 5).result { newRating in
-	// Handle result
+    // Handle result
 }
 ```
 
@@ -97,32 +97,32 @@ Invocation callbacks can be chained:
 
 ```swift
 service.vote(rating: 5)
-	.result { newRating in
-		// Handle result
-	}
-	.error { error in
-		// Handle error
-	}
-	.start {
-		// Setup activity indicator
-	}
-	.finish {
-		// Remove activity indicator
-	}
+    .result { newRating in
+        // Handle result
+    }
+    .error { error in
+        // Handle error
+    }
+    .start {
+        // Setup activity indicator
+    }
+    .finish {
+        // Remove activity indicator
+    }
 ```
 
 #### Invocation Callbacks Queue
 
-By default invocation callback called on default `RPCService` queue. But you can specify custom queue for each callback:
+By default invocation callback called on background queue. But you can specify custom queue for each callback:
 
 ```swift
 service.vote(rating: 5)
-	.result(queue: .background) { newRating in
-		// Handle result
-	}
-	.error(queue: .main) { error in
-		// Handle error
-	}
+    .result(queue: .background) { newRating in
+        // Handle result
+    }
+    .error(queue: .main) { error in
+        // Handle error
+    }
 ```
 
 Use one of available queue types:
@@ -154,13 +154,13 @@ For example:
 
 ```swift
 struct UserModel: Parcelable {
-	let id: String
-	let name: String
-	
-	required init(params: [String: Any]) throws {
-		// Parse params to struct
-		// ...
-	}
+    let id: String
+    let name: String
+    
+    required init(params: [String: Any]) throws {
+        // Parse params to struct
+        // ...
+    }
 }
 ```
 
@@ -170,14 +170,14 @@ After that use this struct as `RPCService.Result` generic parameter:
 
 ```swift
 class UserService: JSONRPCService {
-	func create(name: String) -> ResultProvider<UserModel> {
-		return invoke("create", params: ["name": name])
-	}
+    func create(name: String) -> ResultProvider<UserModel> {
+        return invoke("create", params: ["name": name])
+    }
 }
 ```
 ```swift
 service.create(name: "testuser").result { user in
-	print("User created with ID = \(user.id)")
+    print("User created with ID = \(user.id)")
 }
 ```
 
@@ -185,9 +185,9 @@ Using array of `Parcelable` objects is also supported:
 
 ```swift
 extension UserService {
-	func allUsers() -> ResultProvider <[UserModel]> {
-		return invoke("all_users")
-	}
+    func allUsers() -> ResultProvider<[UserModel]> {
+        return invoke("all_users")
+    }
 }
 ```
 
