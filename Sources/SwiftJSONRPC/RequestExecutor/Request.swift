@@ -24,7 +24,7 @@ public class Request
 
     public let method: String
 
-    public let params: [String: AnyObject]
+    public let params: [String: Any]
 
 // MARK: Functions
 
@@ -45,9 +45,9 @@ public class Request
 
 // MARK: Private Functions
 
-    fileprivate static func prepareParams(_ params: [String: AnyObject?]) -> [String: AnyObject]
+    fileprivate static func prepareParams(_ params: [String: Any?]) -> [String: Any]
     {
-        var result: [String: AnyObject] = [:]
+        var result: [String: Any] = [:]
 
         // Remove 'nil' values
         for (key, value) in params
