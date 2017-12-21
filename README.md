@@ -12,13 +12,13 @@
 ```swift
 import SwiftJSONRPC
 
-class UserService: RPCService {
-	func vote(rating: Int) -> Result<Int> {
-		return execute("vote", params: ["rating": rating])
+class UserService: JSONRPCService {
+	func vote(rating: Int) -> ResultProvider<Int> {
+		return invoke("vote", params: ["rating": rating])
 	}
 	
-	func create(name: String) -> Result<UserModel> {
-		return execute("create", params: ["name": name])
+	func create(name: String) -> ResultProvider<UserModel> {
+		return invoke("create", params: ["name": name])
 	}
 
 	// And other JSON-RPC methods
@@ -31,8 +31,8 @@ You can define as many services as you want depending on your requirements.
 
 ```swift
 // Init JSON-RPC client
-let baseURL = URL(string: "http://example.com/rpc")!
-let client = RPCClient(baseURL: baseURL)
+let url = URL(string: "http://example.com/rpc")!
+let client = RPCClient(url: url)
 
 // Init JSON-RPC service
 let service = MyService(client: client)
@@ -54,7 +54,7 @@ SwiftJSONRPC contains five different invocation callback types.
 ###### Result
 
 ```swift
-func result(_ queue: ResultQueue = .default, block: @escaping (Data) -> Void) -> Self
+func result(queue: ResultQueue = .background, block: @escaping (Result) -> Void) -> Self
 ```
 
 Called on success result. Include generic response data type that you defined in `RPCService` subclass.
@@ -62,7 +62,7 @@ Called on success result. Include generic response data type that you defined in
 ###### Error
 
 ```swift
-func error(_ queue: ResultQueue = .default, block: @escaping (RPCError) -> Void) -> Self
+func error(queue: ResultQueue = .background, block: @escaping (RPCError) -> Void) -> Self
 ```
 
 Called on error result. Include instance of `RPCError` type.
@@ -70,7 +70,7 @@ Called on error result. Include instance of `RPCError` type.
 ###### Cancel
 
 ```swift
-func cancel(_ queue: ResultQueue = .default, block: @escaping () -> Void) -> Self
+func cancel(queue: ResultQueue = .background, block: @escaping () -> Void) -> Self
 ```
 
 Called if invocation was cancelled by calling `cancel()` method.
@@ -78,7 +78,7 @@ Called if invocation was cancelled by calling `cancel()` method.
 ###### Start
 
 ```swift
-func start(_ queue: ResultQueue = .default, block: @escaping () -> Void) -> Self
+func start(queue: ResultQueue = .background, block: @escaping () -> Void) -> Self
 ```
 
 Called before performing invocation. Can be used for starting loading animation.
@@ -86,7 +86,7 @@ Called before performing invocation. Can be used for starting loading animation.
 ###### Finish
 
 ```swift
-func finish(_ queue: ResultQueue = .default, block: @escaping () -> Void) -> Self
+func finish(queue: ResultQueue = .background, block: @escaping () -> Void) -> Self
 ```
 
 Called after performing invocation. In all cases including canceling. Can be used for stopping loading animation.
@@ -117,10 +117,10 @@ By default invocation callback called on default `RPCService` queue. But you can
 
 ```swift
 service.vote(rating: 5)
-	.result(queue: .backgroundQueue) { newRating in
+	.result(queue: .background) { newRating in
 		// Handle result
 	}
-	.error(queue: .mainQueue) { error in
+	.error(queue: .main) { error in
 		// Handle error
 	}
 ```
@@ -130,9 +130,9 @@ Use one of available queue types:
 ```swift
 enum ResultQueue
 {
-    case mainQueue
-    case backgroundQueue
-    case customQueue(queue: DispatchQueue)
+    case main
+    case background
+    case custom(queue: DispatchQueue)
 }
 ```
 
@@ -169,9 +169,9 @@ struct UserModel: Parcelable {
 After that use this struct as `RPCService.Result` generic parameter:
 
 ```swift
-class UserService: RPCService {
-	func create(name: String) -> Result<UserModel> {
-		return execute("create", params: ["name": name])
+class UserService: JSONRPCService {
+	func create(name: String) -> ResultProvider<UserModel> {
+		return invoke("create", params: ["name": name])
 	}
 }
 ```
@@ -185,8 +185,8 @@ Using array of `Parcelable` objects is also supported:
 
 ```swift
 extension UserService {
-	func allUsers() -> Result<[UserModel]> {
-		return execute("all_users")
+	func allUsers() -> ResultProvider <[UserModel]> {
+		return invoke("all_users")
 	}
 }
 ```
