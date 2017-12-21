@@ -16,7 +16,7 @@ open class JSONRPCService
 
 // MARK: - Public Functions
 
-    open func invoke<Result, Parser: ResultParser>(_ method: String, params: Invocation<Result>.Params?, parser: Parser) -> ResultProvider<Result>
+    open func invoke<Result, Parser: ResultParser>(_ method: String, params: Invocation<Result>.Params? = nil, parser: Parser) -> ResultProvider<Result>
         where Parser.Result == Result
     {
         // Init invocation object
