@@ -17,6 +17,12 @@ public class HTTPRequestExecutor: RequestExecutor
         self.httpClient = HTTPClient()
     }
 
+    public convenience init(url: URL)
+    {
+        let config = HTTPRequestExecutorConfig(baseURL: url)
+        self.init(config: config)
+    }
+
 // MARK: - Properties
 
     public let config: HTTPRequestExecutorConfig

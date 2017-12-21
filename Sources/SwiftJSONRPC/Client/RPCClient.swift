@@ -16,6 +16,12 @@ open class RPCClient
         self.requestExecutor = requestExecutor
     }
 
+    public convenience init(url: URL)
+    {
+        let requestExecutor = HTTPRequestExecutor(url: url)
+        self.init(requestExecutor: requestExecutor)
+    }
+
 // MARK: - Properties
 
     open static var logEnabled: Bool = false

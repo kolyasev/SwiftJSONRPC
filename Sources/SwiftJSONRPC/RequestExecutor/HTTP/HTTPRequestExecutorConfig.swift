@@ -12,7 +12,7 @@ public struct HTTPRequestExecutorConfig
 
     public init(
         baseURL: URL,
-        throttleInterval: DispatchTimeInterval
+        throttleInterval: DispatchTimeInterval = HTTPRequestExecutorConfig.defaultThrottleInterval
     )
     {
         self.baseURL = baseURL
@@ -24,6 +24,10 @@ public struct HTTPRequestExecutorConfig
     public let baseURL: URL
 
     public let throttleInterval: DispatchTimeInterval
+
+// MARK: - Constants
+
+    public static let defaultThrottleInterval: DispatchTimeInterval = .milliseconds(100)
 
 }
 
