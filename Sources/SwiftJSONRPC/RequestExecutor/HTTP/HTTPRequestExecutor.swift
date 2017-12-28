@@ -48,6 +48,13 @@ public class HTTPRequestExecutor: RequestExecutor
         }
     }
 
+    public func activeHTTPRequest(forRequest request: Request) -> HTTPRequest?
+    {
+        return self.httpTasks.withValue { httpTasks in
+            return httpTasks.first(where: { $0.requests.contains(where: { $0 === request }) })?.httpRequest
+        }
+    }
+
 // MARK: - Private Functions
 
     private func perform(tasks: [RPCTask])
@@ -60,6 +67,9 @@ public class HTTPRequestExecutor: RequestExecutor
     {
         do {
             let httpRequest = try self.requestAdapter.adapt(request: httpRequest)
+
+            let httpTask = HTTPTask(httpRequest: httpRequest, requests: tasks.map{ $0.request })
+            enqueue(httpTask: httpTask)
 
             weak var weakSelf = self
             self.httpClient.perform(request: httpRequest) { result in
@@ -85,6 +95,8 @@ public class HTTPRequestExecutor: RequestExecutor
                         let cause = HTTPRequestExecutorError(error: error, request: httpRequest, response: nil)
                         instance.dispatch(error: cause, forRequest: httpRequest, tasks: tasks)
                 }
+
+                instance.dequeue(httpTask: httpTask)
             }
         }
         catch (let error as HTTPRequestError)
@@ -177,6 +189,26 @@ public class HTTPRequestExecutor: RequestExecutor
         return self.tasks.swap([])
     }
 
+    private func enqueue(httpTask: HTTPTask)
+    {
+        _ = self.httpTasks.modify { httpTasks in
+            var httpTasks = httpTasks
+            httpTasks.append(httpTask)
+            return httpTasks
+        }
+    }
+
+    private func dequeue(httpTask: HTTPTask)
+    {
+        _ = self.httpTasks.modify { httpTasks in
+            var httpTasks = httpTasks
+            if let idx = httpTasks.index(where: { $0.httpRequest == httpTask.httpRequest }) {
+                httpTasks.remove(at: idx)
+            }
+            return httpTasks
+        }
+    }
+
 // MARK: - Inner Types
 
     private struct RPCTask
@@ -185,11 +217,19 @@ public class HTTPRequestExecutor: RequestExecutor
         let handler: (RequestExecutorResult) -> Void
     }
 
+    private struct HTTPTask
+    {
+        let httpRequest: HTTPRequest
+        let requests: [Request]
+    }
+
 // MARK: - Variables
 
     private let httpClient: HTTPClient
 
     private let tasks = Atomic<[RPCTask]>([])
+
+    private let httpTasks = Atomic<[HTTPTask]>([])
 
 }
 
