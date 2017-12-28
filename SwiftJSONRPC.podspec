@@ -14,7 +14,6 @@ Pod::Spec.new do |s|
 
   s.frameworks = 'Foundation'
   s.dependency 'Alamofire', '~> 4.5'
-  s.dependency 'SwiftyJSON', '~> 3.1'
 
   # TODO: Convert to Swift 3.x
   # s.dependency 'Atomic', '~> 1.0'
