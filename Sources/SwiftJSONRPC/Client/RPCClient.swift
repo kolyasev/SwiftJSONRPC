@@ -24,7 +24,7 @@ open class RPCClient
 
 // MARK: - Properties
 
-    open static var logEnabled: Bool = false
+    public var requestRetrier: RequestRetrier? = nil
 
 // MARK: - Public Functions
 
@@ -59,10 +59,40 @@ open class RPCClient
     private func perform<R>(request: Request, withResultDispatcher resultDispatcher: ResultDispatcher<R>)
     {
         resultDispatcher.dispatchStart()
-        self.requestExecutor.execute(request: request) { result in
+        execute(request: request) { result in
             resultDispatcher.dispatch(result: result)
             resultDispatcher.dispatchFinish()
         }
+    }
+
+    private func execute(request: Request, completionHandler: @escaping (RequestExecutorResult) -> Void)
+    {
+        self.requestExecutor.execute(request: request) { [weak self] result in
+            if let instance = self,
+               instance.shouldRetry(request: request, afterResult: result)
+            {
+                instance.execute(request: request, completionHandler: completionHandler)
+            }
+            else {
+                completionHandler(result)
+            }
+        }
+    }
+
+    private func shouldRetry(request: Request, afterResult result: RequestExecutorResult) -> Bool
+    {
+        let retry: Bool
+
+        if case .response(let response) = result,
+           let requestRetrier = self.requestRetrier
+        {
+            retry = requestRetrier.should(client: self, retryRequest: request, afterResponse: response)
+        }
+        else {
+            retry = false
+        }
+
+        return retry
     }
 
 // MARK: - Constants

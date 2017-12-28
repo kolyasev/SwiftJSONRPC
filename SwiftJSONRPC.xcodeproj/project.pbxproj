@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		35ADB4041FF5149D0003499D /* RequestRetrier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35ADB4031FF5149D0003499D /* RequestRetrier.swift */; };
 		35BC9BD71F8669E400881541 /* SwiftJSONRPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35BC9BCD1F8669E400881541 /* SwiftJSONRPC.framework */; };
 		35BC9BDE1F8669E400881541 /* SwiftJSONRPC.h in Headers */ = {isa = PBXBuildFile; fileRef = 35BC9BD01F8669E400881541 /* SwiftJSONRPC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35BC9C121F866B5300881541 /* RPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9C101F866AE400881541 /* RPCClient.swift */; };
@@ -74,6 +75,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		35ADB4031FF5149D0003499D /* RequestRetrier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestRetrier.swift; sourceTree = "<group>"; };
 		35BC9BCD1F8669E400881541 /* SwiftJSONRPC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftJSONRPC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35BC9BD01F8669E400881541 /* SwiftJSONRPC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftJSONRPC.h; sourceTree = "<group>"; };
 		35BC9BD11F8669E400881541 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -144,6 +146,14 @@
 				35DFC5F51F87711200B15E9D /* Alamofire.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		35ADB4021FF5147C0003499D /* Retrier */ = {
+			isa = PBXGroup;
+			children = (
+				35ADB4031FF5149D0003499D /* RequestRetrier.swift */,
+			);
+			path = Retrier;
 			sourceTree = "<group>";
 		};
 		35BC9BC31F8669E400881541 = {
@@ -316,6 +326,7 @@
 		35BC9C0F1F866AE400881541 /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				35ADB4021FF5147C0003499D /* Retrier */,
 				35BC9C101F866AE400881541 /* RPCClient.swift */,
 			);
 			path = Client;
@@ -480,6 +491,7 @@
 				35BC9C231F866B5300881541 /* HTTPRequestRetrier.swift in Sources */,
 				35BC9C241F866B5300881541 /* Request.swift in Sources */,
 				35BC9C251F866B5300881541 /* RequestExecutor.swift in Sources */,
+				35ADB4041FF5149D0003499D /* RequestRetrier.swift in Sources */,
 				35BC9C261F866B5300881541 /* RequestId.swift in Sources */,
 				35BC9C271F866B5300881541 /* Response.swift in Sources */,
 				35BC9C281F866B5300881541 /* Result.swift in Sources */,
