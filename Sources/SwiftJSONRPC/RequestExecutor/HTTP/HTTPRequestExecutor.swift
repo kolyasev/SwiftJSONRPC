@@ -129,7 +129,7 @@ public class HTTPRequestExecutor: RequestExecutor
         do {
             let payload = try JSONSerialization.jsonObject(with: httpResponse.body, options: [])
             guard let items = (payload as? [[String: Any]]) else {
-                throw HTTPResponseSerializationError(cause: nil)
+                throw HTTPResponseSerializationError(cause: HTTPResponseSerializationError.UnexpectedPayloadTypeError(payload: payload))
             }
 
             let responses = try items.map{ try Response(response: $0) }
@@ -234,3 +234,16 @@ public class HTTPRequestExecutor: RequestExecutor
 }
 
 // ----------------------------------------------------------------------------
+
+extension HTTPResponseSerializationError
+{
+// MARK: - Inner Types
+
+    struct UnexpectedPayloadTypeError: Error {
+        let payload: Any
+    }
+
+}
+
+// ----------------------------------------------------------------------------
+
