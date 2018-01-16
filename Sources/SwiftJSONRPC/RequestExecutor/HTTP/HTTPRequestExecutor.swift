@@ -84,7 +84,7 @@ public class HTTPRequestExecutor: RequestExecutor
                         }
                         catch (let error as HTTPResponseError)
                         {
-                            let cause = HTTPRequestExecutorError(error: error, request: httpRequest, response: nil)
+                            let cause = HTTPRequestExecutorError(error: error, request: httpRequest, response: response)
                             instance.dispatch(error: cause, forRequest: httpRequest, tasks: tasks)
                         }
                         catch {
@@ -137,13 +137,13 @@ public class HTTPRequestExecutor: RequestExecutor
         }
         catch (let error as HTTPResponseSerializationError)
         {
-            let cause = HTTPRequestExecutorError(error: error, request: request, response: nil)
+            let cause = HTTPRequestExecutorError(error: error, request: request, response: httpResponse)
             dispatch(error: cause, forRequest: request, tasks: tasks)
         }
         catch (let error)
         {
             let error = HTTPResponseSerializationError(cause: error)
-            let cause = HTTPRequestExecutorError(error: error, request: request, response: nil)
+            let cause = HTTPRequestExecutorError(error: error, request: request, response: httpResponse)
             dispatch(error: cause, forRequest: request, tasks: tasks)
         }
     }
