@@ -10,17 +10,22 @@ public class HTTPRequestExecutor: RequestExecutor
 {
 // MARK: - Construction
 
-    public init(config: HTTPRequestExecutorConfig)
-    {
-        // Init instance variables
-        self.config = config
-        self.httpClient = HTTPClient()
-    }
-
     public convenience init(url: URL)
     {
         let config = HTTPRequestExecutorConfig(baseURL: url)
         self.init(config: config)
+    }
+
+    public convenience init(config: HTTPRequestExecutorConfig)
+    {
+        let httpClient = AlamofireHTTPClient()
+        self.init(config: config, httpClient: httpClient)
+    }
+
+    init(config: HTTPRequestExecutorConfig, httpClient: HTTPClient)
+    {
+        self.config = config
+        self.httpClient = httpClient
     }
 
 // MARK: - Properties

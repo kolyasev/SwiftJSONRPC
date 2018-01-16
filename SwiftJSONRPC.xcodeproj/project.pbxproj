@@ -21,7 +21,7 @@
 		35BC9C1A1F866B5300881541 /* DefaultHTTPResponseAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9BFB1F866AE400881541 /* DefaultHTTPResponseAdapter.swift */; };
 		35BC9C1B1F866B5300881541 /* HTTPRequestAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9BFC1F866AE400881541 /* HTTPRequestAdapter.swift */; };
 		35BC9C1C1F866B5300881541 /* HTTPResponseAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9BFD1F866AE400881541 /* HTTPResponseAdapter.swift */; };
-		35BC9C1D1F866B5300881541 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9BFF1F866AE400881541 /* HTTPClient.swift */; };
+		35BC9C1D1F866B5300881541 /* AlamofireHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9BFF1F866AE400881541 /* AlamofireHTTPClient.swift */; };
 		35BC9C1E1F866B5300881541 /* HTTPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9C001F866AE400881541 /* HTTPRequest.swift */; };
 		35BC9C1F1F866B5300881541 /* HTTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9C011F866AE400881541 /* HTTPResponse.swift */; };
 		35BC9C201F866B5300881541 /* HTTPRequestExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC9C021F866AE400881541 /* HTTPRequestExecutor.swift */; };
@@ -48,6 +48,7 @@
 		35DFC5F81F877B6800B15E9D /* Alamofire.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 35DFC5F51F87711200B15E9D /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35DFC61C1F87931700B15E9D /* ResultQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DFC61B1F87931700B15E9D /* ResultQueue.swift */; };
 		35DFC61E1F87AB2800B15E9D /* CallbackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DFC61D1F87AB2800B15E9D /* CallbackEvent.swift */; };
+		35ECD854200E330C001B3054 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35ECD853200E330C001B3054 /* HTTPClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,7 +96,7 @@
 		35BC9BFB1F866AE400881541 /* DefaultHTTPResponseAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHTTPResponseAdapter.swift; sourceTree = "<group>"; };
 		35BC9BFC1F866AE400881541 /* HTTPRequestAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestAdapter.swift; sourceTree = "<group>"; };
 		35BC9BFD1F866AE400881541 /* HTTPResponseAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponseAdapter.swift; sourceTree = "<group>"; };
-		35BC9BFF1F866AE400881541 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		35BC9BFF1F866AE400881541 /* AlamofireHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireHTTPClient.swift; sourceTree = "<group>"; };
 		35BC9C001F866AE400881541 /* HTTPRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequest.swift; sourceTree = "<group>"; };
 		35BC9C011F866AE400881541 /* HTTPResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponse.swift; sourceTree = "<group>"; };
 		35BC9C021F866AE400881541 /* HTTPRequestExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestExecutor.swift; sourceTree = "<group>"; };
@@ -118,6 +119,7 @@
 		35DFC5F51F87711200B15E9D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		35DFC61B1F87931700B15E9D /* ResultQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultQueue.swift; sourceTree = "<group>"; };
 		35DFC61D1F87AB2800B15E9D /* CallbackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackEvent.swift; sourceTree = "<group>"; };
+		35ECD853200E330C001B3054 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,9 +301,10 @@
 		35BC9BFE1F866AE400881541 /* Client */ = {
 			isa = PBXGroup;
 			children = (
-				35BC9BFF1F866AE400881541 /* HTTPClient.swift */,
+				35ECD853200E330C001B3054 /* HTTPClient.swift */,
 				35BC9C001F866AE400881541 /* HTTPRequest.swift */,
 				35BC9C011F866AE400881541 /* HTTPResponse.swift */,
+				35BC9BFF1F866AE400881541 /* AlamofireHTTPClient.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -481,7 +484,7 @@
 				35BC9C1A1F866B5300881541 /* DefaultHTTPResponseAdapter.swift in Sources */,
 				35BC9C1B1F866B5300881541 /* HTTPRequestAdapter.swift in Sources */,
 				35BC9C1C1F866B5300881541 /* HTTPResponseAdapter.swift in Sources */,
-				35BC9C1D1F866B5300881541 /* HTTPClient.swift in Sources */,
+				35BC9C1D1F866B5300881541 /* AlamofireHTTPClient.swift in Sources */,
 				35BC9C1E1F866B5300881541 /* HTTPRequest.swift in Sources */,
 				35BC9C1F1F866B5300881541 /* HTTPResponse.swift in Sources */,
 				35BC9C201F866B5300881541 /* HTTPRequestExecutor.swift in Sources */,
@@ -499,6 +502,7 @@
 				35BC9C2A1F866B5300881541 /* ResultParser.swift in Sources */,
 				35BC9C2B1F866B5300881541 /* JsonPrimitiveResultParser.swift in Sources */,
 				35BC9C2C1F866B5300881541 /* ParcelableArrayResultParser.swift in Sources */,
+				35ECD854200E330C001B3054 /* HTTPClient.swift in Sources */,
 				35BC9C2D1F866B5300881541 /* ParcelableResultParser.swift in Sources */,
 				35BC9C2E1F866B5300881541 /* JSONRPCService.swift in Sources */,
 				35BC9C361F866BCA00881541 /* Lock.swift in Sources */,

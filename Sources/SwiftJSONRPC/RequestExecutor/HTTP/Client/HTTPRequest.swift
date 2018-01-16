@@ -6,7 +6,6 @@
 //
 // ----------------------------------------------------------------------------
 
-import Alamofire
 import Foundation
 
 // ----------------------------------------------------------------------------
@@ -22,25 +21,6 @@ public struct HTTPRequest
     public var headers: [String: String]
 
     public var body: Data
-
-}
-
-// ----------------------------------------------------------------------------
-
-extension HTTPRequest: URLRequestConvertible
-{
-// MARK: - Functions
-
-    public func asURLRequest() throws -> URLRequest
-    {
-        var request = URLRequest(url: self.url)
-
-        request.httpMethod = self.method.rawValue
-        request.allHTTPHeaderFields = self.headers
-        request.httpBody = self.body
-
-        return request
-    }
 
 }
 

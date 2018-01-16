@@ -18,7 +18,7 @@ class HTTPClientTests: XCTestCase
     override func setUp() {
         super.setUp()
 
-        self.httpClient = HTTPClient()
+        self.httpClient = AlamofireHTTPClient()
     }
 
     func testHasResponse()
