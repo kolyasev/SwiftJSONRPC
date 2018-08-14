@@ -6,6 +6,10 @@
 //
 // ----------------------------------------------------------------------------
 
+import PromiseKit
+
+// ----------------------------------------------------------------------------
+
 class ParcelableArrayResultParser<Element: Parcelable>: ResultParser
 {
 // MARK: Functions
@@ -31,7 +35,7 @@ extension JSONRPCService
 {
 // MARK: Functions
 
-    open func invoke<Element: Parcelable>(_ method: String, params: Invocation<[Element]>.Params? = nil) -> ResultProvider<[Element]>
+    open func invoke<Element: Parcelable>(_ method: String, params: Invocation<[Element]>.Params? = nil) -> Promise<[Element]>
     {
         return invoke(method, params: params, parser: ParcelableArrayResultParser())
     }

@@ -6,6 +6,10 @@
 //
 // ----------------------------------------------------------------------------
 
+import PromiseKit
+
+// ----------------------------------------------------------------------------
+
 class JsonPrimitiveResultParser<ResultType: JsonPrimitive>: ResultParser
 {
 // MARK: Functions
@@ -27,7 +31,7 @@ extension JSONRPCService
 {
 // MARK: Functions
 
-    open func invoke<Result: JsonPrimitive>(_ method: String, params: Invocation<Result>.Params? = nil) -> ResultProvider<Result>
+    open func invoke<Result: JsonPrimitive>(_ method: String, params: Invocation<Result>.Params? = nil) -> Promise<Result>
     {
         return invoke(method, params: params, parser: JsonPrimitiveResultParser())
     }

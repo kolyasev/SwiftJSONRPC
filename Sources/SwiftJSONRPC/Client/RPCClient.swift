@@ -6,6 +6,10 @@
 //
 // ----------------------------------------------------------------------------
 
+import PromiseKit
+
+// ----------------------------------------------------------------------------
+
 open class RPCClient
 {
 // MARK: - Construction
@@ -28,7 +32,7 @@ open class RPCClient
 
 // MARK: - Public Functions
 
-    open func invoke<Result>(_ invocation: Invocation<Result>) -> ResultProvider<Result>
+    open func invoke<Result>(_ invocation: Invocation<Result>) -> Promise<Result>
     {
         // Init request
         let request = makeRequest(invocation: invocation)
@@ -38,10 +42,10 @@ open class RPCClient
 
         // Perform request
         DispatchQueue.global().async { [weak self] in
-            self?.perform(request: request, withResultDispatcher: resultDispatcher)
+            self?.execute(request: request, withResultDispatcher: resultDispatcher)
         }
 
-        return resultDispatcher
+        return resultDispatcher.promise
     }
 
 // MARK: - Private Functions
@@ -56,12 +60,10 @@ open class RPCClient
         return Request(id: identifier, invocation: invocation)
     }
 
-    private func perform<R>(request: Request, withResultDispatcher resultDispatcher: ResultDispatcher<R>)
+    private func execute<R>(request: Request, withResultDispatcher resultDispatcher: ResultDispatcher<R>)
     {
-        resultDispatcher.dispatchStart()
         execute(request: request) { result in
             resultDispatcher.dispatch(result: result)
-            resultDispatcher.dispatchFinish()
         }
     }
 
@@ -121,10 +123,10 @@ extension ResultDispatcher
                 dispatch(response: response)
 
             case .error(let error):
-                dispatchError(InvocationError.applicationError(cause: error))
+                dispatch(error: InvocationError.applicationError(cause: error))
 
             case .cancel:
-                dispatchCancel()
+                dispatch(error: InvocationError.canceled)
         }
     }
 
@@ -136,7 +138,7 @@ extension ResultDispatcher
                 dispatchSuccessBody(successBody)
 
             case .error(let error):
-                dispatchError(InvocationError.rpcError(error: error))
+                dispatch(error: InvocationError.rpcError(error: error))
         }
     }
 
@@ -144,12 +146,12 @@ extension ResultDispatcher
     {
         do {
             let result = try self.invocation.parser.parse(body)
-            dispatchResult(result)
+            dispatch(result: result)
         }
         catch (let cause)
         {
             let error = InvocationError.applicationError(cause: cause)
-            dispatchError(error)
+            dispatch(error: error)
         }
     }
 

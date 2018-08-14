@@ -6,6 +6,10 @@
 //
 // ----------------------------------------------------------------------------
 
+import PromiseKit
+
+// ----------------------------------------------------------------------------
+
 open class JSONRPCService
 {
 // MARK: - Construction
@@ -16,7 +20,7 @@ open class JSONRPCService
 
 // MARK: - Public Functions
 
-    open func invoke<Result, Parser: ResultParser>(_ method: String, params: Invocation<Result>.Params? = nil, parser: Parser) -> ResultProvider<Result>
+    open func invoke<Result, Parser: ResultParser>(_ method: String, params: Invocation<Result>.Params? = nil, parser: Parser) -> Promise<Result>
         where Parser.Result == Result
     {
         // Init invocation object

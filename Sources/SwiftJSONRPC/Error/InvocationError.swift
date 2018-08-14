@@ -10,6 +10,7 @@ public enum InvocationError: Error
 {
     case applicationError(cause: Error)
     case rpcError(error: RPCError)
+    case canceled
 }
 
 // ----------------------------------------------------------------------------

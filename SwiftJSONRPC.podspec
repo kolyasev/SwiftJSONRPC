@@ -13,7 +13,8 @@ Pod::Spec.new do |s|
   s.source_files = 'Sources/**/*.swift'
 
   s.frameworks = 'Foundation'
-  s.dependency 'Alamofire', '~> 4.5'
+  s.dependency 'Alamofire', '~> 4.7'
+  s.dependency 'PromiseKit', '~> 6.3'
 
   # TODO: Convert to Swift 3.x
   # s.dependency 'Atomic', '~> 1.0'
