@@ -43,11 +43,11 @@
 		662C6A5F212310B600274389 /* JsonPrimitiveResultParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A35212310B600274389 /* JsonPrimitiveResultParser.swift */; };
 		662C6A60212310B600274389 /* Parcelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A37212310B600274389 /* Parcelable.swift */; };
 		662C6A61212310B600274389 /* ResultParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A38212310B600274389 /* ResultParser.swift */; };
-		662C6A62212310B600274389 /* JSONRPCService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A3A212310B600274389 /* JSONRPCService.swift */; };
 		662C6A63212310B600274389 /* RPCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A3C212310B600274389 /* RPCError.swift */; };
 		662C6A64212310B600274389 /* InvocationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A3D212310B600274389 /* InvocationError.swift */; };
 		662C6A65212310B600274389 /* RequestRetrier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A40212310B600274389 /* RequestRetrier.swift */; };
 		662C6A66212310B600274389 /* RPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A41212310B600274389 /* RPCClient.swift */; };
+		666123D221245C0800DA0244 /* RPCService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666123D121245C0800DA0244 /* RPCService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,11 +112,11 @@
 		662C6A35212310B600274389 /* JsonPrimitiveResultParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonPrimitiveResultParser.swift; sourceTree = "<group>"; };
 		662C6A37212310B600274389 /* Parcelable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parcelable.swift; sourceTree = "<group>"; };
 		662C6A38212310B600274389 /* ResultParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultParser.swift; sourceTree = "<group>"; };
-		662C6A3A212310B600274389 /* JSONRPCService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONRPCService.swift; sourceTree = "<group>"; };
 		662C6A3C212310B600274389 /* RPCError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPCError.swift; sourceTree = "<group>"; };
 		662C6A3D212310B600274389 /* InvocationError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvocationError.swift; sourceTree = "<group>"; };
 		662C6A40212310B600274389 /* RequestRetrier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestRetrier.swift; sourceTree = "<group>"; };
 		662C6A41212310B600274389 /* RPCClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPCClient.swift; sourceTree = "<group>"; };
+		666123D121245C0800DA0244 /* RPCService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPCService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -319,7 +319,7 @@
 		662C6A39212310B600274389 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				662C6A3A212310B600274389 /* JSONRPCService.swift */,
+				666123D121245C0800DA0244 /* RPCService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -486,13 +486,13 @@
 				662C6A5E212310B600274389 /* ParcelableResultParser.swift in Sources */,
 				662C6A65212310B600274389 /* RequestRetrier.swift in Sources */,
 				662C6A51212310B600274389 /* HTTPRequestAdapter.swift in Sources */,
-				662C6A62212310B600274389 /* JSONRPCService.swift in Sources */,
 				662C6A63212310B600274389 /* RPCError.swift in Sources */,
 				662C6A5D212310B600274389 /* ParcelableArrayResultParser.swift in Sources */,
 				662C6A57212310B600274389 /* HTTPRequest.swift in Sources */,
 				662C6A61212310B600274389 /* ResultParser.swift in Sources */,
 				662C6A59212310B600274389 /* AlamofireHTTPClient.swift in Sources */,
 				662C6A5A212310B600274389 /* HTTPClient.swift in Sources */,
+				666123D221245C0800DA0244 /* RPCService.swift in Sources */,
 				662C6A47212310B600274389 /* ResultDispatcher.swift in Sources */,
 				662C6A50212310B600274389 /* HTTPRequestExecutorError.swift in Sources */,
 			);

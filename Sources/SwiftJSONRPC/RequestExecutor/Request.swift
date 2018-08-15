@@ -45,7 +45,7 @@ public class Request
 
 // MARK: Private Functions
 
-    fileprivate static func prepareParams(_ params: [String: Any?]) -> [String: Any]
+    private static func prepareParams(_ params: [String: Any?]) -> [String: Any]
     {
         var result: [String: Any] = [:]
 
@@ -62,7 +62,7 @@ public class Request
 
 // MARK: Constants
 
-    fileprivate struct JsonKeys
+    private struct JsonKeys
     {
         static let JsonRPC = "jsonrpc"
         static let Method = "method"
@@ -74,7 +74,6 @@ public class Request
         static let Data = "data"
         static let Id = "id"
     }
-
 }
 
 // ----------------------------------------------------------------------------

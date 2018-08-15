@@ -27,7 +27,7 @@ class JsonPrimitiveResultParser<ResultType: JsonPrimitive>: ResultParser
 
 // ----------------------------------------------------------------------------
 
-extension JSONRPCService
+extension RPCService
 {
 // MARK: Functions
 

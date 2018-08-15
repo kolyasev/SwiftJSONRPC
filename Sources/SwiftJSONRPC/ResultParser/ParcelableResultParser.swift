@@ -27,7 +27,7 @@ class ParcelableResultParser<Result: Parcelable>: ResultParser
 
 // ----------------------------------------------------------------------------
 
-extension JSONRPCService
+extension RPCService
 {
 // MARK: Functions
 

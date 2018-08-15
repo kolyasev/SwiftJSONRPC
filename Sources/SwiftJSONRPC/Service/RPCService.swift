@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //
-//  JSONRPCService.swift
+//  RPCService.swift
 //
 //  @author Denis Kolyasev <kolyasev@gmail.com>
 //
@@ -10,7 +10,7 @@ import PromiseKit
 
 // ----------------------------------------------------------------------------
 
-open class JSONRPCService
+open class RPCService
 {
 // MARK: - Construction
 
