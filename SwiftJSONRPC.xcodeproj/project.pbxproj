@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		35BC9BD71F8669E400881541 /* SwiftJSONRPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35BC9BCD1F8669E400881541 /* SwiftJSONRPC.framework */; };
-		35DE3F5B1F866E9000A6F773 /* ResultDispatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DE3F581F866E9000A6F773 /* ResultDispatcherTests.swift */; };
 		35DE3F5C1F866E9000A6F773 /* HTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DE3F591F866E9000A6F773 /* HTTPClientTests.swift */; };
 		35DE3F5D1F866E9000A6F773 /* HTTPRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DE3F5A1F866E9000A6F773 /* HTTPRequestTests.swift */; };
 		35DFC5F61F87711500B15E9D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35DFC5F51F87711200B15E9D /* Alamofire.framework */; };
@@ -78,7 +77,6 @@
 		35BC9BCD1F8669E400881541 /* SwiftJSONRPC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftJSONRPC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35BC9BD61F8669E400881541 /* SwiftJSONRPCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftJSONRPCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35BC9BDD1F8669E400881541 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		35DE3F581F866E9000A6F773 /* ResultDispatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDispatcherTests.swift; sourceTree = "<group>"; };
 		35DE3F591F866E9000A6F773 /* HTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientTests.swift; sourceTree = "<group>"; };
 		35DE3F5A1F866E9000A6F773 /* HTTPRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestTests.swift; sourceTree = "<group>"; };
 		35DFC5F51F87711200B15E9D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
@@ -173,7 +171,6 @@
 			children = (
 				35DE3F591F866E9000A6F773 /* HTTPClientTests.swift */,
 				35DE3F5A1F866E9000A6F773 /* HTTPRequestTests.swift */,
-				35DE3F581F866E9000A6F773 /* ResultDispatcherTests.swift */,
 				35BC9C111F866B0E00881541 /* SupportingFiles */,
 			);
 			path = Tests;
@@ -503,7 +500,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				35DE3F5D1F866E9000A6F773 /* HTTPRequestTests.swift in Sources */,
-				35DE3F5B1F866E9000A6F773 /* ResultDispatcherTests.swift in Sources */,
 				35DE3F5C1F866E9000A6F773 /* HTTPClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
