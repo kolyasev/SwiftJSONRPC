@@ -43,14 +43,7 @@ public class HTTPRequestExecutor: RequestExecutor
     public func execute(request: Request, completionHandler: @escaping (RequestExecutorResult) -> Void)
     {
         let task = RPCTask(request: request, handler: completionHandler)
-        enqueue(task: task)
-
-        weak var weakSelf = self
-        DispatchQueue.global().asyncAfter(deadline: .now() + self.config.throttleInterval) {
-            if let tasks = weakSelf?.dequeueTasks(), !(tasks.isEmpty) {
-                weakSelf?.perform(tasks: tasks)
-            }
-        }
+        dispatch(task: task)
     }
 
     public func activeHTTPRequest(forRequest request: Request) -> HTTPRequest?
@@ -61,6 +54,30 @@ public class HTTPRequestExecutor: RequestExecutor
     }
 
 // MARK: - Private Functions
+
+    private func dispatch(task: RPCTask)
+    {
+        switch self.config.throttle
+        {
+            case .disabled:
+                perform(tasks: [task])
+
+            case .interval(let interval):
+                dispatch(task: task, withThrottleInterval: interval)
+        }
+    }
+
+    private func dispatch(task: RPCTask, withThrottleInterval interval: DispatchTimeInterval)
+    {
+        enqueue(task: task)
+
+        weak var weakSelf = self
+        DispatchQueue.global().asyncAfter(deadline: .now() + interval) {
+            if let tasks = weakSelf?.dequeueTasks(), !(tasks.isEmpty) {
+                weakSelf?.perform(tasks: tasks)
+            }
+        }
+    }
 
     private func perform(tasks: [RPCTask])
     {
@@ -116,9 +133,18 @@ public class HTTPRequestExecutor: RequestExecutor
 
     private func buildHTTPRequest(forRequests requests: [Request]) -> HTTPRequest
     {
-        let payload = requests.map{ $0.buildBody() }
-        let body: Data
+        let payload: Any
+        let isBatch = requests.count != 1
+        if !isBatch
+        {
+            // Do not use batch call format if we have only one request
+            payload = requests[0].buildBody()
+        }
+        else {
+            payload = requests.map{ $0.buildBody() }
+        }
 
+        let body: Data
         do {
             body = try JSONSerialization.data(withJSONObject: payload, options: [])
         }
