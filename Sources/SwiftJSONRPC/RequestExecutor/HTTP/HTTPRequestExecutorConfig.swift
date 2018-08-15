@@ -12,18 +12,26 @@ public struct HTTPRequestExecutorConfig
 
     public init(
         baseURL: URL,
-        throttleInterval: DispatchTimeInterval = HTTPRequestExecutorConfig.defaultThrottleInterval
+        throttle: Throttle = .interval(HTTPRequestExecutorConfig.defaultThrottleInterval)
     )
     {
         self.baseURL = baseURL
-        self.throttleInterval = throttleInterval
+        self.throttle = throttle
     }
 
 // MARK: - Properties
 
     public let baseURL: URL
 
-    public let throttleInterval: DispatchTimeInterval
+    public let throttle: Throttle
+
+// MARK: - Inner Types
+
+    public enum Throttle
+    {
+        case disabled
+        case interval(DispatchTimeInterval)
+    }
 
 // MARK: - Constants
 
