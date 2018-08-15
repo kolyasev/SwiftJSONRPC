@@ -158,12 +158,21 @@ public class HTTPRequestExecutor: RequestExecutor
     private func dispatch(httpResponse: HTTPResponse, forRequest request: HTTPRequest, tasks: [RPCTask])
     {
         do {
+            let responses: [Response]
+
             let payload = try JSONSerialization.jsonObject(with: httpResponse.body, options: [])
-            guard let items = (payload as? [[String: Any]]) else {
-                throw HTTPResponseSerializationError(cause: HTTPResponseSerializationError.UnexpectedPayloadTypeError(payload: payload))
+            switch payload
+            {
+                case let item as [String: Any]:
+                    responses = [try Response(response: item)]
+
+                case let items as [[String: Any]]:
+                    responses = try items.map{ try Response(response: $0) }
+
+                default:
+                    throw HTTPResponseSerializationError(cause: HTTPResponseSerializationError.UnexpectedPayloadTypeError(payload: payload))
             }
 
-            let responses = try items.map{ try Response(response: $0) }
             dispatch(responses: responses, forTasks: tasks)
         }
         catch (let error as HTTPResponseSerializationError)
