@@ -7,7 +7,8 @@ Pod::Spec.new do |s|
   s.author           = { "Denis Kolyasev" => "kolyasev@gmail.com" }
   s.source           = { :git => "https://github.com/kolyasev/SwiftJSONRPC.git", :tag => s.version.to_s }
 
-  s.platform     = :ios, '8.0'
+  s.ios.deployment_target = "8.0"
+  s.osx.deployment_target = "10.12"
   s.requires_arc = true
 
   s.source_files = 'Sources/**/*.swift'
