@@ -71,11 +71,15 @@ public class HTTPRequestExecutor: RequestExecutor
     {
         enqueue(task: task)
 
-        weak var weakSelf = self
-        DispatchQueue.global().asyncAfter(deadline: .now() + interval) {
-            if let tasks = weakSelf?.dequeueTasks(), !(tasks.isEmpty) {
-                weakSelf?.perform(tasks: tasks)
-            }
+        DispatchQueue.global().asyncAfter(deadline: .now() + interval) { [weak self] in
+            self?.performQueuedTasks()
+        }
+    }
+
+    private func performQueuedTasks()
+    {
+        while let tasks = dequeueTasks(), !tasks.isEmpty {
+            perform(tasks: tasks)
         }
     }
 
@@ -225,8 +229,17 @@ public class HTTPRequestExecutor: RequestExecutor
         }
     }
 
-    private func dequeueTasks() -> [RPCTask] {
-        return self.tasks.swap([])
+    private func dequeueTasks() -> [RPCTask]?
+    {
+        let allTasks = self.tasks.modify { tasks in
+            return Array(tasks.dropFirst(self.config.maxBatchCount))
+        }
+
+        guard !allTasks.isEmpty else {
+            return nil
+        }
+
+        return Array(allTasks.prefix(self.config.maxBatchCount))
     }
 
     private func enqueue(httpTask: HTTPTask)
