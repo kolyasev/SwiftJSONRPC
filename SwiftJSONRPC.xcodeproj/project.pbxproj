@@ -80,6 +80,7 @@
 		35DE3F591F866E9000A6F773 /* HTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientTests.swift; sourceTree = "<group>"; };
 		35DE3F5A1F866E9000A6F773 /* HTTPRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestTests.swift; sourceTree = "<group>"; };
 		35DFC5F51F87711200B15E9D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		6612D8A1239FEE66001AE450 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		662C6A0E212310B500274389 /* SwiftJSONRPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftJSONRPC.h; sourceTree = "<group>"; };
 		662C6A0F212310B500274389 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		662C6A12212310B600274389 /* Lock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 		35BC9BC31F8669E400881541 = {
 			isa = PBXGroup;
 			children = (
+				6612D8A1239FEE66001AE450 /* Package.swift */,
 				662C6A14212310B600274389 /* SwiftJSONRPC */,
 				662C6A10212310B600274389 /* Libraries */,
 				662C6A0D212310B500274389 /* SupportingFiles */,
