@@ -11,13 +11,14 @@
 
 ```swift
 import SwiftJSONRPC
+import PromiseKit
 
 class UserService: JSONRPCService {
-    func vote(rating: Int) -> ResultProvider<Int> {
+    func vote(rating: Int) -> Promise<Int> {
         return invoke("vote", params: ["rating": rating])
     }
     
-    func create(name: String) -> ResultProvider<UserModel> {
+    func create(name: String) -> Promise<UserModel> {
         return invoke("create", params: ["name": name])
     }
 
@@ -43,97 +44,16 @@ service.vote(rating: 5)
 
 ### Result Handling
 
-```swift
-service.vote(rating: 5).result { newRating in
-    // Handle result
-}
-```
-
-SwiftJSONRPC contains five different invocation callback types.
-
-###### Result
-
-```swift
-func result(queue: ResultQueue = .background, block: @escaping (Result) -> Void) -> Self
-```
-
-Called on success result. Include generic response data type that you defined in `RPCService` subclass.
-
-###### Error
-
-```swift
-func error(queue: ResultQueue = .background, block: @escaping (RPCError) -> Void) -> Self
-```
-
-Called on error result. Include instance of `RPCError` type.
-
-###### Cancel
-
-```swift
-func cancel(queue: ResultQueue = .background, block: @escaping () -> Void) -> Self
-```
-
-Called if invocation was cancelled by calling `cancel()` method.
-
-###### Start
-
-```swift
-func start(queue: ResultQueue = .background, block: @escaping () -> Void) -> Self
-```
-
-Called before performing invocation. Can be used for starting loading animation.
-
-###### Finish
-
-```swift
-func finish(queue: ResultQueue = .background, block: @escaping () -> Void) -> Self
-```
-
-Called after performing invocation. In all cases including canceling. Can be used for stopping loading animation.
-
-#### Chained Invocation Callbacks
-
-Invocation callbacks can be chained:
+SwiftJSONRPC uses [PromiseKit](https://github.com/mxcl/PromiseKit) to return result.
 
 ```swift
 service.vote(rating: 5)
-    .result { newRating in
+    .done { newRating in
         // Handle result
     }
-    .error { error in
+    .catch { error in
         // Handle error
     }
-    .start {
-        // Setup activity indicator
-    }
-    .finish {
-        // Remove activity indicator
-    }
-```
-
-#### Invocation Callbacks Queue
-
-By default invocation callback called on background queue. But you can specify custom queue for each callback:
-
-```swift
-service.vote(rating: 5)
-    .result(queue: .background) { newRating in
-        // Handle result
-    }
-    .error(queue: .main) { error in
-        // Handle error
-    }
-```
-
-Use one of available queue types:
-
-```swift
-enum ResultQueue
-{
-    case main
-    case background
-    case custom(queue: DispatchQueue)
-}
 ```
 
 #### Result Serialization
@@ -170,13 +90,13 @@ After that use this struct as `RPCService.Result` generic parameter:
 
 ```swift
 class UserService: JSONRPCService {
-    func create(name: String) -> ResultProvider<UserModel> {
+    func create(name: String) -> Promise<UserModel> {
         return invoke("create", params: ["name": name])
     }
 }
 ```
 ```swift
-service.create(name: "testuser").result { user in
+service.create(name: "testuser").done { user in
     print("User created with ID = \(user.id)")
 }
 ```
@@ -185,7 +105,7 @@ Using array of `Parcelable` objects is also supported:
 
 ```swift
 extension UserService {
-    func allUsers() -> ResultProvider<[UserModel]> {
+    func allUsers() -> Promise<[UserModel]> {
         return invoke("all_users")
     }
 }
@@ -200,6 +120,8 @@ extension UserService {
 
 ## Installation
 
+### CocoaPods
+
 SwiftJSONRPC is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
@@ -207,9 +129,24 @@ it, simply add the following line to your Podfile:
 pod "SwiftJSONRPC"
 ```
 
+### Carthage
+
+```ruby
+github "kolyasev/SwiftJSONRPC"
+```
+
+### Swift Package Manager
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/kolyasev/SwiftJSONRPC.git", .upToNextMajor(from: "0.7.0"))
+]
+```
+
 ## ToDo
 
 - [ ] Add support for notification request object without an "id" member.
+- [ ] Remove `Parcelable` protocol and use `Decodable`.
 
 ## Author
 
