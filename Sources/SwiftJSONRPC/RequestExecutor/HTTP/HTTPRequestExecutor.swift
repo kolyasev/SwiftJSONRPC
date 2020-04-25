@@ -259,7 +259,7 @@ public class HTTPRequestExecutor: RequestExecutor
     {
         _ = self.httpTasks.modify { httpTasks in
             var httpTasks = httpTasks
-            if let idx = httpTasks.index(where: { $0.httpRequest == httpTask.httpRequest }) {
+            if let idx = httpTasks.firstIndex(where: { $0.httpRequest == httpTask.httpRequest }) {
                 httpTasks.remove(at: idx)
             }
             return httpTasks

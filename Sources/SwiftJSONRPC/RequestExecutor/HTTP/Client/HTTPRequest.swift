@@ -20,7 +20,7 @@ public struct HTTPRequest
 
     public var headers: [String: String]
 
-    public var body: Data
+    public var body: Data?
 
 }
 

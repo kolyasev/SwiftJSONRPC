@@ -27,7 +27,7 @@ class HTTPClientTests: XCTestCase
         let method = HTTPMethod(rawValue: "GET")!
         let url = URL(string: "https://httpbin.org/get")!
 
-        let request = HTTPRequest(method: method, url: url, headers: [:], body: Data())
+        let request = HTTPRequest(method: method, url: url, headers: [:], body: nil)
 
         let expectation = self.expectation(description: "Request should succeed.")
         var response: HTTPResponse!
@@ -55,9 +55,9 @@ class HTTPClientTests: XCTestCase
     {
         // Given
         let method = HTTPMethod(rawValue: "GET")!
-        let url = URL(string: "https://httpbin.org/status/401")!
+        let url = URL(string: "https://httpbin.org/status/204")!
 
-        let request = HTTPRequest(method: method, url: url, headers: [:], body: Data())
+        let request = HTTPRequest(method: method, url: url, headers: [:], body: nil)
 
         let expectation = self.expectation(description: "Request should succeed.")
         var response: HTTPResponse!
@@ -79,16 +79,16 @@ class HTTPClientTests: XCTestCase
 
         // Then
         XCTAssertNotNil(response)
-        XCTAssertEqual(response.code, 401)
+        XCTAssertEqual(response.code, 204)
     }
 
     func testResponseHeaders()
     {
         // Given
         let method = HTTPMethod(rawValue: "GET")!
-        let url = URL(string: "https://httpbin.org/response-headers?Foo=bar&Baz=bat")!
+        let url = URL(string: "https://httpbin.org/response-headers?foo=bar&baz=bat")!
 
-        let request = HTTPRequest(method: method, url: url, headers: [:], body: Data())
+        let request = HTTPRequest(method: method, url: url, headers: [:], body: nil)
 
         let expectation = self.expectation(description: "Request should succeed.")
         var response: HTTPResponse!
@@ -110,8 +110,8 @@ class HTTPClientTests: XCTestCase
 
         // Then
         XCTAssertNotNil(response)
-        XCTAssertEqual(response.headers["Foo"], "bar")
-        XCTAssertEqual(response.headers["Baz"], "bat")
+        XCTAssertEqual(response.headers["foo"], "bar")
+        XCTAssertEqual(response.headers["baz"], "bat")
     }
 
     func testResponseBody()
@@ -120,7 +120,7 @@ class HTTPClientTests: XCTestCase
         let method = HTTPMethod(rawValue: "GET")!
         let url = URL(string: "https://httpbin.org//bytes/100")!
 
-        let request = HTTPRequest(method: method, url: url, headers: [:], body: Data())
+        let request = HTTPRequest(method: method, url: url, headers: [:], body: nil)
 
         let expectation = self.expectation(description: "Request should succeed.")
         var response: HTTPResponse!

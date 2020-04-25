@@ -17,7 +17,7 @@ class AlamofireHTTPClient: HTTPClient
 
     func perform(request: HTTPRequest, completionHandler: @escaping (HTTPClient.PerformRequestResult) -> Void)
     {
-        Alamofire
+        AF
             .request(request)
             .responseData(queue: responseQueue(), completionHandler: { result in
                 switch result.result
