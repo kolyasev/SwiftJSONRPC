@@ -10,7 +10,7 @@ public struct Invocation<Result>
 {
 // MARK: - Construction
 
-    init<Parser: ResultParser>(method: String, params: Params, parser: Parser)
+    init<Parser: ResultParser>(method: String, params: Params?, parser: Parser)
         where Parser.Result == Result
     {
         // Init instance variables
@@ -23,7 +23,7 @@ public struct Invocation<Result>
 
     public let method: String
 
-    public let params: Params
+    public let params: Params?
 
     public let parser: AnyResultParser<Result>
 

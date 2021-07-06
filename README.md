@@ -13,7 +13,7 @@
 import SwiftJSONRPC
 import PromiseKit
 
-class UserService: JSONRPCService {
+class UserService: RPCService {
     func vote(rating: Int) -> Promise<Int> {
         return invoke("vote", params: ["rating": rating])
     }
@@ -89,7 +89,7 @@ struct UserModel: Parcelable {
 After that use this struct as `RPCService.Result` generic parameter:
 
 ```swift
-class UserService: JSONRPCService {
+class UserService: RPCService {
     func create(name: String) -> Promise<UserModel> {
         return invoke("create", params: ["name": name])
     }
