@@ -33,7 +33,7 @@ open class RPCService
     open func makeInvocation<Result, Parser: ResultParser>(method: String, params: Invocation<Result>.Params?, parser: Parser) -> Invocation<Result>
         where Parser.Result == Result
     {
-        return Invocation<Result>(method: method, params: params ?? [:], parser: parser)
+        return Invocation<Result>(method: method, params: params, parser: parser)
     }
 
 // MARK: - Variables

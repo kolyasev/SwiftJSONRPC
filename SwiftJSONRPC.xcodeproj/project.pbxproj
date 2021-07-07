@@ -3,15 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		35BC9BD71F8669E400881541 /* SwiftJSONRPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35BC9BCD1F8669E400881541 /* SwiftJSONRPC.framework */; };
 		35DE3F5C1F866E9000A6F773 /* HTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DE3F591F866E9000A6F773 /* HTTPClientTests.swift */; };
 		35DE3F5D1F866E9000A6F773 /* HTTPRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DE3F5A1F866E9000A6F773 /* HTTPRequestTests.swift */; };
-		35DFC5F61F87711500B15E9D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35DFC5F51F87711200B15E9D /* Alamofire.framework */; };
-		35DFC5F81F877B6800B15E9D /* Alamofire.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 35DFC5F51F87711200B15E9D /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		49248EE02695000D00F4E479 /* Alamofire.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49248EDF2695000D00F4E479 /* Alamofire.xcframework */; };
+		49248EE12695000D00F4E479 /* Alamofire.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49248EDF2695000D00F4E479 /* Alamofire.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		49248EE32695002800F4E479 /* PromiseKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49248EE22695002800F4E479 /* PromiseKit.xcframework */; };
+		49248EE42695002800F4E479 /* PromiseKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49248EE22695002800F4E479 /* PromiseKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		662C6A42212310B600274389 /* SwiftJSONRPC.h in Headers */ = {isa = PBXBuildFile; fileRef = 662C6A0E212310B500274389 /* SwiftJSONRPC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		662C6A44212310B600274389 /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A12212310B600274389 /* Lock.swift */; };
 		662C6A45212310B600274389 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A13212310B600274389 /* Atomic.swift */; };
@@ -46,8 +48,6 @@
 		662C6A65212310B600274389 /* RequestRetrier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A40212310B600274389 /* RequestRetrier.swift */; };
 		662C6A66212310B600274389 /* RPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662C6A41212310B600274389 /* RPCClient.swift */; };
 		666123D221245C0800DA0244 /* RPCService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666123D121245C0800DA0244 /* RPCService.swift */; };
-		66D5251F2454AAA30026F2D0 /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D5251E2454AAA30026F2D0 /* PromiseKit.framework */; };
-		66D525242454AC740026F2D0 /* PromiseKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 66D5251E2454AAA30026F2D0 /* PromiseKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,10 +67,20 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				66D525242454AC740026F2D0 /* PromiseKit.framework in Copy Frameworks */,
-				35DFC5F81F877B6800B15E9D /* Alamofire.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49248ED72694FF1B00F4E479 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				49248EE42695002800F4E479 /* PromiseKit.xcframework in Embed Frameworks */,
+				49248EE12695000D00F4E479 /* Alamofire.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -81,7 +91,8 @@
 		35BC9BDD1F8669E400881541 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35DE3F591F866E9000A6F773 /* HTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientTests.swift; sourceTree = "<group>"; };
 		35DE3F5A1F866E9000A6F773 /* HTTPRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestTests.swift; sourceTree = "<group>"; };
-		35DFC5F51F87711200B15E9D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		49248EDF2695000D00F4E479 /* Alamofire.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Alamofire.xcframework; path = Carthage/Build/Alamofire.xcframework; sourceTree = "<group>"; };
+		49248EE22695002800F4E479 /* PromiseKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PromiseKit.xcframework; path = Carthage/Build/PromiseKit.xcframework; sourceTree = "<group>"; };
 		6612D8A1239FEE66001AE450 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		662C6A0E212310B500274389 /* SwiftJSONRPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftJSONRPC.h; sourceTree = "<group>"; };
 		662C6A0F212310B500274389 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -118,7 +129,6 @@
 		662C6A40212310B600274389 /* RequestRetrier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestRetrier.swift; sourceTree = "<group>"; };
 		662C6A41212310B600274389 /* RPCClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPCClient.swift; sourceTree = "<group>"; };
 		666123D121245C0800DA0244 /* RPCService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPCService.swift; sourceTree = "<group>"; };
-		66D5251E2454AAA30026F2D0 /* PromiseKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PromiseKit.framework; path = Carthage/Build/iOS/PromiseKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,8 +136,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35DFC5F61F87711500B15E9D /* Alamofire.framework in Frameworks */,
-				66D5251F2454AAA30026F2D0 /* PromiseKit.framework in Frameworks */,
+				49248EE32695002800F4E479 /* PromiseKit.xcframework in Frameworks */,
+				49248EE02695000D00F4E479 /* Alamofire.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,8 +155,8 @@
 		3562ED6A1F866FA3007D184D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				35DFC5F51F87711200B15E9D /* Alamofire.framework */,
-				66D5251E2454AAA30026F2D0 /* PromiseKit.framework */,
+				49248EE22695002800F4E479 /* PromiseKit.xcframework */,
+				49248EDF2695000D00F4E479 /* Alamofire.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -376,6 +386,7 @@
 				35BC9BC91F8669E400881541 /* Frameworks */,
 				35BC9BCA1F8669E400881541 /* Headers */,
 				35BC9BCB1F8669E400881541 /* Resources */,
+				49248ED72694FF1B00F4E479 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -634,7 +645,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -654,11 +666,17 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/Alamofire.xcframework/ios-arm64_i386_x86_64-simulator",
+					"$(PROJECT_DIR)/Carthage/Build/PromiseKit.xcframework/ios-arm64_i386_x86_64-simulator",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/SupportingFiles/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.kolyasev.SwiftJSONRPC;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -681,11 +699,17 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/Alamofire.xcframework/ios-arm64_i386_x86_64-simulator",
+					"$(PROJECT_DIR)/Carthage/Build/PromiseKit.xcframework/ios-arm64_i386_x86_64-simulator",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/SupportingFiles/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.kolyasev.SwiftJSONRPC;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -701,7 +725,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Tests/SupportingFiles/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.kolyasev.SwiftJSONRPCTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -715,7 +743,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Tests/SupportingFiles/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.kolyasev.SwiftJSONRPCTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

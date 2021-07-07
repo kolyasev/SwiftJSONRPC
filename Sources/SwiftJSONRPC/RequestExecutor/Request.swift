@@ -15,7 +15,7 @@ public class Request
         // Init instance variables
         self.id = id
         self.method = invocation.method
-        self.params = Request.prepareParams(invocation.params)
+        self.params = invocation.params != nil ? Request.prepareParams(invocation.params!) : nil
     }
 
 // MARK: Properties
@@ -24,7 +24,7 @@ public class Request
 
     public let method: String
 
-    public let params: [String: Any]
+    public let params: [String: Any]?
 
 // MARK: Functions
 
