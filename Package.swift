@@ -18,8 +18,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.1.0"),
-        .package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.13.1")
+        .package(url: "https://github.com/Alamofire/Alamofire.git", .branch("master")),
+        .package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.17.1")
     ],
     targets: [
         .target(
