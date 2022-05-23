@@ -159,8 +159,11 @@ public class HTTPRequestExecutor: RequestExecutor
         catch {
             fatalError("Build data from request failed.")
         }
-
-        return HTTPRequest(method: .post, url: self.config.baseURL, headers: [:], body: body)
+        let headers = [
+            "Content-Type": "application/json"
+        ]
+        
+        return HTTPRequest(method: .post, url: self.config.baseURL, headers: headers, body: body)
     }
 
     private func dispatch(httpResponse: HTTPResponse, forRequest request: HTTPRequest, tasks: [RPCTask])
