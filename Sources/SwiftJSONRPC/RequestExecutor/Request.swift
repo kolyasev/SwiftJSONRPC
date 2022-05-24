@@ -16,6 +16,7 @@ public class Request
         self.id = id
         self.method = invocation.method
         self.params = invocation.params != nil ? Request.prepareParams(invocation.params!) : nil
+
     }
 
 // MARK: Properties
@@ -24,7 +25,7 @@ public class Request
 
     public let method: String
 
-    public let params: [String: Any]?
+    public let params: [Any]?
 
 // MARK: Functions
 
@@ -39,25 +40,15 @@ public class Request
         if let id = self.id {
             body[JsonKeys.Id] = id as AnyObject?
         }
-        
+
         return body
     }
 
 // MARK: Private Functions
 
-    private static func prepareParams(_ params: [String: Any?]) -> [String: Any]
+    private static func prepareParams(_ params: [Any]) -> [Any]
     {
-        var result: [String: Any] = [:]
-
-        // Remove 'nil' values
-        for (key, value) in params
-        {
-            if let value = value {
-                result[key] = value
-            }
-        }
-
-        return result
+        return params
     }
 
 // MARK: Constants

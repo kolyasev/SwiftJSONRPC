@@ -29,7 +29,7 @@ public struct Invocation<Result>
 
 // MARK: - Inner Types
 
-    public typealias Params = [String: Any?]
+    public typealias Params = [Any?]
 
 }
 
