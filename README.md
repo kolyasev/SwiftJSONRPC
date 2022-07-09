@@ -11,15 +11,14 @@
 
 ```swift
 import SwiftJSONRPC
-import PromiseKit
 
 class UserService: RPCService {
-    func vote(rating: Int) -> Promise<Int> {
-        return invoke("vote", params: ["rating": rating])
+    func vote(rating: Int) async throws -> Int {
+        return try await invoke("vote", params: ["rating": rating])
     }
-    
-    func create(name: String) -> Promise<UserModel> {
-        return invoke("create", params: ["name": name])
+
+    func create(name: String) async throws -> UserModel {
+        return try await invoke("create", params: ["name": name])
     }
 
     // And other JSON-RPC methods
@@ -39,21 +38,7 @@ let client = RPCClient(url: url)
 let service = MyService(client: client)
 
 // Perform request
-service.vote(rating: 5)
-```
-
-### Result Handling
-
-SwiftJSONRPC uses [PromiseKit](https://github.com/mxcl/PromiseKit) to return result.
-
-```swift
-service.vote(rating: 5)
-    .done { newRating in
-        // Handle result
-    }
-    .catch { error in
-        // Handle error
-    }
+try await service.vote(rating: 5)
 ```
 
 #### Result Serialization
@@ -90,27 +75,25 @@ After that use this struct as `RPCService.Result` generic parameter:
 
 ```swift
 class UserService: RPCService {
-    func create(name: String) -> Promise<UserModel> {
-        return invoke("create", params: ["name": name])
+    func create(name: String) async throws -> UserModel {
+        return try await invoke("create", params: ["name": name])
     }
 }
 ```
 ```swift
-service.create(name: "testuser").done { user in
-    print("User created with ID = \(user.id)")
-}
+let user = try await service.create(name: "testuser")
+print("User created with ID = \(user.id)")
 ```
 
 Using array of `Parcelable` objects is also supported:
 
 ```swift
 extension UserService {
-    func allUsers() -> Promise<[UserModel]> {
-        return invoke("all_users")
+    func allUsers() async throws -> [UserModel] {
+        return try await invoke("all_users")
     }
 }
 ```
-
 
 ## Advanced Usage
 

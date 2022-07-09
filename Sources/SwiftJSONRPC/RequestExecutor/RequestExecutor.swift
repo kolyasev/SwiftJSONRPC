@@ -6,25 +6,18 @@
 //
 // ----------------------------------------------------------------------------
 
-public protocol RequestExecutor
-{
-// MARK: - Functions
+public protocol RequestExecutor {
+
+    // MARK: - Functions
 
     func execute(request: Request, completionHandler: @escaping (RequestExecutorResult) -> Void)
 
 }
 
-// ----------------------------------------------------------------------------
-
-public enum RequestExecutorResult
-{
+public enum RequestExecutorResult {
     case response(Response)
     case error(RequestExecutorError)
     case cancel
 }
 
-// ----------------------------------------------------------------------------
-
 public protocol RequestExecutorError: Error { }
-
-// ----------------------------------------------------------------------------

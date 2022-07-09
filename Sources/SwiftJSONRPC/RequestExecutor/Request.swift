@@ -6,19 +6,9 @@
 //
 // ----------------------------------------------------------------------------
 
-public class Request
-{
-// MARK: Construction
+public class Request {
 
-    init<R>(id: String? = nil, invocation: Invocation<R>)
-    {
-        // Init instance variables
-        self.id = id
-        self.method = invocation.method
-        self.params = invocation.params != nil ? Request.prepareParams(invocation.params!) : nil
-    }
-
-// MARK: Properties
+    // MARK: - Properties
 
     public let id: String?
 
@@ -26,31 +16,37 @@ public class Request
 
     public let params: [String: Any]?
 
-// MARK: Functions
+    // MARK: - Initialization
 
-    public func buildBody() -> [String: AnyObject]
-    {
+    init(id: String? = nil, method: String, params: [String: Any?]?) {
+        self.id = id
+        self.method = method
+        self.params = params.map { Request.prepareParams($0) }
+    }
+
+    // MARK: - Functions
+
+    public func buildBody() -> [String: AnyObject] {
         var body: [String: AnyObject] = [
             JsonKeys.JsonRPC: RPCClient.Version as AnyObject,
-            JsonKeys.Method: self.method as AnyObject,
-            JsonKeys.Params: self.params as AnyObject,
+            JsonKeys.Method: method as AnyObject,
+            JsonKeys.Params: params as AnyObject,
         ]
 
-        if let id = self.id {
+        if let id = id {
             body[JsonKeys.Id] = id as AnyObject?
         }
         
         return body
     }
 
-// MARK: Private Functions
+    // MARK: - Private Functions
 
-    private static func prepareParams(_ params: [String: Any?]) -> [String: Any]
-    {
+    private static func prepareParams(_ params: [String: Any?]?) -> [String: Any] {
         var result: [String: Any] = [:]
 
         // Remove 'nil' values
-        for (key, value) in params
+        for (key, value) in params ?? [:]
         {
             if let value = value {
                 result[key] = value
@@ -60,10 +56,9 @@ public class Request
         return result
     }
 
-// MARK: Constants
+    // MARK: - Constants
 
-    private struct JsonKeys
-    {
+    private struct JsonKeys {
         static let JsonRPC = "jsonrpc"
         static let Method = "method"
         static let Params = "params"
@@ -75,5 +70,3 @@ public class Request
         static let Id = "id"
     }
 }
-
-// ----------------------------------------------------------------------------

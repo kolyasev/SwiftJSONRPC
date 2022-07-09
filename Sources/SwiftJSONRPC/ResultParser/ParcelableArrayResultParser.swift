@@ -6,16 +6,11 @@
 //
 // ----------------------------------------------------------------------------
 
-import PromiseKit
+class ParcelableArrayResultParser<Element: Parcelable>: ResultParser {
 
-// ----------------------------------------------------------------------------
+    // MARK: Functions
 
-class ParcelableArrayResultParser<Element: Parcelable>: ResultParser
-{
-// MARK: Functions
-
-    func parse(_ object: AnyObject) throws -> Result
-    {
+    func parse(_ object: AnyObject) throws -> Result {
         guard let objects = object as? [[String: AnyObject]] else {
             throw ResultParserError.invalidFormat(object: object)
         }
@@ -23,23 +18,17 @@ class ParcelableArrayResultParser<Element: Parcelable>: ResultParser
         return try objects.map { try Element(params: $0) }
     }
 
-// MARK: - Inner Types
+    // MARK: - Inner Types
 
     typealias Result = Array<Element>
 
 }
 
-// ----------------------------------------------------------------------------
+extension RPCService {
 
-extension RPCService
-{
-// MARK: Functions
+    // MARK: Functions
 
-    open func invoke<Element: Parcelable>(_ method: String, params: Invocation<[Element]>.Params? = nil) -> Promise<[Element]>
-    {
-        return invoke(method, params: params, parser: ParcelableArrayResultParser())
+    open func invoke<Element: Parcelable>(_ method: String, params: Invocation<[Element]>.Params? = nil) async throws -> [Element] {
+        return try await invoke(method, params: params, parser: ParcelableArrayResultParser())
     }
-
 }
-
-// ----------------------------------------------------------------------------
