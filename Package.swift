@@ -18,13 +18,12 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.1.0"),
         .package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.13.1")
     ],
     targets: [
         .target(
             name: "SwiftJSONRPC",
-            dependencies: ["Alamofire", "PromiseKit"],
+            dependencies: ["PromiseKit"],
             path: "Sources"
         ),
         .testTarget(

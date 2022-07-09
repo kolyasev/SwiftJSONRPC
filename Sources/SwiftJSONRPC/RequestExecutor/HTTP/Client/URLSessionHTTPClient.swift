@@ -64,3 +64,18 @@ struct URLSessionHTTPClient: HTTPClient {
     class NoResponseDataError: HTTPClientError { }
 
 }
+
+extension HTTPRequest  {
+
+    // MARK: - Functions
+
+    func asURLRequest() -> URLRequest {
+        var request = URLRequest(url: self.url)
+
+        request.httpMethod = method.rawValue
+        request.allHTTPHeaderFields = headers
+        request.httpBody = body
+
+        return request
+    }
+}

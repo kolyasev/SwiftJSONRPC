@@ -25,7 +25,7 @@ final class HTTPRequestTests: XCTestCase {
         let request = HTTPRequest(method: method, url: url, headers: headers, body: body)
 
         // When
-        let urlRequest: URLRequest! = try? request.asURLRequest()
+        let urlRequest: URLRequest! = request.asURLRequest()
 
         // Then
         XCTAssertNotNil(urlRequest)
