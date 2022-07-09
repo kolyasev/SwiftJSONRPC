@@ -22,7 +22,7 @@ public class HTTPRequestExecutor: RequestExecutor
 
     public convenience init(config: HTTPRequestExecutorConfig)
     {
-        let httpClient = AlamofireHTTPClient()
+        let httpClient = URLSessionHTTPClient()
         self.init(config: config, httpClient: httpClient)
     }
 
