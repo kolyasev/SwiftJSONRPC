@@ -14,6 +14,8 @@ open class RPCClient {
 
     public var requestRetrier: RequestRetrier? = nil
 
+    public var coder = Coder()
+
     // MARK: - Private Properties
 
     private let requestExecutor: RequestExecutor
@@ -33,17 +35,17 @@ open class RPCClient {
 
     // MARK: - Public Functions
 
-    open func invoke<Result>(_ invocation: Invocation<Result>) async throws -> Result {
+    open func invoke<Params, Result>(_ invocation: Invocation<Params, Result>) async throws -> Result {
         // Init request
-        let request = makeRequest(invocation: invocation)
+        let request = try makeRequest(invocation: invocation)
 
         // Perform request
-        return try await execute(request: request, with: invocation.parser)
+        return try await execute(request: request)
     }
 
     // MARK: - Private Functions
 
-    private func makeRequest<Result>(invocation: Invocation<Result>) -> Request {
+    private func makeRequest<Params, Result>(invocation: Invocation<Params, Result>) throws -> Request {
         // TODO: Support notification type calls without identifiers
         // Generate request identifier
         let identifier = requestIdGenerator.next()
@@ -52,15 +54,15 @@ open class RPCClient {
         return Request(
             id: identifier,
             method: invocation.method,
-            params: invocation.params
+            params: try coder.encode(invocation.params)
         )
     }
 
-    private func execute<Result>(request: Request, with parser: AnyResultParser<Result>) async throws -> Result {
-        return try await withCheckedThrowingContinuation { continuation in
+    private func execute<Result: InvocationResult>(request: Request) async throws -> Result {
+        return try await withCheckedThrowingContinuation { [coder] continuation in
             execute(request: request) { result in
                 do {
-                    continuation.resume(returning: try result.result(with: parser))
+                    continuation.resume(returning: try result.result(with: coder))
                 } catch {
                     continuation.resume(throwing: error)
                 }
@@ -102,10 +104,10 @@ private extension RequestExecutorResult {
 
     // MARK: - Functions
 
-    func result<Result>(with parser: AnyResultParser<Result>) throws -> Result {
+    func result<Result: InvocationResult>(with coder: Coder) throws -> Result {
         switch self {
         case .response(let response):
-            return try result(for: response, with: parser)
+            return try result(for: response, with: coder)
         case .error(let error):
             throw InvocationError.applicationError(cause: error)
         case .cancel:
@@ -115,18 +117,18 @@ private extension RequestExecutorResult {
 
     // MARK: - Private Functions
 
-    private func result<Result>(for response: Response, with parser: AnyResultParser<Result>) throws -> Result {
+    private func result<Result: InvocationResult>(for response: Response, with coder: Coder) throws -> Result {
         switch response.body {
         case .success(let successBody):
-            return try resultForSuccessBody(successBody, with: parser)
+            return try resultForSuccessBody(successBody, with: coder)
         case .error(let error):
             throw InvocationError.rpcError(error: error)
         }
     }
 
-    private func resultForSuccessBody<Result>(_ body: AnyObject, with parser: AnyResultParser<Result>) throws -> Result {
+    private func resultForSuccessBody<Result: InvocationResult>(_ body: Any, with coder: Coder) throws -> Result {
         do {
-            return try parser.parse(body)
+            return try coder.decode(Result.self, from: body)
         } catch {
             throw InvocationError.applicationError(cause: error)
         }

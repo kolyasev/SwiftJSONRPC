@@ -6,12 +6,17 @@
 //
 // ----------------------------------------------------------------------------
 
-public class Response
-{
-// MARK: Construction
+public class Response {
 
-    init(response: Any) throws
-    {
+    // MARK: - Properties
+
+    public let id: String
+
+    public let body: Body
+
+    // MARK: - Initialization
+
+    init(response: Any) throws {
         guard let json = (response as? [String: AnyObject]),
               let version = (json[JsonKeys.JsonRPC] as? String), (version == RPCClient.Version),
               let id = (json[JsonKeys.Id] as? String)
@@ -47,24 +52,9 @@ public class Response
         }
     }
 
-// MARK: - Properties
+    // MARK: - Constants
 
-    public let id: String
-
-    public let body: Body
-
-// MARK: - Inner Types
-
-    public enum Body
-    {
-        case success(result: AnyObject)
-        case error(error: RPCError)
-    }
-
-// MARK: Constants
-
-    fileprivate struct JsonKeys
-    {
+    private struct JsonKeys {
         static let JsonRPC = "jsonrpc"
         static let Method = "method"
         static let Params = "params"
@@ -76,13 +66,17 @@ public class Response
         static let Id = "id"
     }
 
+    // MARK: - Inner Types
+
+    public enum Body {
+        case success(result: Result)
+        case error(error: RPCError)
+    }
+
+    public typealias Result = Any
+
 }
 
-// ----------------------------------------------------------------------------
-
-enum ResponseError: Error
-{
+enum ResponseError: Error {
     case invalidFormat
 }
-
-// ----------------------------------------------------------------------------

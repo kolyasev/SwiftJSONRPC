@@ -20,17 +20,31 @@ open class RPCService {
 
     // MARK: - Public Functions
 
-    open func invoke<Result, Parser: ResultParser>(_ method: String, params: Invocation<Result>.Params? = nil, parser: Parser) async throws -> Result
-    where Parser.Result == Result {
+    open func invoke(_ method: String) async throws {
+        _ = try await invoke(method, params: VoidInvocationParams()) as VoidInvocationResult
+    }
+
+    open func invoke<Result>(_ method: String) async throws -> Result where Result: InvocationResult {
+        return try await invoke(method, params: VoidInvocationParams())
+    }
+
+    open func invoke<Params>(_ method: String, params: Params) async throws where Params: InvocationParams {
+        _ = try await invoke(method, params: params) as VoidInvocationResult
+    }
+
+    open func invoke<Params, Result>(_ method: String, params: Params) async throws -> Result
+    where Params: InvocationParams, Result: InvocationResult {
+
         // Init invocation object
-        let invocation = makeInvocation(method: method, params: params, parser: parser)
+        let invocation = makeInvocation(method: method, params: params, resultType: Result.self)
 
         // Perform invocation
         return try await client.invoke(invocation)
     }
 
-    open func makeInvocation<Result, Parser: ResultParser>(method: String, params: Invocation<Result>.Params?, parser: Parser) -> Invocation<Result>
-    where Parser.Result == Result {
-        return Invocation<Result>(method: method, params: params, parser: parser)
+    // MARK: - Private Functions
+
+    private func makeInvocation<Params, Result>(method: String, params: Params, resultType: Result.Type) -> Invocation<Params, Result> {
+        return Invocation(method: method, params: params, resultType: resultType)
     }
 }

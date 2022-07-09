@@ -14,46 +14,32 @@ public class Request {
 
     public let method: String
 
-    public let params: [String: Any]?
+    public let params: Params?
 
     // MARK: - Initialization
 
-    init(id: String? = nil, method: String, params: [String: Any?]?) {
+    init(id: String? = nil, method: String, params: Params?) {
         self.id = id
         self.method = method
-        self.params = params.map { Request.prepareParams($0) }
+        self.params = params
     }
 
     // MARK: - Functions
 
-    public func buildBody() -> [String: AnyObject] {
-        var body: [String: AnyObject] = [
-            JsonKeys.JsonRPC: RPCClient.Version as AnyObject,
-            JsonKeys.Method: method as AnyObject,
-            JsonKeys.Params: params as AnyObject,
+    public func buildBody() -> [String: Any] {
+        var body: [String: Any] = [
+            JsonKeys.JsonRPC: RPCClient.Version,
+            JsonKeys.Method: method
         ]
 
         if let id = id {
-            body[JsonKeys.Id] = id as AnyObject?
+            body[JsonKeys.Id] = id
         }
-        
+        if let params = params {
+            body[JsonKeys.Params] = params
+        }
+
         return body
-    }
-
-    // MARK: - Private Functions
-
-    private static func prepareParams(_ params: [String: Any?]?) -> [String: Any] {
-        var result: [String: Any] = [:]
-
-        // Remove 'nil' values
-        for (key, value) in params ?? [:]
-        {
-            if let value = value {
-                result[key] = value
-            }
-        }
-
-        return result
     }
 
     // MARK: - Constants
@@ -69,4 +55,9 @@ public class Request {
         static let Data = "data"
         static let Id = "id"
     }
+
+    // MARK: - Inner Types
+
+    public typealias Params = Any
+
 }
