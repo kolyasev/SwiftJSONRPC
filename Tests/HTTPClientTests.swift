@@ -11,18 +11,22 @@ import XCTest
 @testable
 import SwiftJSONRPC
 
-class HTTPClientTests: XCTestCase
-{
+final class HTTPClientTests: XCTestCase {
+
+    // MARK: - Properties
+
     var httpClient: HTTPClient!
+
+    // MARK: - Functions
     
     override func setUp() {
         super.setUp()
-
-        self.httpClient = AlamofireHTTPClient()
+        httpClient = AlamofireHTTPClient()
     }
 
-    func testHasResponse()
-    {
+    // MARK: - Functions: Tests
+
+    func testHasResponse() {
         // Given
         let method = HTTPMethod(rawValue: "GET")!
         let url = URL(string: "https://httpbin.org/get")!
@@ -34,14 +38,13 @@ class HTTPClientTests: XCTestCase
 
         // When
         self.httpClient.perform(request: request) { result in
-            switch result
-            {
-                case .success(let resp):
-                    response = resp
-                    expectation.fulfill()
+            switch result {
+            case .success(let resp):
+                response = resp
+                expectation.fulfill()
 
-                case .error(let error):
-                    XCTFail("Request failed with error: \(error).")
+            case .error(let error):
+                XCTFail("Request failed with error: \(error).")
             }
         }
 
@@ -51,8 +54,7 @@ class HTTPClientTests: XCTestCase
         XCTAssertNotNil(response)
     }
 
-    func testResponseStatusCode()
-    {
+    func testShouldParseResponseStatusCode() {
         // Given
         let method = HTTPMethod(rawValue: "GET")!
         let url = URL(string: "https://httpbin.org/status/204")!
@@ -64,8 +66,7 @@ class HTTPClientTests: XCTestCase
 
         // When
         self.httpClient.perform(request: request) { result in
-            switch result
-            {
+            switch result {
             case .success(let resp):
                 response = resp
                 expectation.fulfill()
@@ -82,8 +83,7 @@ class HTTPClientTests: XCTestCase
         XCTAssertEqual(response.code, 204)
     }
 
-    func testResponseHeaders()
-    {
+    func testShouldParseResponseHeaders() {
         // Given
         let method = HTTPMethod(rawValue: "GET")!
         let url = URL(string: "https://httpbin.org/response-headers?foo=bar&baz=bat")!
@@ -95,8 +95,7 @@ class HTTPClientTests: XCTestCase
 
         // When
         self.httpClient.perform(request: request) { result in
-            switch result
-            {
+            switch result {
             case .success(let resp):
                 response = resp
                 expectation.fulfill()
@@ -114,8 +113,47 @@ class HTTPClientTests: XCTestCase
         XCTAssertEqual(response.headers["baz"], "bat")
     }
 
-    func testResponseBody()
-    {
+    func testShouldSetRequestHeaders() throws {
+        // Given
+        let method = HTTPMethod(rawValue: "GET")!
+        let url = URL(string: "https://httpbin.org/headers")!
+
+        let headers = [
+            "Accept": "application/json",
+            "X-Custom-Header": "test-header"
+        ]
+        let request = HTTPRequest(method: method, url: url, headers: headers, body: nil)
+
+        let expectation = self.expectation(description: "Request should succeed.")
+        var response: HTTPResponse!
+
+        // When
+        self.httpClient.perform(request: request) { result in
+            switch result {
+            case .success(let resp):
+                response = resp
+                expectation.fulfill()
+
+            case .error(let error):
+                XCTFail("Request failed with error: \(error).")
+            }
+        }
+
+        wait(for: [expectation], timeout: 10.0)
+
+        // Then
+        XCTAssertNotNil(response)
+
+        let responseJSONObject = try JSONSerialization.jsonObject(with: response.body)
+        let responseDict = try XCTUnwrap(responseJSONObject as? [String: Any])
+        let requestHeaders = try XCTUnwrap(responseDict["headers"] as? [String: String])
+
+        for (key, value) in headers {
+            XCTAssertEqual(requestHeaders[key], value)
+        }
+    }
+
+    func testShouldParseResponseBody() {
         // Given
         let method = HTTPMethod(rawValue: "GET")!
         let url = URL(string: "https://httpbin.org//bytes/100")!
@@ -127,8 +165,7 @@ class HTTPClientTests: XCTestCase
 
         // When
         self.httpClient.perform(request: request) { result in
-            switch result
-            {
+            switch result {
             case .success(let resp):
                 response = resp
                 expectation.fulfill()
@@ -144,5 +181,4 @@ class HTTPClientTests: XCTestCase
         XCTAssertNotNil(response)
         XCTAssertEqual(response.body.count, 100)
     }
-
 }
