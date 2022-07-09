@@ -21,7 +21,7 @@ final class HTTPClientTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        httpClient = AlamofireHTTPClient()
+        httpClient = URLSessionHTTPClient()
     }
 
     // MARK: - Functions: Tests

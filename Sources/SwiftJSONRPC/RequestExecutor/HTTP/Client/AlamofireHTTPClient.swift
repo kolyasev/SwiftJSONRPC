@@ -58,7 +58,7 @@ extension HTTPRequest: URLRequestConvertible
 {
 // MARK: - Functions
 
-    public func asURLRequest() throws -> URLRequest
+    public func asURLRequest() -> URLRequest
     {
         var request = URLRequest(url: self.url)
 
