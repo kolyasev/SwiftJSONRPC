@@ -11,10 +11,11 @@ import XCTest
 @testable
 import SwiftJSONRPC
 
-class HTTPRequestTests: XCTestCase
-{
-    func testConvertToURLRequest()
-    {
+final class HTTPRequestTests: XCTestCase {
+
+    // MARK: - Functions
+
+    func testConvertToURLRequest() {
         // Given
         let method = HTTPMethod(rawValue: "GET")!
         let url = URL(string: "http://example.com")!
