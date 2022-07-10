@@ -10,7 +10,7 @@ public struct Invocation<Params, Result> where Params: InvocationParams, Result:
 
     // MARK: - Initialization
 
-    init(method: String, params: Params, resultType: Result.Type) {
+    init(method: String, params: Params?, resultType: Result.Type) {
         self.method = method
         self.params = params
     }
@@ -19,12 +19,12 @@ public struct Invocation<Params, Result> where Params: InvocationParams, Result:
 
     public let method: String
 
-    public let params: Params
+    public let params: Params?
 
 }
 
 public typealias InvocationParams = Encodable
 public typealias InvocationResult = Decodable
 
-public struct VoidInvocationParams: InvocationParams {}
-public struct VoidInvocationResult: InvocationResult {}
+struct VoidInvocationParams: InvocationParams {}
+struct VoidInvocationResult: InvocationResult {}

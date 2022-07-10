@@ -54,7 +54,7 @@ open class RPCClient {
         return Request(
             id: identifier,
             method: invocation.method,
-            params: try coder.encode(invocation.params)
+            params: try invocation.params.flatMap { try coder.encode($0) }
         )
     }
 
