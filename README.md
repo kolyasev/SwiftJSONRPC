@@ -108,7 +108,7 @@ github "kolyasev/SwiftJSONRPC"
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/kolyasev/SwiftJSONRPC.git", .upToNextMajor(from: "0.7.0"))
+    .package(url: "https://github.com/kolyasev/SwiftJSONRPC.git", .upToNextMajor(from: "0.9.0"))
 ]
 ```
 
