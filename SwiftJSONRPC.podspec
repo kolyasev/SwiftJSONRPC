@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "SwiftJSONRPC"
-  s.version          = "0.8.0"
+  s.version          = "0.9.0"
   s.summary          = "Swift JSON-RPC 2.0 client"
   s.homepage         = "https://github.com/kolyasev/SwiftJSONRPC"
   s.license          = 'MIT'
