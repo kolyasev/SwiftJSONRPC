@@ -33,7 +33,6 @@ public final class Atomic<Value> {
         _value = value
     }
 
-
     /// Atomically replaces the contents of the variable.
     ///
     /// Returns the old value.

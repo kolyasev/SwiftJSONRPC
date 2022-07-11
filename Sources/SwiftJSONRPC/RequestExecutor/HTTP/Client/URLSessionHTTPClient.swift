@@ -65,7 +65,7 @@ struct URLSessionHTTPClient: HTTPClient {
 
 }
 
-extension HTTPRequest  {
+extension HTTPRequest {
 
     // MARK: - Functions
 

@@ -12,7 +12,7 @@ open class RPCClient {
 
     // MARK: - Properties
 
-    public var requestRetrier: RequestRetrier? = nil
+    public var requestRetrier: RequestRetrier?
 
     public var coder = Coder()
 

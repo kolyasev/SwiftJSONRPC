@@ -8,18 +8,23 @@
 
 import Foundation
 
-// ----------------------------------------------------------------------------
+public struct HTTPRequestExecutorConfig {
 
-public struct HTTPRequestExecutorConfig
-{
-// MARK: - Construction
+    // MARK: - Properties
+
+    public let baseURL: URL
+
+    public let throttle: Throttle
+
+    public let maxBatchCount: Int
+
+    // MARK: - Initialization
 
     public init(
         baseURL: URL,
         throttle: Throttle = .interval(HTTPRequestExecutorConfig.defaultThrottleInterval),
         maxBatchCount: Int = HTTPRequestExecutorConfig.defaultMaxBatchCount
-    )
-    {
+    ) {
         guard maxBatchCount > 0 else {
             fatalError("`HTTPRequestExecutorConfig.maxBatchCount` must be greater than zero.")
         }
@@ -29,28 +34,17 @@ public struct HTTPRequestExecutorConfig
         self.maxBatchCount = maxBatchCount
     }
 
-// MARK: - Properties
+    // MARK: - Inner Types
 
-    public let baseURL: URL
-
-    public let throttle: Throttle
-
-    public let maxBatchCount: Int
-
-// MARK: - Inner Types
-
-    public enum Throttle
-    {
+    public enum Throttle {
         case disabled
         case interval(DispatchTimeInterval)
     }
 
-// MARK: - Constants
+    // MARK: - Constants
 
     public static let defaultThrottleInterval: DispatchTimeInterval = .milliseconds(100)
 
     public static let defaultMaxBatchCount: Int = 10
 
 }
-
-// ----------------------------------------------------------------------------

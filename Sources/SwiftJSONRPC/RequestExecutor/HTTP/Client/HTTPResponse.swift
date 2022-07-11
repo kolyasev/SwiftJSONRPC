@@ -8,11 +8,9 @@
 
 import Foundation
 
-// ----------------------------------------------------------------------------
+public struct HTTPResponse {
 
-public struct HTTPResponse
-{
-// MARK: - Properties
+    // MARK: - Properties
 
     public var url: URL
 
@@ -23,5 +21,3 @@ public struct HTTPResponse
     public var body: Data
 
 }
-
-// ----------------------------------------------------------------------------

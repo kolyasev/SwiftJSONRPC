@@ -18,7 +18,7 @@ final class HTTPClientTests: XCTestCase {
     var httpClient: HTTPClient!
 
     // MARK: - Functions
-    
+
     override func setUp() {
         super.setUp()
         httpClient = URLSessionHTTPClient()

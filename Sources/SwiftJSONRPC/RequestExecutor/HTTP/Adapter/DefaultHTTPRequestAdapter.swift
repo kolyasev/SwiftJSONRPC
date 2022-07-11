@@ -6,18 +6,15 @@
 //
 // ----------------------------------------------------------------------------
 
-open class DefaultHTTPRequestAdapter: HTTPRequestAdapter
-{
-// MARK: - Construction
+open class DefaultHTTPRequestAdapter: HTTPRequestAdapter {
+
+    // MARK: - Initialization
 
     public init() { }
 
-// MARK: - Functions
+    // MARK: - Functions
 
     open func adapt(request: HTTPRequest) -> HTTPRequest {
         return request
     }
-
 }
-
-// ----------------------------------------------------------------------------

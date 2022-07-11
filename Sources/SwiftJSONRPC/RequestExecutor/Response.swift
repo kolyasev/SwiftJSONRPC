@@ -28,17 +28,14 @@ public class Response {
         self.id = id
 
         // Handle 'result' object if exists
-        if let result = json[JsonKeys.Result]
-        {
+        if let result = json[JsonKeys.Result] {
             // Create success result body
             self.body = .success(result: result)
-        }
-        else
+        } else
         // Handle 'error' object if exists
         if let error   = (json[JsonKeys.Error] as? [String: Any]),
            let code    = (error[JsonKeys.Code] as? Int),
-           let message = (error[JsonKeys.Message] as? String)
-        {
+           let message = (error[JsonKeys.Message] as? String) {
             let data = error[JsonKeys.Data]
 
             // Init JSON-RPC error
@@ -46,8 +43,7 @@ public class Response {
 
             // Create error body
             self.body = .error(error: error)
-        }
-        else {
+        } else {
             throw ResponseError.invalidFormat
         }
     }

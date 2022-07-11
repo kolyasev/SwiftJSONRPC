@@ -40,7 +40,7 @@ public struct Coder {
 
     func decode<Result: InvocationResult>(_ type: Result.Type, from result: Response.Result) throws -> Result {
         guard Result.self != VoidInvocationResult.self else {
-            return VoidInvocationResult() as! Result
+            return VoidInvocationResult() as! Result // swiftlint:disable:this force_cast
         }
         do {
             let data = try JSONSerialization.data(withJSONObject: result, options: .fragmentsAllowed)

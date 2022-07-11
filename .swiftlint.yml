@@ -1,0 +1,7 @@
+included:
+  - Sources
+  - Tests
+
+disabled_rules:
+  - identifier_name
+  - todo

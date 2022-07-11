@@ -6,12 +6,12 @@
 //
 // ----------------------------------------------------------------------------
 
-public protocol HTTPRequestRetrier
-{
-// MARK: - Functions
+public protocol HTTPRequestRetrier {
 
-    func should(executor: HTTPRequestExecutor, retryRequest request: HTTPRequest, afterError error: HTTPRequestExecutorError) -> Bool
+    // MARK: - Functions
+
+    func should(executor: HTTPRequestExecutor,
+                retryRequest request: HTTPRequest,
+                afterError error: HTTPRequestExecutorError) -> Bool
 
 }
-
-// ----------------------------------------------------------------------------

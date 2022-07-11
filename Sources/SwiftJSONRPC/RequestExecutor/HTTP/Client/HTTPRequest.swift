@@ -26,7 +26,7 @@ extension HTTPRequest: Equatable {
 
     // MARK: - Functions
 
-    public static func ==(lhs: HTTPRequest, rhs: HTTPRequest) -> Bool {
+    public static func == (lhs: HTTPRequest, rhs: HTTPRequest) -> Bool {
         return lhs.method == rhs.method &&
                lhs.url == rhs.url &&
                lhs.headers == rhs.headers &&

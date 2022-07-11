@@ -6,23 +6,19 @@
 //
 // ----------------------------------------------------------------------------
 
-open class DefaultHTTPResponseAdapter: HTTPResponseAdapter
-{
-// MARK: - Construction
+open class DefaultHTTPResponseAdapter: HTTPResponseAdapter {
+
+    // MARK: - Initialization
 
     public init() { }
 
-// MARK: - Functions
+    // MARK: - Functions
 
-    open func adapt(response: HTTPResponse, forRequest request: HTTPRequest) throws -> HTTPResponse
-    {
+    open func adapt(response: HTTPResponse, forRequest request: HTTPRequest) throws -> HTTPResponse {
         guard (200..<300).contains(response.code) else {
             throw HTTPResponseStatusCodeError(cause: nil)
         }
 
         return response
     }
-
 }
-
-// ----------------------------------------------------------------------------

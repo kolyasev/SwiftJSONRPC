@@ -8,25 +8,17 @@
 
 // import Atomic
 
-// ----------------------------------------------------------------------------
-
 public typealias RequestId = String
 
-// ----------------------------------------------------------------------------
+class RequestIdGenerator {
 
-class RequestIdGenerator
-{
-// MARK: - Functions
-
-    func next() -> RequestId {
-        return RequestId(self.lastIdx.modify{ $0 + 1 })
-    }
-
-// MARK: - Variables
+    // MARK: - Private Properties
 
     private let lastIdx = Atomic<Int>(1)
 
+    // MARK: - Functions
+
+    func next() -> RequestId {
+        return RequestId(self.lastIdx.modify { $0 + 1 })
+    }
 }
-
-// ----------------------------------------------------------------------------
-
