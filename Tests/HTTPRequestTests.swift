@@ -11,10 +11,11 @@ import XCTest
 @testable
 import SwiftJSONRPC
 
-class HTTPRequestTests: XCTestCase
-{
-    func testConvertToURLRequest()
-    {
+final class HTTPRequestTests: XCTestCase {
+
+    // MARK: - Functions
+
+    func testConvertToURLRequest() {
         // Given
         let method = HTTPMethod(rawValue: "GET")!
         let url = URL(string: "http://example.com")!
@@ -24,7 +25,7 @@ class HTTPRequestTests: XCTestCase
         let request = HTTPRequest(method: method, url: url, headers: headers, body: body)
 
         // When
-        let urlRequest: URLRequest! = try? request.asURLRequest()
+        let urlRequest: URLRequest! = request.asURLRequest()
 
         // Then
         XCTAssertNotNil(urlRequest)

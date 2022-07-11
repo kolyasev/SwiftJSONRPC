@@ -6,40 +6,39 @@
 //
 // ----------------------------------------------------------------------------
 
-import PromiseKit
+open class RPCService {
 
-// ----------------------------------------------------------------------------
+    // MARK: - Private Properties
 
-open class RPCService
-{
-// MARK: - Construction
+    private let client: RPCClient
+
+    // MARK: - Initialization
 
     public init(client: RPCClient) {
         self.client = client
     }
 
-// MARK: - Public Functions
+    // MARK: - Public Functions
 
-    open func invoke<Result, Parser: ResultParser>(_ method: String, params: Invocation<Result>.Params? = nil, parser: Parser) -> Promise<Result>
-        where Parser.Result == Result
-    {
+    open func invoke(_ method: String) async throws {
+        _ = try await invoke(method, params: VoidInvocationParams()) as VoidInvocationResult
+    }
+
+    open func invoke<Result>(_ method: String) async throws -> Result where Result: InvocationResult {
+        return try await invoke(method, params: VoidInvocationParams())
+    }
+
+    open func invoke<Params>(_ method: String, params: Params?) async throws where Params: InvocationParams {
+        _ = try await invoke(method, params: params) as VoidInvocationResult
+    }
+
+    open func invoke<Params, Result>(_ method: String, params: Params?) async throws -> Result
+    where Params: InvocationParams, Result: InvocationResult {
+
         // Init invocation object
-        let invocation = makeInvocation(method: method, params: params, parser: parser)
+        let invocation = Invocation(method: method, params: params, resultType: Result.self)
 
         // Perform invocation
-        return self.client.invoke(invocation)
+        return try await client.invoke(invocation)
     }
-
-    open func makeInvocation<Result, Parser: ResultParser>(method: String, params: Invocation<Result>.Params?, parser: Parser) -> Invocation<Result>
-        where Parser.Result == Result
-    {
-        return Invocation<Result>(method: method, params: params, parser: parser)
-    }
-
-// MARK: - Variables
-
-    private let client: RPCClient
-
 }
-
-// ----------------------------------------------------------------------------

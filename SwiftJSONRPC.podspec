@@ -1,21 +1,21 @@
 Pod::Spec.new do |s|
   s.name             = "SwiftJSONRPC"
-  s.version          = "0.8.0"
-  s.summary          = "Swift JSON-RPC client based on Alamofire"
+  s.version          = "0.9.0"
+  s.summary          = "Swift JSON-RPC 2.0 client"
   s.homepage         = "https://github.com/kolyasev/SwiftJSONRPC"
   s.license          = 'MIT'
   s.author           = { "Denis Kolyasev" => "kolyasev@gmail.com" }
   s.source           = { :git => "https://github.com/kolyasev/SwiftJSONRPC.git", :tag => s.version.to_s }
 
-  s.ios.deployment_target = "10.0"
-  s.osx.deployment_target = "10.12"
+  s.ios.deployment_target = "13.0"
+  s.osx.deployment_target = "10.15"
   s.requires_arc = true
+
+  s.swift_versions = ['5.5', '5.6']
 
   s.source_files = 'Sources/**/*.swift'
 
   s.frameworks = 'Foundation'
-  s.dependency 'Alamofire', '~> 5.1'
-  s.dependency 'PromiseKit', '~> 6.13'
 
   # TODO: Convert to Swift 3.x
   # s.dependency 'Atomic', '~> 1.0'

@@ -8,11 +8,9 @@
 
 import Foundation
 
-// ----------------------------------------------------------------------------
+public struct HTTPRequest {
 
-public struct HTTPRequest
-{
-// MARK: - Properties
+    // MARK: - Properties
 
     public var method: HTTPMethod
 
@@ -24,26 +22,19 @@ public struct HTTPRequest
 
 }
 
-// ----------------------------------------------------------------------------
+extension HTTPRequest: Equatable {
 
-extension HTTPRequest: Equatable
-{
-// MARK: - Functions
+    // MARK: - Functions
 
-    public static func ==(lhs: HTTPRequest, rhs: HTTPRequest) -> Bool
-    {
+    public static func == (lhs: HTTPRequest, rhs: HTTPRequest) -> Bool {
         return lhs.method == rhs.method &&
                lhs.url == rhs.url &&
                lhs.headers == rhs.headers &&
                lhs.body == rhs.body
     }
-
 }
 
-// ----------------------------------------------------------------------------
-
-public enum HTTPMethod: String
-{
+public enum HTTPMethod: String {
     case options = "OPTIONS"
     case get     = "GET"
     case head    = "HEAD"
@@ -54,5 +45,3 @@ public enum HTTPMethod: String
     case trace   = "TRACE"
     case connect = "CONNECT"
 }
-
-// ----------------------------------------------------------------------------

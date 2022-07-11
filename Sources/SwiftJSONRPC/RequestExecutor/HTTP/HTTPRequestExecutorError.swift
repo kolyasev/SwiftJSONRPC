@@ -6,8 +6,7 @@
 //
 // ----------------------------------------------------------------------------
 
-public struct HTTPRequestExecutorError: RequestExecutorError
-{
+public struct HTTPRequestExecutorError: RequestExecutorError {
 // MARK: - Construction
 
     public init(error: HTTPClientError, request: HTTPRequest, response: HTTPResponse?) {
@@ -22,8 +21,7 @@ public struct HTTPRequestExecutorError: RequestExecutorError
         self.init(reason: .httpResponseError(error: error), request: request, response: response)
     }
 
-    init(reason: Reason, request: HTTPRequest, response: HTTPResponse?)
-    {
+    init(reason: Reason, request: HTTPRequest, response: HTTPResponse?) {
         self.reason = reason
         self.request = request
         self.response = response
@@ -39,8 +37,7 @@ public struct HTTPRequestExecutorError: RequestExecutorError
 
 // MARK: - Inner Types
 
-    public enum Reason
-    {
+    public enum Reason {
         case httpClientError(error: HTTPClientError)
         case httpRequestError(error: HTTPRequestError)
         case httpResponseError(error: HTTPResponseError)
@@ -50,8 +47,7 @@ public struct HTTPRequestExecutorError: RequestExecutorError
 
 // ----------------------------------------------------------------------------
 
-open class NestedError<T>: Error
-{
+open class NestedError<T>: Error {
 // MARK: - Construction
 
     public init(cause: T?) {
@@ -66,8 +62,7 @@ open class NestedError<T>: Error
 
 // ----------------------------------------------------------------------------
 
-extension NestedError: CustomStringConvertible, CustomDebugStringConvertible
-{
+extension NestedError: CustomStringConvertible, CustomDebugStringConvertible {
 // MARK: - Properties
 
     open var description: String {

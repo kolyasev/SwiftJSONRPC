@@ -11,15 +11,14 @@
 
 ```swift
 import SwiftJSONRPC
-import PromiseKit
 
 class UserService: RPCService {
-    func vote(rating: Int) -> Promise<Int> {
-        return invoke("vote", params: ["rating": rating])
+    func vote(rating: Int) async throws -> Int {
+        return try await invoke("vote", params: ["rating": rating])
     }
-    
-    func create(name: String) -> Promise<UserModel> {
-        return invoke("create", params: ["name": name])
+
+    func create(name: String) async throws -> User {
+        return try await invoke("create", params: ["name": name])
     }
 
     // And other JSON-RPC methods
@@ -39,84 +38,59 @@ let client = RPCClient(url: url)
 let service = MyService(client: client)
 
 // Perform request
-service.vote(rating: 5)
+try await service.vote(rating: 5)
 ```
 
-### Result Handling
+#### Result Decoding
 
-SwiftJSONRPC uses [PromiseKit](https://github.com/mxcl/PromiseKit) to return result.
-
-```swift
-service.vote(rating: 5)
-    .done { newRating in
-        // Handle result
-    }
-    .catch { error in
-        // Handle error
-    }
-```
-
-#### Result Serialization
-
-SwiftJSONRPC provides built-in result serialization for `Int`, `String`, `Bool` types.
-
-##### `Parcelable` Protocol
-
-To serialize your custom type result from JSON you can implement `Parcelable` protocol.
+SwiftJSONRPC uses Swift's `Decodable` protocol to decode response objects.
 
 ```swift
-protocol Parcelable {
-    init(params: [String: Any]) throws
-}
-```
-
-For example:
-
-```swift
-struct UserModel: Parcelable {
+struct User: Decodable {
     let id: String
     let name: String
-    
-    required init(params: [String: Any]) throws {
-        // Parse params to struct
-        // ...
-    }
 }
-```
 
-> You can use libraries like [ObjectMapper](https://github.com/Hearst-DD/ObjectMapper), [MAPPER](https://github.com/LYFT/MAPPER) or other to adapt `Parcelable` protocol. Or you can adapt Swift 4 `Decodable`.
-
-After that use this struct as `RPCService.Result` generic parameter:
-
-```swift
 class UserService: RPCService {
-    func create(name: String) -> Promise<UserModel> {
-        return invoke("create", params: ["name": name])
+    func getCurrentUser() async throws -> User {
+        return try await invoke("getCurrentUser")
     }
 }
+
+let user = try await userService.getCurrentUser()
+print("Current user ID = \(user.id), name = \(user.name)")
 ```
+
+If you need to modify `JSONDecoder`'s behaviour, use `RPCClient.coder.resultDecoder` for that.
+
 ```swift
-service.create(name: "testuser").done { user in
-    print("User created with ID = \(user.id)")
+client.coder.resultDecoder.dateDecodingStrategy = .iso8601
+```
+
+#### Params Encoding
+
+SwiftJSONRPC uses Swift's `Encodable` protocol to encode request params.
+
+```swift
+struct Message: Encodable {
+    let text: String
 }
-```
 
-Using array of `Parcelable` objects is also supported:
-
-```swift
-extension UserService {
-    func allUsers() -> Promise<[UserModel]> {
-        return invoke("all_users")
+class MessageService: RPCService {
+    func send(message: Message) async throws {
+        return try await invoke("sendMessage", params: message)
     }
 }
+
+let message = Message(text: "Hello World")
+try await messageService.send(message: message)
 ```
 
+If you need to modify `JSONEncoder`'s behaviour, use `RPCClient.coder.paramsEncoder` for that. 
 
-## Advanced Usage
-
-### Request Executor
-
-## Requirements
+```swift
+client.coder.paramsEncoder.dateDecodingStrategy = .iso8601
+```
 
 ## Installation
 
@@ -146,7 +120,6 @@ dependencies: [
 ## ToDo
 
 - [ ] Add support for notification request object without an "id" member.
-- [ ] Remove `Parcelable` protocol and use `Decodable`.
 
 ## Author
 

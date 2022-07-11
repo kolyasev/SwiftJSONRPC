@@ -7,156 +7,130 @@
 // ----------------------------------------------------------------------------
 
 import Foundation
-import PromiseKit
 
-// ----------------------------------------------------------------------------
+open class RPCClient {
 
-open class RPCClient
-{
-// MARK: - Construction
+    // MARK: - Properties
 
-    public init(requestExecutor: RequestExecutor)
-    {
-        // Init instance variables
+    public var requestRetrier: RequestRetrier?
+
+    public var coder = Coder()
+
+    // MARK: - Private Properties
+
+    private let requestExecutor: RequestExecutor
+
+    private let requestIdGenerator = RequestIdGenerator()
+
+    // MARK: - Initialization
+
+    public init(requestExecutor: RequestExecutor) {
         self.requestExecutor = requestExecutor
     }
 
-    public convenience init(url: URL)
-    {
+    public convenience init(url: URL) {
         let requestExecutor = HTTPRequestExecutor(url: url)
         self.init(requestExecutor: requestExecutor)
     }
 
-// MARK: - Properties
+    // MARK: - Public Functions
 
-    public var requestRetrier: RequestRetrier? = nil
-
-// MARK: - Public Functions
-
-    open func invoke<Result>(_ invocation: Invocation<Result>) -> Promise<Result>
-    {
+    open func invoke<Params, Result>(_ invocation: Invocation<Params, Result>) async throws -> Result {
         // Init request
-        let request = makeRequest(invocation: invocation)
-
-        // Init result dispatcher
-        let resultDispatcher = ResultDispatcher(invocation: invocation)
+        let request = try makeRequest(invocation: invocation)
 
         // Perform request
-        DispatchQueue.global().async { [weak self] in
-            self?.execute(request: request, withResultDispatcher: resultDispatcher)
-        }
-
-        return resultDispatcher.promise
+        return try await execute(request: request)
     }
 
-// MARK: - Private Functions
+    // MARK: - Private Functions
 
-    private func makeRequest<Result>(invocation: Invocation<Result>) -> Request
-    {
+    private func makeRequest<Params, Result>(invocation: Invocation<Params, Result>) throws -> Request {
         // TODO: Support notification type calls without identifiers
-        // Generate request indentifier
-        let identifier = self.requestIdGenerator.next()
+        // Generate request identifier
+        let identifier = requestIdGenerator.next()
 
         // Init request
-        return Request(id: identifier, invocation: invocation)
+        return Request(
+            id: identifier,
+            method: invocation.method,
+            params: try invocation.params.flatMap { try coder.encode($0) }
+        )
     }
 
-    private func execute<R>(request: Request, withResultDispatcher resultDispatcher: ResultDispatcher<R>)
-    {
-        execute(request: request) { result in
-            resultDispatcher.dispatch(result: result)
+    private func execute<Result: InvocationResult>(request: Request) async throws -> Result {
+        return try await withCheckedThrowingContinuation { [coder] continuation in
+            execute(request: request) { result in
+                do {
+                    continuation.resume(returning: try result.result(with: coder))
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
         }
     }
 
-    private func execute(request: Request, completionHandler: @escaping (RequestExecutorResult) -> Void)
-    {
-        self.requestExecutor.execute(request: request) { [weak self] result in
-            if let instance = self,
-               instance.shouldRetry(request: request, afterResult: result)
-            {
-                instance.execute(request: request, completionHandler: completionHandler)
-            }
-            else {
+    private func execute(request: Request, completionHandler: @escaping (RequestExecutorResult) -> Void) {
+        requestExecutor.execute(request: request) { [weak self] result in
+            if let self = self,
+               self.shouldRetry(request: request, afterResult: result) {
+                self.execute(request: request, completionHandler: completionHandler)
+            } else {
                 completionHandler(result)
             }
         }
     }
 
-    private func shouldRetry(request: Request, afterResult result: RequestExecutorResult) -> Bool
-    {
+    private func shouldRetry(request: Request, afterResult result: RequestExecutorResult) -> Bool {
         let retry: Bool
 
         if case .response(let response) = result,
-           let requestRetrier = self.requestRetrier
-        {
+           let requestRetrier = self.requestRetrier {
             retry = requestRetrier.should(client: self, retryRequest: request, afterResponse: response)
-        }
-        else {
+        } else {
             retry = false
         }
 
         return retry
     }
 
-// MARK: - Constants
+    // MARK: - Constants
 
     static let Version = "2.0"
 
-// MARK: - Variables
-
-    private let requestExecutor: RequestExecutor
-
-    private let requestIdGenerator = RequestIdGenerator()
-
 }
 
-// ----------------------------------------------------------------------------
+private extension RequestExecutorResult {
 
-extension ResultDispatcher
-{
-// MARK: - Private Functions
+    // MARK: - Functions
 
-    fileprivate func dispatch(result: RequestExecutorResult)
-    {
-        switch result
-        {
-            case .response(let response):
-                dispatch(response: response)
-
-            case .error(let error):
-                dispatch(error: InvocationError.applicationError(cause: error))
-
-            case .cancel:
-                dispatch(error: InvocationError.canceled)
+    func result<Result: InvocationResult>(with coder: Coder) throws -> Result {
+        switch self {
+        case .response(let response):
+            return try result(for: response, with: coder)
+        case .error(let error):
+            throw InvocationError.applicationError(cause: error)
+        case .cancel:
+            throw InvocationError.canceled
         }
     }
 
-    fileprivate func dispatch(response: Response)
-    {
-        switch response.body
-        {
-            case .success(let successBody):
-                dispatchSuccessBody(successBody)
+    // MARK: - Private Functions
 
-            case .error(let error):
-                dispatch(error: InvocationError.rpcError(error: error))
+    private func result<Result: InvocationResult>(for response: Response, with coder: Coder) throws -> Result {
+        switch response.body {
+        case .success(let successBody):
+            return try resultForSuccessBody(successBody, with: coder)
+        case .error(let error):
+            throw InvocationError.rpcError(error: error)
         }
     }
 
-    fileprivate func dispatchSuccessBody(_ body: AnyObject)
-    {
+    private func resultForSuccessBody<Result: InvocationResult>(_ body: Any, with coder: Coder) throws -> Result {
         do {
-            let result = try self.invocation.parser.parse(body)
-            dispatch(result: result)
-        }
-        catch (let cause)
-        {
-            let error = InvocationError.applicationError(cause: cause)
-            dispatch(error: error)
+            return try coder.decode(Result.self, from: body)
+        } catch {
+            throw InvocationError.applicationError(cause: error)
         }
     }
-
 }
-
-// ----------------------------------------------------------------------------
-

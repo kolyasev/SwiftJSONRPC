@@ -6,33 +6,28 @@
 //
 // ----------------------------------------------------------------------------
 
-public struct RPCError: Error
-{
-// MARK: - Construction
+public struct RPCError: Error {
 
-    init(code: Int, message: String, data: Any?)
-    {
-        // Init instance variables
+    // MARK: - Properties
+
+        public let code: Int
+
+        public let message: String
+
+        public let data: Any?
+
+    // MARK: - Initialization
+
+    init(code: Int, message: String, data: Any?) {
         self.code = code
         self.message = message
         self.data = data
     }
-
-// MARK: - Properties
-
-    public let code: Int
-
-    public let message: String
-
-    public let data: Any?
-
 }
 
-// ----------------------------------------------------------------------------
+extension RPCError {
 
-extension RPCError
-{
-// MARK: - Constants
+    // MARK: - Constants
 
     /// Invalid JSON was received by the server.
     /// An error occurred on the server while parsing the JSON text.
@@ -51,6 +46,3 @@ extension RPCError
     public static let internalError = RPCError(code: -32603, message: "Internal error", data: nil)
 
 }
-
-// ----------------------------------------------------------------------------
-

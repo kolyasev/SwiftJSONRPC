@@ -6,12 +6,17 @@
 //
 // ----------------------------------------------------------------------------
 
-public class Response
-{
-// MARK: Construction
+public class Response {
 
-    init(response: Any) throws
-    {
+    // MARK: - Properties
+
+    public let id: String
+
+    public let body: Body
+
+    // MARK: - Initialization
+
+    init(response: Any) throws {
         guard let json = (response as? [String: AnyObject]),
               let version = (json[JsonKeys.JsonRPC] as? String), (version == RPCClient.Version),
               let id = (json[JsonKeys.Id] as? String)
@@ -23,17 +28,14 @@ public class Response
         self.id = id
 
         // Handle 'result' object if exists
-        if let result = json[JsonKeys.Result]
-        {
+        if let result = json[JsonKeys.Result] {
             // Create success result body
             self.body = .success(result: result)
-        }
-        else
+        } else
         // Handle 'error' object if exists
         if let error   = (json[JsonKeys.Error] as? [String: Any]),
            let code    = (error[JsonKeys.Code] as? Int),
-           let message = (error[JsonKeys.Message] as? String)
-        {
+           let message = (error[JsonKeys.Message] as? String) {
             let data = error[JsonKeys.Data]
 
             // Init JSON-RPC error
@@ -41,30 +43,14 @@ public class Response
 
             // Create error body
             self.body = .error(error: error)
-        }
-        else {
+        } else {
             throw ResponseError.invalidFormat
         }
     }
 
-// MARK: - Properties
+    // MARK: - Constants
 
-    public let id: String
-
-    public let body: Body
-
-// MARK: - Inner Types
-
-    public enum Body
-    {
-        case success(result: AnyObject)
-        case error(error: RPCError)
-    }
-
-// MARK: Constants
-
-    fileprivate struct JsonKeys
-    {
+    private struct JsonKeys {
         static let JsonRPC = "jsonrpc"
         static let Method = "method"
         static let Params = "params"
@@ -76,13 +62,17 @@ public class Response
         static let Id = "id"
     }
 
+    // MARK: - Inner Types
+
+    public enum Body {
+        case success(result: Result)
+        case error(error: RPCError)
+    }
+
+    public typealias Result = Any
+
 }
 
-// ----------------------------------------------------------------------------
-
-enum ResponseError: Error
-{
+enum ResponseError: Error {
     case invalidFormat
 }
-
-// ----------------------------------------------------------------------------

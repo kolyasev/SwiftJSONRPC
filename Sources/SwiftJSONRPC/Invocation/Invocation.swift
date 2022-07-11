@@ -6,31 +6,25 @@
 //
 // ----------------------------------------------------------------------------
 
-public struct Invocation<Result>
-{
-// MARK: - Construction
+public struct Invocation<Params, Result> where Params: InvocationParams, Result: InvocationResult {
 
-    init<Parser: ResultParser>(method: String, params: Params?, parser: Parser)
-        where Parser.Result == Result
-    {
-        // Init instance variables
+    // MARK: - Initialization
+
+    init(method: String, params: Params?, resultType: Result.Type) {
         self.method = method
         self.params = params
-        self.parser = AnyResultParser<Result>(parser)
     }
 
-// MARK: - Properties
+    // MARK: - Properties
 
     public let method: String
 
     public let params: Params?
 
-    public let parser: AnyResultParser<Result>
-
-// MARK: - Inner Types
-
-    public typealias Params = [String: Any?]
-
 }
 
-// ----------------------------------------------------------------------------
+public typealias InvocationParams = Encodable
+public typealias InvocationResult = Decodable
+
+struct VoidInvocationParams: InvocationParams {}
+struct VoidInvocationResult: InvocationResult {}

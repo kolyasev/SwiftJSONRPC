@@ -6,12 +6,10 @@
 //
 // ----------------------------------------------------------------------------
 
-public protocol HTTPRequestAdapter
-{
-// MARK: - Functions
+public protocol HTTPRequestAdapter {
+
+    // MARK: - Functions
 
     func adapt(request: HTTPRequest) throws -> HTTPRequest
 
 }
-
-// ----------------------------------------------------------------------------

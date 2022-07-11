@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.5
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,10 +6,10 @@ import PackageDescription
 let package = Package(
     name: "SwiftJSONRPC",
     platforms: [
-        .macOS(.v10_12),
-        .iOS(.v10),
-        .tvOS(.v10),
-        .watchOS(.v3)
+        .macOS(.v10_15),
+        .iOS(.v13),
+        .tvOS(.v13),
+        .watchOS(.v6)
     ],
     products: [
         .library(
@@ -18,13 +18,11 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.1.0"),
-        .package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.13.1")
     ],
     targets: [
         .target(
             name: "SwiftJSONRPC",
-            dependencies: ["Alamofire", "PromiseKit"],
+            dependencies: [],
             path: "Sources"
         ),
         .testTarget(
