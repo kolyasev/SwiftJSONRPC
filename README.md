@@ -92,12 +92,6 @@ If you need to modify `JSONEncoder`'s behaviour, use `RPCClient.coder.paramsEnco
 client.coder.paramsEncoder.dateDecodingStrategy = .iso8601
 ```
 
-## Advanced Usage
-
-### Request Executor
-
-## Requirements
-
 ## Installation
 
 ### CocoaPods
